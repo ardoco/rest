@@ -3,10 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.2</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>io.github.ardoco.core</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.1.0-SNAPSHOT</version>
     </parent>
     <groupId>io.github.ardoco.rest</groupId>
     <artifactId>parent-rest</artifactId>
@@ -33,19 +32,34 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-hateoas</artifactId>
+            <groupId>org.springframework.hateoas</groupId>
+            <artifactId>spring-hateoas</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>6.1.11</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>3.3.2</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot</artifactId>
+            <version>3.3.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.224</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <dependency>
             <groupId>io.github.ardoco.core</groupId>
             <artifactId>framework</artifactId>
@@ -59,6 +73,23 @@
             <version>1.0.0</version>
             <type>pom</type>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/io.github.ardoco.tlr/text-extraction -->
+        <dependency>
+            <groupId>io.github.ardoco.tlr</groupId>
+            <artifactId>text-extraction</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
 
     </dependencies>
 
