@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+import java.util.List;
+
 /**
  * This class models an ArDoCoResult, so that it can be stored into a database
  */
