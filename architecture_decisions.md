@@ -22,3 +22,11 @@ This layer is responsible for processing the input and making the needed calls t
 
 - The output directory, which is required by ardoco when running any pipeline, is internally set to a temporary directory 
 and is not made available to the outside, since the result will be returned in form of a response enitity
+
+- only the direct interaction with ardoco is asynchronous. Handeling the input file (including conversion and 
+checking whether its file type is correct) is done before, since like this the user can get quicker feedback that
+sth. went wrong.
+
+- The uids of the ongoing asynchronous calls are stored in a concurrentHashmap. This has the advantage that
+when a user calls getResult to potentially receive the result, it can first be checked in the concurrentHashmap whether
+the asynchronous call of ardoco has finished yet instead of unnecessarily doing a database call.
