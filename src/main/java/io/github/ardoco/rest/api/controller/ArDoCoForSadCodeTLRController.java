@@ -25,7 +25,7 @@ public class ArDoCoForSadCodeTLRController {
         try {
             //right now: no additional configs, they can later be added to the mapping as parameter.
             SortedMap<String, String> additionalConfigs = new TreeMap<>();
-            long unique_id = sadSamCodeTLRService.runPipeline(projectName, inputText, inputCode, additionalConfigs);
+            String unique_id = sadSamCodeTLRService.runPipeline(projectName, inputText, inputCode, additionalConfigs);
             return ResponseEntity.ok(unique_id);
         } catch (Exception e) {
             return ResponseEntity.status(400).body(e.getMessage());
@@ -34,7 +34,7 @@ public class ArDoCoForSadCodeTLRController {
 
 
     @GetMapping("/api/sad/code/{id}")
-    public ResponseEntity<String> getResult(@PathVariable("id") long id) {
+    public ResponseEntity<String> getResult(@PathVariable("id") String id) {
         try {
             String result = sadSamCodeTLRService.getResult(id);
             return ResponseEntity.ok(result);

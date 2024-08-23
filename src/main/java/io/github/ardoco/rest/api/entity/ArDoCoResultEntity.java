@@ -1,16 +1,17 @@
 package io.github.ardoco.rest.api.entity;
 
 import jakarta.persistence.*;
+import org.springframework.data.redis.core.RedisHash;
 
 /**
  * This class models an ArDoCoResult, so that it can be stored into a database
  */
-@Entity
-@Table(name = "ARDOCO_RESULT")
+
+@RedisHash("ArDoCoResultEntity")
 public class ArDoCoResultEntity {
 
     @Id @GeneratedValue
-    private Long id;
+    private String id;
 
     private String sadCodeTraceLinksJson;
 
@@ -18,11 +19,11 @@ public class ArDoCoResultEntity {
     public ArDoCoResultEntity() {
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

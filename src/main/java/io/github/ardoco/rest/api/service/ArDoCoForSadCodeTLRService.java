@@ -23,14 +23,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
 
     // Map to track the progress of async tasks
-    private final ConcurrentHashMap<Long, CompletableFuture<Void>> asyncTasks = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, CompletableFuture<Void>> asyncTasks = new ConcurrentHashMap<>();
 
     public ArDoCoForSadCodeTLRService(ArDoCoResultEntityRepository repository) {
         super(repository);
     }
 
     @Override
-    public long runPipeline(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs) throws Exception {
+    public String runPipeline(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs) throws Exception {
         File inputTextFile = convertMultipartFileToFile(inputText);
         File inputCodeFile = convertMultipartFileToFile(inputCode);
         File outputDir = Files.createTempDir(); // temporary directory to store the ardoco result in
@@ -38,7 +38,7 @@ public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
         //TODO: Check if file type is correct
 
         ArDoCoResultEntity resultEntity = new ArDoCoResultEntity();
-        Long uid = saveResult(resultEntity);
+        String uid = saveResult(resultEntity);
 
         // Start asynchronous processing and store the future in the map
         CompletableFuture<Void> future = runPipelineAsync(uid, projectName, inputTextFile, inputCodeFile, outputDir, additionalConfigs);
@@ -48,7 +48,7 @@ public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
     }
 
     @Override
-    public String getResult(long id) throws ResultNotFoundException {
+    public String getResult(String id) throws ResultNotFoundException {
         CompletableFuture<Void> future = asyncTasks.get(id);
         if (future != null && !future.isDone()) {
             return "Result is still being processed. Please try again later.";
@@ -63,7 +63,7 @@ public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
     }
 
     @Async
-    public CompletableFuture<Void> runPipelineAsync(Long uid, String projectName, File inputTextFile, File inputCodeFile, File outputDir, SortedMap<String, String> additionalConfigs) throws Exception {
+    public CompletableFuture<Void> runPipelineAsync(String uid, String projectName, File inputTextFile, File inputCodeFile, File outputDir, SortedMap<String, String> additionalConfigs) throws Exception {
 
         // Run the pipeline
         ArDoCoForSadCodeTraceabilityLinkRecovery runner = new ArDoCoForSadCodeTraceabilityLinkRecovery(projectName);

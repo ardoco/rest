@@ -14,9 +14,9 @@ public abstract class RunnerTLRService {
         this.arDoCoResultRepository = repository;
     }
 
-    abstract public long runPipeline(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs) throws Exception;
+    abstract public String runPipeline(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs) throws Exception;
 
-    abstract public String getResult(long id);
+    abstract public String getResult(String id);
 
 
     /**
@@ -24,7 +24,7 @@ public abstract class RunnerTLRService {
      * @param resultEntity
      * @return Return the generated ID as the UID
      */
-    protected Long saveResult(ArDoCoResultEntity resultEntity) {
+    protected String saveResult(ArDoCoResultEntity resultEntity) {
         ArDoCoResultEntity savedEntity = arDoCoResultRepository.save(resultEntity);
         return savedEntity.getId();
     }

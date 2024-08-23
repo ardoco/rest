@@ -1,0 +1,38 @@
+version: "3.8" # Version of the Docker Compose file format
+
+services:
+#  redisstack:
+#    image: redis/redis-stack:7.4.0-v0
+#    container_name: redis-stack
+#    restart: always # Always restart the container if it stops
+#    ports:
+#      - "6379:6379" # Map port 6379 on localhost to port 6379 inside the container (Redis)
+#      - "5540:5540" # Map port 5540 on localhost to port 5540 inside the container (RedisInsight)
+#    environment:
+#      - REDIS_PASSWORD=mypassword # Set Redis password
+#    volumes:
+#      - ./data:/data  # Persist Redis data to the ./data directory on the host
+#    command: [ "redis-server"]
+#    volumes:
+#      - ./data:/data  # Persist Redis data to the ./data directory on the host
+#      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf  # Use a custom redis.conf for configuration
+#    command: [ "redis-server", "/usr/local/etc/redis/redis.conf", "--requirepass", "mypassword" ]  # Start Redis with the custom configuration and password
+  redis: # Service name
+    image: redis:7.4.0-alpine # Use the official Redis image from Docker Hub
+    container_name: redis
+    restart: always # Always restart the container
+    ports:
+      - "6379:6379" # Map port 6379 on localhost to port 6379 inside the container
+    volumes:
+      - ./data:/data  # Persist Redis data to the ./data directory on the host
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf  # Use a custom redis.conf for configuration
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]  # Start Redis with the custom configuration
+
+  redisinsight:
+    image: redis/redisinsight:2.54 # RedisInsight image for visualizing and managing Redis
+    container_name: redisinsight
+    restart: always # Always restart the container
+    ports:
+      - '5540:5540' # Map port 8001 on localhost to port 8001 inside the container
+    depends_on:
+      - redis # Ensure Redis is started before RedisInsight
