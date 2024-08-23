@@ -21,7 +21,7 @@ public abstract class RunnerTLRService {
 
     /**
      *
-     * @param resultEntity
+     * @param resultEntity the ArDoCoResult that should be saved
      * @return Return the generated ID as the UID
      */
     protected String saveResult(ArDoCoResultEntity resultEntity) {
