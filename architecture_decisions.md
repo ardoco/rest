@@ -38,3 +38,10 @@ A md5 hash is used to ensure to get a hash space great enough to ensure that the
 
 The hashes are used as keys in the database. Since entries are automatically deleted after 24h and the hash space is
 large enough this should work fine since there are few enough entries being stored at once.
+
+## Database
+The no-sql database Redis is used. The results of the querying ardoco are stored like a in a giant hash table.
+This means, that everything is stored as key-result(in JSON format). The key is identically with the hash used
+to check whether the result has been calculated before to avoid calculating it again. All entries have a 
+Time To Live of 24h, so that the database never gets to large because of stored results which are not needed anymore 
+(because the client's request has been too long ago).

@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.SortedMap;
+import java.util.concurrent.TimeUnit;
 
 public abstract class RunnerTLRService {
 
@@ -38,7 +39,7 @@ public abstract class RunnerTLRService {
 //    }
 
     protected String saveResult(String key, String jsonResult) {
-        template.opsForValue().set(key, jsonResult);
+        template.opsForValue().set(key, jsonResult, 24, TimeUnit.HOURS);
         return key;
     }
 
