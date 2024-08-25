@@ -3,10 +3,12 @@ package io.github.ardoco.rest.api.controller;
 //import io.github.ardoco.rest.api.repository.ArDoCoResultEntityRepository;
 import io.github.ardoco.rest.api.service.ArDoCoForSadCodeTLRService;
 import io.github.ardoco.rest.api.service.RunnerTLRService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -35,11 +37,14 @@ public class ArDoCoForSadCodeTLRController {
 
     @GetMapping("/api/sad/code/{id}")
     public ResponseEntity<String> getResult(@PathVariable("id") String id) {
-        try {
-            String result = sadSamCodeTLRService.getResult(id);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.status(400).body(e.getMessage());
+        Optional<String> result = sadSamCodeTLRService.getResult(id);
+
+        if (result.isEmpty()) {
+            // If result is not ready, return a processing status
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Result is still being processed. Please try again later.");
         }
+
+        // If result is present, return it
+        return ResponseEntity.ok(result.get());
     }
 }

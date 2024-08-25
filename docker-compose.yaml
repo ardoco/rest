@@ -26,6 +26,8 @@ services:
     volumes:
       - ./data:/data  # Persist Redis data to the ./data directory on the host
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf  # Use a custom redis.conf for configuration
+    env_file:
+      - redis/redis.env
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]  # Start Redis with the custom configuration
 
   redisinsight:

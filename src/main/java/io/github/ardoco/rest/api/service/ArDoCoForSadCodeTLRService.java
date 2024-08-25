@@ -3,10 +3,10 @@ package io.github.ardoco.rest.api.service;
 import com.github.jsonldjava.shaded.com.google.common.io.Files;
 import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSadCodeTraceabilityLinkRecovery;
 import edu.kit.kastel.mcse.ardoco.core.api.output.ArDoCoResult;
-import io.github.ardoco.rest.api.entity.ArDoCoResultEntity;
+// import io.github.ardoco.rest.api.entity.ArDoCoResultEntity;
 import io.github.ardoco.rest.api.exception.FileNotFoundException;
 import io.github.ardoco.rest.api.exception.ResultNotFoundException;
-import io.github.ardoco.rest.api.repository.ArDoCoResultEntityRepository;
+// import io.github.ardoco.rest.api.repository.ArDoCoResultEntityRepository;
 import io.github.ardoco.rest.api.util.TraceLinkConverter;
 
 import org.springframework.scheduling.annotation.Async;
@@ -15,19 +15,25 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.SortedMap;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
 
+    private static final String STRING_KEY_PREFIX = "SadCodeResult:";
+
     // Map to track the progress of async tasks
     private final ConcurrentHashMap<String, CompletableFuture<Void>> asyncTasks = new ConcurrentHashMap<>();
 
-    public ArDoCoForSadCodeTLRService(ArDoCoResultEntityRepository repository) {
-        super(repository);
-    }
+//    public ArDoCoForSadCodeTLRService(ArDoCoResultEntityRepository repository) {
+//        super(repository);
+//    }
+
+    public ArDoCoForSadCodeTLRService() {}
 
     @Override
     public String runPipeline(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs) throws Exception {
@@ -37,8 +43,11 @@ public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
 
         //TODO: Check if file type is correct
 
-        ArDoCoResultEntity resultEntity = new ArDoCoResultEntity();
-        String uid = saveResult(resultEntity);
+        // TODO: generate hash value (right no use mock random uuid until hash is integrated)
+        String uid = "hash_value:" + UUID.randomUUID().toString();
+
+        // ArDoCoResultEntity resultEntity = new ArDoCoResultEntity();
+        // String uid = saveResult(resultEntity);
 
         // Start asynchronous processing and store the future in the map
         CompletableFuture<Void> future = runPipelineAsync(uid, projectName, inputTextFile, inputCodeFile, outputDir, additionalConfigs);
@@ -48,19 +57,20 @@ public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
     }
 
     @Override
-    public String getResult(String id) throws ResultNotFoundException {
+    public Optional<String> getResult(String id) {
         CompletableFuture<Void> future = asyncTasks.get(id);
         if (future != null && !future.isDone()) {
-            return "Result is still being processed. Please try again later.";
+            // Return empty Optional if the result is still being processed
+            return Optional.empty();
         }
 
-        ArDoCoResultEntity resultEntity = arDoCoResultRepository.findById(id).orElseThrow(() -> new ResultNotFoundException(id));
-        if (resultEntity.getSadCodeTraceLinksJson() == null) {
-            return "Result is still being processed. Please try again later.";
-        } else {
-            return resultEntity.getSadCodeTraceLinksJson();
-        }
+        // Query Redis for the result
+        String result = template.opsForValue().get(id);
+
+        // Return an empty Optional if value is null
+        return Optional.ofNullable(result);
     }
+
 
     @Async
     public CompletableFuture<Void> runPipelineAsync(String uid, String projectName, File inputTextFile, File inputCodeFile, File outputDir, SortedMap<String, String> additionalConfigs) throws Exception {
@@ -74,9 +84,10 @@ public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
         var traceLinks = result.getSadCodeTraceLinks();
         TraceLinkConverter converter = new TraceLinkConverter();
         String traceLinkJson = converter.convertListOfTraceLinksToJSONString(traceLinks);
-        ArDoCoResultEntity resultEntity = arDoCoResultRepository.findById(uid).orElseThrow(() -> new ResultNotFoundException(uid));
-        resultEntity.setSadCodeTraceLinksJson(traceLinkJson);
-        arDoCoResultRepository.save(resultEntity);
+        saveResult(uid, traceLinkJson);
+//        ArDoCoResultEntity resultEntity = arDoCoResultRepository.findById(uid).orElseThrow(() -> new ResultNotFoundException(uid));
+//        resultEntity.setSadCodeTraceLinksJson(traceLinkJson);
+//        arDoCoResultRepository.save(resultEntity);
 
         // Remove the completed future from the map
         asyncTasks.remove(uid);
