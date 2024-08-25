@@ -30,3 +30,11 @@ sth. went wrong.
 - The uids of the ongoing asynchronous calls are stored in a concurrentHashmap. This has the advantage that
 when a user calls getResult to potentially receive the result, it can first be checked in the concurrentHashmap whether
 the asynchronous call of ardoco has finished yet instead of unnecessarily doing a database call.
+
+## Hashing
+Only the files are used to create the hash, the configs not, meaning that in case only the configs change, the same
+hash is generated. in future, the configs might need to be hashed as well.
+A md5 hash is used to ensure to get a hash space great enough to ensure that the probability of collisions is almost 0.
+
+The hashes are used as keys in the database. Since entries are automatically deleted after 24h and the hash space is
+large enough this should work fine since there are few enough entries being stored at once.

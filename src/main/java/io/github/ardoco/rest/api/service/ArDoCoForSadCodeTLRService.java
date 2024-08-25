@@ -7,6 +7,7 @@ import edu.kit.kastel.mcse.ardoco.core.api.output.ArDoCoResult;
 import io.github.ardoco.rest.api.exception.FileNotFoundException;
 import io.github.ardoco.rest.api.exception.ResultNotFoundException;
 // import io.github.ardoco.rest.api.repository.ArDoCoResultEntityRepository;
+import io.github.ardoco.rest.api.util.HashGenerator;
 import io.github.ardoco.rest.api.util.TraceLinkConverter;
 
 import org.springframework.scheduling.annotation.Async;
@@ -15,9 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.SortedMap;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,17 +42,19 @@ public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
         File inputCodeFile = convertMultipartFileToFile(inputCode);
         File outputDir = Files.createTempDir(); // temporary directory to store the ardoco result in
 
-        //TODO: Check if file type is correct
-
-        // TODO: generate hash value (right no use mock random uuid until hash is integrated)
-        String uid = "hash_value:" + UUID.randomUUID().toString();
+        //generate uid from hash
+        HashGenerator hashGenerator = new HashGenerator();
+        String hash = hashGenerator.getHashFromFiles(List.of(inputCodeFile, inputTextFile));
+        String uid = STRING_KEY_PREFIX + hash;
 
         // ArDoCoResultEntity resultEntity = new ArDoCoResultEntity();
         // String uid = saveResult(resultEntity);
 
-        // Start asynchronous processing and store the future in the map
-        CompletableFuture<Void> future = runPipelineAsync(uid, projectName, inputTextFile, inputCodeFile, outputDir, additionalConfigs);
-        asyncTasks.put(uid, future);
+        //only start async processing to query ardoco if result doesn't exist in database yet.
+        if(Boolean.FALSE.equals(template.hasKey(uid))) {
+            CompletableFuture<Void> future = runPipelineAsync(uid, projectName, inputTextFile, inputCodeFile, outputDir, additionalConfigs);
+            asyncTasks.put(uid, future);
+        }
 
         return uid;
     }
