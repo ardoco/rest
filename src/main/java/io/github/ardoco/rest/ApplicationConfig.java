@@ -19,7 +19,7 @@ public class ApplicationConfig {
     @Bean
     public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory redisConnectionFactory) { // needed to access the redis server from our application
 
-        RedisTemplate<byte[], byte[]> template = new RedisTemplate<byte[], byte[]>();
+        RedisTemplate<?, ?> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
         return template;
     }
