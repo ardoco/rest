@@ -4,9 +4,9 @@ import com.github.jsonldjava.shaded.com.google.common.io.Files;
 import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSadCodeTraceabilityLinkRecovery;
 import edu.kit.kastel.mcse.ardoco.core.api.output.ArDoCoResult;
 // import io.github.ardoco.rest.api.entity.ArDoCoResultEntity;
-import io.github.ardoco.rest.api.controller.ArDoCoForSadCodeTLRController;
+// import io.github.ardoco.rest.api.controller.ArDoCoForSadCodeTLRController;
 import io.github.ardoco.rest.api.exception.FileNotFoundException;
-import io.github.ardoco.rest.api.exception.ResultNotFoundException;
+// import io.github.ardoco.rest.api.exception.ResultNotFoundException;
 // import io.github.ardoco.rest.api.repository.ArDoCoResultEntityRepository;
 import io.github.ardoco.rest.api.util.HashGenerator;
 import io.github.ardoco.rest.api.util.TraceLinkConverter;
@@ -110,7 +110,7 @@ public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
 
 
     @Async
-    protected CompletableFuture<Void> runPipelineAsync(String id, String projectName, File inputTextFile, File inputCodeFile, File outputDir, SortedMap<String, String> additionalConfigs) throws Exception {
+    protected CompletableFuture<Void> runPipelineAsync(String id, String projectName, File inputTextFile, File inputCodeFile, File outputDir, SortedMap<String, String> additionalConfigs) {
         try {
             // Run the pipeline
             ArDoCoForSadCodeTraceabilityLinkRecovery runner = new ArDoCoForSadCodeTraceabilityLinkRecovery(projectName);

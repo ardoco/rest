@@ -25,7 +25,6 @@ public class HashGenerator {
         byte[] filesInByte = convertFilesToByte(files);
         byte[] hashBytes = messageDigest.digest(filesInByte);
         String hash = DatatypeConverter.printHexBinary(hashBytes);
-
         return hash;
     }
 

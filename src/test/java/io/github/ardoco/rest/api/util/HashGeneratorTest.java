@@ -72,7 +72,7 @@ class HashGeneratorTest {
     }
 
     @Test
-    void testEmptyFileList() throws NoSuchAlgorithmException, IOException {
+    void testEmptyFileList() {
         // Empty file list test
         List<File> files = Collections.emptyList();
 
