@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.SortedMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public abstract class RunnerTLRService {
@@ -27,20 +28,25 @@ public abstract class RunnerTLRService {
 
     abstract public Optional<String> getResult(String id);
 
+    abstract public String waitForResult(String id) throws ExecutionException, InterruptedException;
 
-//    /**
-//     *
-//     * @param resultEntity the ArDoCoResult that should be saved
-//     * @return Return the generated ID as the UID
-//     */
+    abstract public String runPipelineAndWaitForResult(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs) throws Exception;
+
 //    protected String saveResult(ArDoCoResultEntity resultEntity) {
 //        ArDoCoResultEntity savedEntity = arDoCoResultRepository.save(resultEntity);
 //        return savedEntity.getId();
 //    }
 
-    protected String saveResult(String key, String jsonResult) {
-        template.opsForValue().set(key, jsonResult, 24, TimeUnit.HOURS);
-        return key;
+    /**
+     * Stores a jsonResult in the database for 24h, using id as key to retrieve the result later
+     *
+     * @param id the key that should be used to retrieve the jsonResult from the database
+     * @param jsonResult the value that should be saved to the redis database
+     * @return Return the generated id which can be used to retrieve the result
+     */
+    protected String saveResult(String id, String jsonResult) {
+        template.opsForValue().set(id, jsonResult, 24, TimeUnit.HOURS);
+        return id;
     }
 
 

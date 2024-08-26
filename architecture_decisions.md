@@ -21,19 +21,19 @@ This layer is responsible for processing the input and making the needed calls t
 ### Remarks
 
 - The output directory, which is required by ardoco when running any pipeline, is internally set to a temporary directory 
-and is not made available to the outside, since the result will be returned in form of a response enitity
+and is not made available to the outside, since the result will be returned in form of a response entity
 
-- only the direct interaction with ardoco is asynchronous. Handeling the input file (including conversion and 
+- only the direct interaction with ardoco is asynchronous. Handling the input file (including conversion and 
 checking whether its file type is correct) is done before, since like this the user can get quicker feedback that
 sth. went wrong.
 
-- The uids of the ongoing asynchronous calls are stored in a concurrentHashmap. This has the advantage that
+- The ids of the ongoing asynchronous calls are stored in a concurrentHashmap. This has the advantage that
 when a user calls getResult to potentially receive the result, it can first be checked in the concurrentHashmap whether
 the asynchronous call of ardoco has finished yet instead of unnecessarily doing a database call.
 
 ## Hashing
 Only the files are used to create the hash, the configs not, meaning that in case only the configs change, the same
-hash is generated. in future, the configs might need to be hashed as well.
+hash is generated. In the future, the configs might need to be hashed as well.
 A md5 hash is used to ensure to get a hash space great enough to ensure that the probability of collisions is almost 0.
 
 The hashes are used as keys in the database. Since entries are automatically deleted after 24h and the hash space is
