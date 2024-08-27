@@ -3,11 +3,8 @@ package io.github.ardoco.rest.api.service;
 import com.github.jsonldjava.shaded.com.google.common.io.Files;
 import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSadCodeTraceabilityLinkRecovery;
 import edu.kit.kastel.mcse.ardoco.core.api.output.ArDoCoResult;
-// import io.github.ardoco.rest.api.entity.ArDoCoResultEntity;
-// import io.github.ardoco.rest.api.controller.ArDoCoForSadCodeTLRController;
-import io.github.ardoco.rest.api.exception.FileNotFoundException;
-// import io.github.ardoco.rest.api.exception.ResultNotFoundException;
-// import io.github.ardoco.rest.api.repository.ArDoCoResultEntityRepository;
+import io.github.ardoco.rest.api.repository.DatabaseAccessor;
+import io.github.ardoco.rest.api.util.FileConverter;
 import io.github.ardoco.rest.api.util.HashGenerator;
 import io.github.ardoco.rest.api.util.TraceLinkConverter;
 
@@ -27,40 +24,34 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
-@Service
-public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
+@Service("sadCodeTLRService")
+public class ArDoCoForSadCodeTLRService implements RunnerTLRService {
 
     private static final String STRING_KEY_PREFIX = "SadCodeResult:";
 
-    // Map to track the progress of async tasks
+    /** Map to track the progress of async tasks */
     private final ConcurrentHashMap<String, CompletableFuture<Void>> asyncTasks = new ConcurrentHashMap<>();
 
     private static final Logger logger = LogManager.getLogger(ArDoCoForSadCodeTLRService.class);
 
-//    public ArDoCoForSadCodeTLRService(ArDoCoResultEntityRepository repository) {
-//        super(repository);
-//    }
+    private final DatabaseAccessor databaseAccessor;
 
-    public ArDoCoForSadCodeTLRService() {}
+    public ArDoCoForSadCodeTLRService(DatabaseAccessor databaseAccessor) {
+        this.databaseAccessor = databaseAccessor;
+    }
 
     @Override
     public String runPipeline(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs) throws Exception {
-        File inputTextFile = convertMultipartFileToFile(inputText);
-        File inputCodeFile = convertMultipartFileToFile(inputCode);
-        File outputDir = Files.createTempDir(); // temporary directory to store the ardoco result in
+        File inputTextFile = FileConverter.convertMultipartFileToFile(inputText);
+        File inputCodeFile = FileConverter.convertMultipartFileToFile(inputCode);
+        File outputDir = Files.createTempDir();
         String id = generateHashFromFiles(List.of(inputCodeFile, inputTextFile));
 
-        // ArDoCoResultEntity resultEntity = new ArDoCoResultEntity();
-        // String id = saveResult(resultEntity);
-
-        //only start async processing to query ardoco if result doesn't exist in database yet.
-        if(Boolean.FALSE.equals(template.hasKey(id))) {
+        if(databaseAccessor.keyExistsInDatabase(id)) {
             CompletableFuture<Void> future = runPipelineAsync(id, projectName, inputTextFile, inputCodeFile, outputDir, additionalConfigs);
             asyncTasks.put(id, future);
             future.whenComplete((result, ex) -> asyncTasks.remove(id));
         }
-
-
         return id;
     }
 
@@ -71,8 +62,7 @@ public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
             return Optional.empty();
         }
 
-        // Query Redis for the result
-        String result = template.opsForValue().get(id);
+        String result = databaseAccessor.getResult(id);
         return Optional.ofNullable(result);
     }
 
@@ -82,29 +72,28 @@ public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
         if (future != null && !future.isDone()) {
             future.get();
         }
-        return template.opsForValue().get(id);
+        return databaseAccessor.getResult(id);
     }
 
     @Override
     public String runPipelineAndWaitForResult(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs) throws Exception {
-        File inputTextFile = convertMultipartFileToFile(inputText);
-        File inputCodeFile = convertMultipartFileToFile(inputCode);
+        File inputTextFile = FileConverter.convertMultipartFileToFile(inputText);
+        File inputCodeFile = FileConverter.convertMultipartFileToFile(inputCode);
         File outputDir = Files.createTempDir();
         String id = generateHashFromFiles(List.of(inputCodeFile, inputTextFile));
 
-        //only start async processing to query ardoco if result doesn't exist in database yet.
-        if (Boolean.FALSE.equals(template.hasKey(id))) {
+        if (databaseAccessor.keyExistsInDatabase(id)) {
             CompletableFuture<Void> future = runPipelineAsync(id, projectName, inputTextFile, inputCodeFile, outputDir, additionalConfigs);
             asyncTasks.put(id, future);
             future.get();
             asyncTasks.remove(id);
         }
-        return template.opsForValue().get(id);
+        return databaseAccessor.getResult(id);
     }
 
     private String generateHashFromFiles(List<File> files) throws NoSuchAlgorithmException, IOException {
         HashGenerator hashGenerator = new HashGenerator();
-        String hash = hashGenerator.getHashFromFiles(files);
+        String hash = hashGenerator.getMD5HashFromFiles(files);
         return STRING_KEY_PREFIX + hash;
     }
 
@@ -121,33 +110,14 @@ public class ArDoCoForSadCodeTLRService extends RunnerTLRService {
             var traceLinks = result.getSadCodeTraceLinks();
             TraceLinkConverter converter = new TraceLinkConverter();
             String traceLinkJson = converter.convertListOfTraceLinksToJSONString(traceLinks);
-            saveResult(id, traceLinkJson);
-            //        ArDoCoResultEntity resultEntity = arDoCoResultRepository.findById(id).orElseThrow(() -> new ResultNotFoundException(id));
-            //        resultEntity.setSadCodeTraceLinksJson(traceLinkJson);
-            //        arDoCoResultRepository.save(resultEntity);
+            databaseAccessor.saveResult(id, traceLinkJson);
+
         } catch (Exception e) {
             String message = "Error occurred while running the pipeline asynchronously for ID: " + id;
             logger.error(message, e);
             return CompletableFuture.failedFuture(e);
         }
-
-//        // Remove the completed future from the map
-//        asyncTasks.remove(id);
-
         return CompletableFuture.completedFuture(null);
-    }
-
-    private File convertMultipartFileToFile(MultipartFile multipartFile) throws Exception {
-        if (multipartFile.isEmpty()) {
-            throw new FileNotFoundException();
-        }
-        File file = new File(System.getProperty("java.io.tmpdir") + File.separator + multipartFile.getOriginalFilename());
-        try {
-            multipartFile.transferTo(file);
-        } catch (IOException | IllegalStateException e) {
-            throw new IOException("Error occurred while transferring the MultipartFile to File.", e);
-        }
-        return file;
     }
 
 }

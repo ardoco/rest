@@ -1,9 +1,9 @@
 package io.github.ardoco.rest.api.controller;
 
-import io.github.ardoco.rest.api.service.ArDoCoForSadCodeTLRService;
 import io.github.ardoco.rest.api.service.RunnerTLRService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +16,12 @@ import java.util.TreeMap;
 @RestController
 public class ArDoCoForSadCodeTLRController {
 
-    private final RunnerTLRService sadSamCodeTLRService;
+    private final RunnerTLRService runnerTLRService;
 
     private static final Logger logger = LogManager.getLogger(ArDoCoForSadCodeTLRController.class);
 
-    public ArDoCoForSadCodeTLRController(ArDoCoForSadCodeTLRService sadSamCodeTLRService) {
-        this.sadSamCodeTLRService = sadSamCodeTLRService;
+    public ArDoCoForSadCodeTLRController(@Qualifier("sadCodeTLRService") RunnerTLRService runnerTLRService) {
+        this.runnerTLRService = runnerTLRService;
     }
 
 
@@ -30,7 +30,7 @@ public class ArDoCoForSadCodeTLRController {
         try {
             //right now: no additional configs, they can later be added to the mapping as parameter.
             SortedMap<String, String> additionalConfigs = new TreeMap<>();
-            String unique_id = sadSamCodeTLRService.runPipeline(projectName, inputText, inputCode, additionalConfigs);
+            String unique_id = runnerTLRService.runPipeline(projectName, inputText, inputCode, additionalConfigs);
             return ResponseEntity.ok(unique_id);
         } catch (Exception e) {
             String message = "An error occurred while processing the files: ";
@@ -48,14 +48,11 @@ public class ArDoCoForSadCodeTLRController {
      */
     @GetMapping("/api/sad-code/{id}")
     public ResponseEntity<String> getResult(@PathVariable("id") String id) {
-        Optional<String> result = sadSamCodeTLRService.getResult(id);
+        Optional<String> result = runnerTLRService.getResult(id);
 
         if (result.isEmpty()) {
-            // If result is not ready, return a processing status
             return ResponseEntity.status(HttpStatus.ACCEPTED).body("Result is still being processed. Please try again later.");
         }
-
-        // If result is present, return it
         return ResponseEntity.ok(result.get());
     }
 
@@ -68,9 +65,8 @@ public class ArDoCoForSadCodeTLRController {
      */
     @GetMapping("/api/sad-code/wait/{id}")
     public ResponseEntity<String> waitForResult(@PathVariable("id") String id) {
-
         try {
-            String result = sadSamCodeTLRService.waitForResult(id);
+            String result = runnerTLRService.waitForResult(id);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             String message = "An error occurred while waiting for the result with ID: " + id;
@@ -93,7 +89,7 @@ public class ArDoCoForSadCodeTLRController {
         try {
             //right now: no additional configs, they can later be added to the mapping as parameter.
             SortedMap<String, String> additionalConfigs = new TreeMap<>();
-            String result = sadSamCodeTLRService.runPipelineAndWaitForResult(projectName, inputText, inputCode, additionalConfigs);
+            String result = runnerTLRService.runPipelineAndWaitForResult(projectName, inputText, inputCode, additionalConfigs);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             String message = "An error occurred while processing the project files: ";
