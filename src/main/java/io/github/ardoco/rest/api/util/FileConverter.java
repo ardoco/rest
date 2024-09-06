@@ -1,5 +1,6 @@
 package io.github.ardoco.rest.api.util;
 
+import io.github.ardoco.rest.api.exception.FileConversionException;
 import io.github.ardoco.rest.api.exception.FileNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,15 +27,19 @@ public final class FileConverter {
      * @throws IOException if an I/O error occurs reading from any of the files
      * @throws IllegalArgumentException if the provided file list is empty
      */
-    public static byte[] convertFilesToByte(List<File> files) throws IOException, IllegalArgumentException {
+    public static byte[] convertFilesToByte(List<File> files) throws FileConversionException, FileNotFoundException {
         if (files.isEmpty()) {
-            throw new IllegalArgumentException("File list is empty");
+            throw new FileNotFoundException("File list is empty");
         }
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-        for (File file : files) {
-            byte[] bytes = Files.readAllBytes(file.toPath());
-            outputStream.write(bytes);
+        try {
+            for (File file : files) {
+                byte[] bytes = Files.readAllBytes(file.toPath());
+                outputStream.write(bytes);
+            }
+        } catch (Exception e) {
+            throw new FileConversionException("Error occurred while transferring the MultipartFile to File: " + e.getMessage());
         }
         return outputStream.toByteArray( );
     }
@@ -44,20 +49,17 @@ public final class FileConverter {
      *
      * @param multipartFile the {@link MultipartFile} to convert
      * @return a {@link File} object containing the contents of the {@link MultipartFile}
-     * @throws FileNotFoundException if the provided {@link MultipartFile} is empty
-     * @throws IOException if an error occurs during the file transfer
-     * @throws Exception for any unexpected errors during file conversion
      */
-    public static File convertMultipartFileToFile(MultipartFile multipartFile) throws Exception {
+    public static File convertMultipartFileToFile(MultipartFile multipartFile) throws FileNotFoundException, FileConversionException {
         if (multipartFile.isEmpty()) {
-            throw new FileNotFoundException();
+            throw new FileNotFoundException("The file with name " + multipartFile.getOriginalFilename() + " is empty");
         }
-        File file = new File(System.getProperty("java.io.tmpdir") + File.separator + multipartFile.getOriginalFilename());
         try {
+            File file = new File(System.getProperty("java.io.tmpdir") + File.separator + multipartFile.getOriginalFilename());
             multipartFile.transferTo(file);
-        } catch (IOException | IllegalStateException e) {
-            throw new IOException("Error occurred while transferring the MultipartFile to File.", e);
+            return file;
+        } catch (Exception e) {
+            throw new FileConversionException("Error occurred while transferring the MultipartFile to File: " + e.getMessage());
         }
-        return file;
     }
 }

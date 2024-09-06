@@ -32,6 +32,11 @@ public class RedisAccessor implements DatabaseAccessor {
 
     @Override
     public boolean keyExistsInDatabase(String key) {
-        return Boolean.FALSE.equals(template.hasKey(key));
+        return Boolean.TRUE.equals(template.hasKey(key));
+    }
+
+    @Override
+    public void saveError(String id, String error) {
+        template.opsForValue().set(id, error, 24, TimeUnit.HOURS);
     }
 }

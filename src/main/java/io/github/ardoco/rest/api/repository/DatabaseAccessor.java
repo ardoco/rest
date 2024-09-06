@@ -26,4 +26,6 @@ public interface DatabaseAccessor {
      * @return true if the key exists, false otherwise
      */
     boolean keyExistsInDatabase(String key);
+
+    void saveError(String id, String errorMessage);
 }

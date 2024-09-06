@@ -1,5 +1,9 @@
 package io.github.ardoco.rest.api.util;
 
+import io.github.ardoco.rest.api.exception.FileConversionException;
+import io.github.ardoco.rest.api.exception.FileNotFoundException;
+import io.github.ardoco.rest.api.exception.HashingException;
+
 import javax.xml.bind.DatatypeConverter;
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +20,13 @@ public class HashGenerator {
      * @return The MD5 hash as a hex string.
      * @throws NoSuchAlgorithmException If MD5 algorithm is not available.
      */
-    public String getMD5HashFromFiles(List<File> files) throws NoSuchAlgorithmException, IOException, IllegalArgumentException {
-        MessageDigest messageDigest = MessageDigest.getInstance("MD5");
-
+    public String getMD5HashFromFiles(List<File> files) throws HashingException, FileNotFoundException, FileConversionException {
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException | NullPointerException e) {
+            throw new HashingException();
+        }
         byte[] filesInByte = FileConverter.convertFilesToByte(files);
         byte[] hashBytes = messageDigest.digest(filesInByte);
         String hash = DatatypeConverter.printHexBinary(hashBytes);

@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+/redis/redis.conf
+/redis/redis.env
+/.env
