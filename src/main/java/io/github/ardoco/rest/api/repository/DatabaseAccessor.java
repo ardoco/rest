@@ -28,4 +28,6 @@ public interface DatabaseAccessor {
     boolean keyExistsInDatabase(String key);
 
     void saveError(String id, String errorMessage);
+
+    boolean deleteResult(String id);
 }

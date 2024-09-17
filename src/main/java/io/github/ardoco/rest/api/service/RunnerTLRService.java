@@ -1,9 +1,11 @@
 package io.github.ardoco.rest.api.service;
 
+import io.github.ardoco.rest.api.api_response.ResultBag;
 import io.github.ardoco.rest.api.exception.ArdocoException;
 import io.github.ardoco.rest.api.exception.FileConversionException;
 import io.github.ardoco.rest.api.exception.FileNotFoundException;
 import io.github.ardoco.rest.api.exception.HashingException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
@@ -56,13 +58,13 @@ public interface RunnerTLRService {
      * @param inputText           The documentation file (text) for the project.
      * @param inputCode           The code file for the project.
      * @param additionalConfigs   Any additional configurations needed for the pipeline.
-     * @return                    The result in JSON format if available.
+     * @return                    The resultBag containing the traceLinks in JSON format if available and the projectId.
      * @throws FileNotFoundException      If the input files are not found or invalid.
      * @throws FileConversionException    If there is an error during the file conversion process.
      * @throws HashingException           If there is an error generating a hash from the input files.
      * @throws ArdocoException            If an error occurs during pipeline execution.
      */
-    String runPipelineAndWaitForResult(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs)
+    ResultBag runPipelineAndWaitForResult(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs)
             throws FileConversionException, HashingException, ArdocoException;
 
 }

@@ -27,6 +27,13 @@ public class ArdocoResultResponse {
         this.samSadTraceLinks = samSadTraceLinks;
     }
 
+    public ArdocoResultResponse(String projectId, HttpStatus status, String samSadTraceLinks, String message) {
+        this.projectId = projectId;
+        this.status = status;
+        this.samSadTraceLinks = samSadTraceLinks;
+        this.message = message;
+    }
+
     public String getProjectId() {
         return projectId;
     }

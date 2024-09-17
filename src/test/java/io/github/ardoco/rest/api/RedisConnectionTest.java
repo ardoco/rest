@@ -3,11 +3,12 @@ package io.github.ardoco.rest.api;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@DataRedisTest
+@SpringBootTest
 public class RedisConnectionTest {
 
     @Autowired

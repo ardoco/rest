@@ -39,4 +39,9 @@ public class RedisAccessor implements DatabaseAccessor {
     public void saveError(String id, String error) {
         template.opsForValue().set(id, error, 24, TimeUnit.HOURS);
     }
+
+    @Override
+    public boolean deleteResult(String id) {
+        return Boolean.TRUE.equals(template.delete(id));
+    }
 }

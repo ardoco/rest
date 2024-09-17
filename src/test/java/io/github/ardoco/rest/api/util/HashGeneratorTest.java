@@ -1,5 +1,7 @@
 package io.github.ardoco.rest.api.util;
 
+import io.github.ardoco.rest.api.exception.FileConversionException;
+import io.github.ardoco.rest.api.exception.FileNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -76,7 +78,7 @@ class HashGeneratorTest {
         // Empty file list test
         List<File> files = Collections.emptyList();
 
-        assertThrows(IllegalArgumentException.class, () -> hashGenerator.getMD5HashFromFiles(files));
+        assertThrows(FileNotFoundException.class, () -> hashGenerator.getMD5HashFromFiles(files));
     }
 
     @Test
@@ -84,7 +86,7 @@ class HashGeneratorTest {
         // Non-existing file test
         File nonExistingFile = new File("nonExistingFile.txt");
         List<File> files = Collections.singletonList(nonExistingFile);
-        assertThrows(IOException.class, () -> hashGenerator.getMD5HashFromFiles(files));
+        assertThrows(FileConversionException.class, () -> hashGenerator.getMD5HashFromFiles(files));
     }
 
     @Test

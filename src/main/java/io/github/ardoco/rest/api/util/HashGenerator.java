@@ -18,7 +18,7 @@ public class HashGenerator {
      *
      * @param files The List of Files from which one hash value should be generated
      * @return The MD5 hash as a hex string.
-     * @throws NoSuchAlgorithmException If MD5 algorithm is not available.
+     * @throws HashingException If MD5 algorithm is not available.
      */
     public String getMD5HashFromFiles(List<File> files) throws HashingException, FileNotFoundException, FileConversionException {
         MessageDigest messageDigest;

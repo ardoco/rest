@@ -9,8 +9,8 @@ import java.util.Objects;
 
 
 public class ErrorResponse {
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-    private LocalDateTime timestamp;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
+    private final LocalDateTime timestamp;
 
     private HttpStatus status;
     private String message;
@@ -75,7 +75,10 @@ public class ErrorResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ErrorResponse that = (ErrorResponse) o;
-        return Objects.equals(timestamp, that.timestamp) && status == that.status && Objects.equals(message, that.message) && Objects.equals(debugMessage, that.debugMessage);
+        return Objects.equals(timestamp, that.timestamp) &&
+                status == that.status &&
+                Objects.equals(message, that.message) &&
+                Objects.equals(debugMessage, that.debugMessage);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package io.github.ardoco.rest.api.exception;
 
+import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.ErrorResponse;
+import io.github.ardoco.rest.api.util.Messages;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,7 +27,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ApiResponse(responseCode = "422", description = "When the provided file is empty or doesn't exist", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     public ResponseEntity<ErrorResponse> handleFileNotFoundException(FileNotFoundException ex) {
         logger.error(ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "File not found", ex);
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, Messages.FILE_NOT_FOUND, ex);
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -33,7 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ApiResponse(responseCode = "422", description = "When the provided file cannot be converted", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     public ResponseEntity<ErrorResponse> handleFileConversionException(FileConversionException ex) {
         logger.error(ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "File not convertable", ex);
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, Messages.FILE_NOT_CONVERTABLE, ex);
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -62,9 +64,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ApiResponse(responseCode = "422", description = "One of the Provided Argument is invalid.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(FileNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
         logger.error(ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, "The provided argument is invalid.", ex);
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage(), ex);
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    @ExceptionHandler(TimeoutException.class)
+    @ApiResponse(responseCode = "408", description = "The request timed out before the result could be retrieved.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    public ResponseEntity<ArdocoResultResponse> handleTimeoutException(TimeoutException ex) {
+        logger.error(ex);
+        ArdocoResultResponse error = new ArdocoResultResponse(ex.getId(), HttpStatus.REQUEST_TIMEOUT, ex.getMessage());
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -75,9 +85,4 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, error.getStatus());
     }
 
-    //    @ExceptionHandler(TimeoutException.class)
-//    public ResponseEntity<String> handleTimeoutException(TimeoutException ex) {
-//        // Handle custom timeout exception
-//        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("Request timed out. ID: " + ex.getId());
-//    }
 }

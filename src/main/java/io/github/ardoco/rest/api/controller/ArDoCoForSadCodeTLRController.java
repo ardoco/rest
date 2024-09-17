@@ -1,11 +1,13 @@
 package io.github.ardoco.rest.api.controller;
 
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
+import io.github.ardoco.rest.api.api_response.ResultBag;
 import io.github.ardoco.rest.api.exception.ArdocoException;
 import io.github.ardoco.rest.api.exception.FileConversionException;
 import io.github.ardoco.rest.api.exception.FileNotFoundException;
 import io.github.ardoco.rest.api.exception.HashingException;
 import io.github.ardoco.rest.api.service.RunnerTLRService;
+import io.github.ardoco.rest.api.util.Messages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,9 +21,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.http.HttpTimeoutException;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.TimeoutException;
 
 import org.springframework.http.MediaType;
 
@@ -54,7 +58,7 @@ public class ArDoCoForSadCodeTLRController {
         SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
         String projectId = runnerTLRService.runPipeline(projectName, inputText, inputCode, additionalConfigs);
 
-        ArdocoResultResponse response = new ArdocoResultResponse(projectId, HttpStatus.OK);
+        ArdocoResultResponse response = new ArdocoResultResponse(projectId, HttpStatus.OK, Messages.RESULT_IS_BEING_PROCESSED);
         return new ResponseEntity<>(response, response.getStatus());
     }
 
@@ -77,9 +81,9 @@ public class ArDoCoForSadCodeTLRController {
         Optional<String> result = runnerTLRService.getResult(id);
         ArdocoResultResponse response;
         if (result.isEmpty()) {
-            response = new ArdocoResultResponse(id, HttpStatus.ACCEPTED, "Result is still being processed. Please try again later.");
+            response = new ArdocoResultResponse(id, HttpStatus.ACCEPTED, Messages.RESULT_NOT_READY);
         } else {
-            response = new ArdocoResultResponse(HttpStatus.OK, result.get());
+            response = new ArdocoResultResponse(id, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
         }
         return new ResponseEntity<>(response, response.getStatus());
     }
@@ -100,7 +104,7 @@ public class ArDoCoForSadCodeTLRController {
             throws ArdocoException, InterruptedException, IllegalArgumentException {
 
         String result = runnerTLRService.waitForResult(id);
-        ArdocoResultResponse response = new ArdocoResultResponse(HttpStatus.OK, result);
+        ArdocoResultResponse response = new ArdocoResultResponse(id, HttpStatus.OK, result, Messages.RESULT_IS_READY);
         return new ResponseEntity<>(response, response.getStatus());
     }
 
@@ -118,12 +122,14 @@ public class ArDoCoForSadCodeTLRController {
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
             @Parameter(description = "The documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
-            throws FileConversionException, HashingException, ArdocoException {
+            throws FileConversionException, HashingException, ArdocoException, InterruptedException {
+        {
+            SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
+            ResultBag result = runnerTLRService.runPipelineAndWaitForResult(projectName, inputText, inputCode, additionalConfigs);
+            ArdocoResultResponse response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
+            return new ResponseEntity<>(response, response.getStatus());
+        }
 
-        SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
-        String result = runnerTLRService.runPipelineAndWaitForResult(projectName, inputText, inputCode, additionalConfigs);
-        ArdocoResultResponse response = new ArdocoResultResponse(HttpStatus.OK, result);
-        return new ResponseEntity<>(response, response.getStatus());
     }
 
 }
