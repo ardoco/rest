@@ -14,7 +14,6 @@
     <artifactId>parent-rest</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
-
     <name>ArDoCo-REST</name>
     <description>The goal of this project is to provide a REST API for the ArDoCo runners</description>
 
@@ -22,6 +21,20 @@
         <java.version>21</java.version>
         <springboot.version>3.3.3</springboot.version> <!-- Centralized Spring Boot version -->
     </properties>
+
+    <!-- Repositories section for snapshot versions -->
+    <repositories>
+        <repository>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <id>mavenSnapshot</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
 
     <!-- Spring Boot Dependency Management -->
     <dependencyManagement>
@@ -71,24 +84,24 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Jedis Redis Client  https://mvnrepository.com/artifact/redis.clients/jedis -->
+        <!-- Jedis Redis Client  -->
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>5.1.5</version>
         </dependency>
 
-        <!-- dependencies for ArDoCo -->
+        <!-- Latest ArDoCo dependencies using snapshot versions -->
         <dependency>
             <groupId>io.github.ardoco.core</groupId>
             <artifactId>common</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version> <!-- Use the latest snapshot version -->
         </dependency>
 
         <dependency>
             <groupId>io.github.ardoco.tlr</groupId>
             <artifactId>pipeline-tlr</artifactId>
-            <version>1.0.0</version>
+            <version>1.1.0-SNAPSHOT</version> <!-- Use the latest snapshot version -->
         </dependency>
 
         <!-- Log4j for logging -->
@@ -98,21 +111,12 @@
             <version>2.23.1</version>
         </dependency>
 
-        <!-- swagger integration to visualize/ test endpoints -->
+        <!-- swagger integration to visualize/test endpoints -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.6.0</version>
         </dependency>
-
-        <!-- Testcontainers -->
-<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.testcontainers/testcontainers &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.testcontainers</groupId>-->
-<!--            <artifactId>testcontainers</artifactId>-->
-<!--            <version>1.20.1</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
 
         <!-- Testcontainers JUnit Jupiter -->
         <dependency>
@@ -128,7 +132,6 @@
             <version>1.4.6</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -139,5 +142,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
