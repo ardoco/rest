@@ -1,3 +1,11 @@
+# API
+### Useful links:
+System health check: http://localhost:8080/actuator/health
+
+Swagger UI with API endpoints: http://localhost:8080/swagger-ui/index.htm
+
+Redis insight: http://localhost:5540/
+
 
 # Main Architecture Decisions of the REST API
 
