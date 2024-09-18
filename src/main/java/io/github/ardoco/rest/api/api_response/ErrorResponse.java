@@ -14,7 +14,6 @@ public class ErrorResponse {
 
     private HttpStatus status;
     private String message;
-    private String debugMessage;
 
 
     public ErrorResponse() {
@@ -24,20 +23,13 @@ public class ErrorResponse {
     public ErrorResponse(HttpStatus status) {
         this();
         this.status = status;
-    }
-
-    public ErrorResponse(HttpStatus status, Throwable ex) {
-        this();
-        this.status = status;
         this.message = "Unexpected error";
-        this.debugMessage = ex.getLocalizedMessage();
     }
 
-    public ErrorResponse(HttpStatus status, String message, Throwable ex) {
+    public ErrorResponse(HttpStatus status, String message) {
         this();
         this.status = status;
         this.message = message;
-        this.debugMessage = ex.getLocalizedMessage();
     }
 
     public LocalDateTime getTimestamp() {
@@ -61,14 +53,6 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    public String getDebugMessage() {
-        return debugMessage;
-    }
-
-    public void setDebugMessage(String debugMessage) {
-        this.debugMessage = debugMessage;
-    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -77,12 +61,11 @@ public class ErrorResponse {
         ErrorResponse that = (ErrorResponse) o;
         return Objects.equals(timestamp, that.timestamp) &&
                 status == that.status &&
-                Objects.equals(message, that.message) &&
-                Objects.equals(debugMessage, that.debugMessage);
+                Objects.equals(message, that.message);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, status, message, debugMessage);
+        return Objects.hash(timestamp, status, message);
     }
 }

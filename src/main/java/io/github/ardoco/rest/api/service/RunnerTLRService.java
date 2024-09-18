@@ -1,10 +1,7 @@
 package io.github.ardoco.rest.api.service;
 
 import io.github.ardoco.rest.api.api_response.ResultBag;
-import io.github.ardoco.rest.api.exception.ArdocoException;
-import io.github.ardoco.rest.api.exception.FileConversionException;
-import io.github.ardoco.rest.api.exception.FileNotFoundException;
-import io.github.ardoco.rest.api.exception.HashingException;
+import io.github.ardoco.rest.api.exception.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +22,7 @@ public interface RunnerTLRService {
      * @throws FileConversionException    If there is an error during the file conversion process.
      * @throws HashingException           If there is an error generating a hash from the input files.
      */
-    String runPipeline(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs)
+    ResultBag runPipeline(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs)
             throws FileNotFoundException, FileConversionException, HashingException;
 
     /**
@@ -49,7 +46,7 @@ public interface RunnerTLRService {
      * @throws InterruptedException      If the current thread is interrupted while waiting.
      * @throws IllegalArgumentException  If the provided ID does not exist in the database.
      */
-    String waitForResult(String id) throws ArdocoException, InterruptedException, IllegalArgumentException;
+    String waitForResult(String id) throws ArdocoException, InterruptedException, IllegalArgumentException, TimeoutException;
 
     /**
      * Synchronously runs the trace link recovery pipeline and waits for the result.
@@ -65,6 +62,6 @@ public interface RunnerTLRService {
      * @throws ArdocoException            If an error occurs during pipeline execution.
      */
     ResultBag runPipelineAndWaitForResult(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs)
-            throws FileConversionException, HashingException, ArdocoException;
+            throws FileConversionException, HashingException, ArdocoException, TimeoutException;
 
 }

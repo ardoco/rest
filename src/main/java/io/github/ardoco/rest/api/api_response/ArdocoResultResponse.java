@@ -1,6 +1,8 @@
 package io.github.ardoco.rest.api.api_response;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.github.ardoco.rest.api.util.ArdocoResultResponseDeserializer;
 import org.springframework.http.HttpStatus;
 
 
@@ -10,6 +12,7 @@ public class ArdocoResultResponse {
     private String message;
 
     @JsonRawValue
+    //@JsonDeserialize(using = ArdocoResultResponseDeserializer.class)
     private String samSadTraceLinks;
 
     public ArdocoResultResponse() {}

@@ -8,18 +8,18 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./data:/data  # Persist Redis data to the ./data directory on the host
+      - ./data:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf  # Use a custom redis.conf for configuration
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]  # Start Redis with the custom configuration
 
   redisinsight:
-    image: redis/redisinsight:2.54 # RedisInsight image for visualizing and managing Redis
+    image: redis/redisinsight:2.54
     container_name: redisinsight
     restart: always
     ports:
       - '5540:5540'
     depends_on:
-      - redis # Ensure Redis is started before RedisInsight
+      - redis
     volumes:
       - redisinsight:/db
 

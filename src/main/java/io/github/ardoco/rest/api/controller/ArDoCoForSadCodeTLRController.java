@@ -2,10 +2,7 @@ package io.github.ardoco.rest.api.controller;
 
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.ResultBag;
-import io.github.ardoco.rest.api.exception.ArdocoException;
-import io.github.ardoco.rest.api.exception.FileConversionException;
-import io.github.ardoco.rest.api.exception.FileNotFoundException;
-import io.github.ardoco.rest.api.exception.HashingException;
+import io.github.ardoco.rest.api.exception.*;
 import io.github.ardoco.rest.api.service.RunnerTLRService;
 import io.github.ardoco.rest.api.util.Messages;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,12 +22,10 @@ import java.net.http.HttpTimeoutException;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.concurrent.TimeoutException;
 
 import org.springframework.http.MediaType;
 
 @RestController
-// @Tag(name = "ArDoCo Sad-Sam-TLR", description = "API for managing ArDoCo Sad Sam Trace Link Recovery")
 public class ArDoCoForSadCodeTLRController {
 
     private final RunnerTLRService runnerTLRService;
@@ -56,9 +51,13 @@ public class ArDoCoForSadCodeTLRController {
             throws FileNotFoundException, FileConversionException, HashingException {
 
         SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
-        String projectId = runnerTLRService.runPipeline(projectName, inputText, inputCode, additionalConfigs);
-
-        ArdocoResultResponse response = new ArdocoResultResponse(projectId, HttpStatus.OK, Messages.RESULT_IS_BEING_PROCESSED);
+        ResultBag result = runnerTLRService.runPipeline(projectName, inputText, inputCode, additionalConfigs);
+        ArdocoResultResponse response;
+        if (result.traceLinks() != null) {
+            response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
+        } else {
+            response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, Messages.RESULT_IS_BEING_PROCESSED);
+        }
         return new ResponseEntity<>(response, response.getStatus());
     }
 
@@ -101,10 +100,15 @@ public class ArDoCoForSadCodeTLRController {
     @GetMapping("/api/sad-code/wait/{id}")
     public ResponseEntity<ArdocoResultResponse> waitForResult(
             @Parameter(description = "The ID of the result to query", required = true) @PathVariable("id") String id)
-            throws ArdocoException, InterruptedException, IllegalArgumentException {
+            throws ArdocoException, InterruptedException, IllegalArgumentException, TimeoutException {
 
-        String result = runnerTLRService.waitForResult(id);
-        ArdocoResultResponse response = new ArdocoResultResponse(id, HttpStatus.OK, result, Messages.RESULT_IS_READY);
+        ArdocoResultResponse response;
+        try {
+            String result = runnerTLRService.waitForResult(id);
+            response = new ArdocoResultResponse(id, HttpStatus.OK, result, Messages.RESULT_IS_READY);
+        } catch (TimeoutException e) {
+            response = new ArdocoResultResponse(id, HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT);
+        }
         return new ResponseEntity<>(response, response.getStatus());
     }
 
@@ -122,14 +126,19 @@ public class ArDoCoForSadCodeTLRController {
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
             @Parameter(description = "The documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
-            throws FileConversionException, HashingException, ArdocoException, InterruptedException {
+            throws FileConversionException, HashingException, ArdocoException, TimeoutException {
         {
             SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
-            ResultBag result = runnerTLRService.runPipelineAndWaitForResult(projectName, inputText, inputCode, additionalConfigs);
-            ArdocoResultResponse response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
+            ArdocoResultResponse response;
+            try {
+                ResultBag result = runnerTLRService.runPipelineAndWaitForResult(projectName, inputText, inputCode, additionalConfigs);
+                response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
+            } catch (TimeoutException e) {
+                response = new ArdocoResultResponse(e.getId(), HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT_START_AND_WAIT);
+            }
             return new ResponseEntity<>(response, response.getStatus());
         }
-
     }
+
 
 }

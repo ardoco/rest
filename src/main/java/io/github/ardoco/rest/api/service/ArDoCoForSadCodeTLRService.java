@@ -18,7 +18,6 @@ import io.github.ardoco.rest.api.util.TraceLinkConverter;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +32,7 @@ public class ArDoCoForSadCodeTLRService implements RunnerTLRService {
 
     private static final String STRING_KEY_PREFIX = "SadCodeResult:";
     private static final String ERROR_PREFIX = "Error: ";
+    private static final int SECONDS_UNTIL_TIMEOUT = 60;
 
     /** Map to track the progress of async tasks*/
     private final ConcurrentHashMap<String, CompletableFuture<String>> asyncTasks = new ConcurrentHashMap<>();
@@ -50,14 +50,15 @@ public class ArDoCoForSadCodeTLRService implements RunnerTLRService {
     }
 
     @Override
-    public String runPipeline(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs)
+    public ResultBag runPipeline(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs)
             throws FileNotFoundException, FileConversionException, HashingException {
         File inputTextFile = FileConverter.convertMultipartFileToFile(inputText);
         File inputCodeFile = FileConverter.convertMultipartFileToFile(inputCode);
         File outputDir = Files.createTempDir();
         String id = generateHashFromFiles(List.of(inputCodeFile, inputTextFile), projectName);
 
-        if (!databaseAccessor.keyExistsInDatabase(id)) {
+        if (!resultIsInDatabase(id) && !resultIsOnItsWay(id)) {
+            logger.log(Level.INFO, "Start new samSadTLR for: " + id);
             CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
                 try {
                     return runPipelineAsync(id, projectName, inputTextFile, inputCodeFile, outputDir, additionalConfigs);
@@ -67,16 +68,21 @@ public class ArDoCoForSadCodeTLRService implements RunnerTLRService {
                 }
             });
             asyncTasks.put(id, future);
+        } else if (resultIsInDatabase(id)){
+            return new ResultBag(id, databaseAccessor.getResult(id));
         }
-        return id;
+
+        return new ResultBag(id, null);
     }
 
     @Override
     public Optional<String> getResult(String id) throws ArdocoException, IllegalArgumentException {
-        if (asyncTasks.containsKey(id)) {
+        if (resultIsOnItsWay(id)) {
+            logger.log(Level.INFO, "Result is not yet available for " + id);
             return Optional.empty();
         }
-        if (!databaseAccessor.keyExistsInDatabase(id)) {
+
+        if (!resultIsInDatabase(id)) {
             throw new IllegalArgumentException(Messages.noResultForKey(id));
         }
 
@@ -84,22 +90,27 @@ public class ArDoCoForSadCodeTLRService implements RunnerTLRService {
         if (result == null || result.startsWith(ERROR_PREFIX)) {
             throw new ArdocoException(result);
         }
+        logger.log(Level.INFO, "Result is available for " + id);
         return Optional.of(result);
     }
 
     @Override
-    public String waitForResult(String id) throws ArdocoException, InterruptedException, IllegalArgumentException {
-        if (asyncTasks.containsKey(id)) {
+    public String waitForResult(String id)
+            throws ArdocoException, InterruptedException, IllegalArgumentException, io.github.ardoco.rest.api.exception.TimeoutException {
+
+        if (resultIsOnItsWay(id)) {
             try {
-                asyncTasks.get(id).get(60, TimeUnit.SECONDS);
+                logger.log(Level.INFO, "Waiting for the result of " + id);
+                return asyncTasks.get(id).get(SECONDS_UNTIL_TIMEOUT, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
+                logger.log(Level.INFO, "Waiting for " + id + " took too long...");
                 throw new io.github.ardoco.rest.api.exception.TimeoutException(id);
             } catch (ExecutionException e) {
                 throw new ArdocoException(e.getMessage());
             }
         }
 
-        if (!databaseAccessor.keyExistsInDatabase(id)) {
+        if (!resultIsInDatabase(id)) {
             throw new IllegalArgumentException(Messages.noResultForKey(id));
         }
 
@@ -107,34 +118,37 @@ public class ArDoCoForSadCodeTLRService implements RunnerTLRService {
         if (result == null || result.startsWith(ERROR_PREFIX)) {
             throw new ArdocoException(result);
         }
-
+        logger.log(Level.INFO, "Result is available for " + id);
         return result;
     }
 
     @Override
     public ResultBag runPipelineAndWaitForResult(String projectName, MultipartFile inputText, MultipartFile inputCode, SortedMap<String, String> additionalConfigs)
-            throws FileNotFoundException, FileConversionException, HashingException, ArdocoException {
+            throws FileNotFoundException, FileConversionException, HashingException, ArdocoException, io.github.ardoco.rest.api.exception.TimeoutException {
         File inputTextFile = FileConverter.convertMultipartFileToFile(inputText);
         File inputCodeFile = FileConverter.convertMultipartFileToFile(inputCode);
         File outputDir = Files.createTempDir();
         String id = generateHashFromFiles(List.of(inputCodeFile, inputTextFile), projectName);
 
-        if (!databaseAccessor.keyExistsInDatabase(id)) {
-            CompletableFuture<String> future = CompletableFuture.supplyAsync(() ->
-                    runPipelineAsync(id, projectName, inputTextFile, inputCodeFile, outputDir, additionalConfigs)
-            );
-            asyncTasks.put(id, future);
+        if (!resultIsInDatabase(id)) {
+            if (!resultIsOnItsWay(id)) {
+                logger.log(Level.INFO, "Start new samSadTLR for: " + id);
+                CompletableFuture<String> future = CompletableFuture.supplyAsync(() ->
+                        runPipelineAsync(id, projectName, inputTextFile, inputCodeFile, outputDir, additionalConfigs)
+                );
+                asyncTasks.put(id, future);
+            }
 
             try {
-                return new ResultBag(id, future.get(60, TimeUnit.SECONDS));
+                logger.log(Level.INFO, "Waiting for the result of " + id);
+                return new ResultBag(id, asyncTasks.get(id).get(SECONDS_UNTIL_TIMEOUT, TimeUnit.SECONDS));
             } catch (InterruptedException | ExecutionException e) {
-                logger.error("Error while executing async pipeline for ID {}: {}", id, e.getMessage());
                 throw new ArdocoException(e.getCause().getMessage());
             } catch (TimeoutException e) {
                 throw new io.github.ardoco.rest.api.exception.TimeoutException(id);
             }
         }
-
+        logger.log(Level.INFO, "Result is available for " + id);
         return new ResultBag(id, databaseAccessor.getResult(id));
     }
 
@@ -175,6 +189,14 @@ public class ArDoCoForSadCodeTLRService implements RunnerTLRService {
             inputTextFile.delete();
         }
         return traceLinkJson;
+    }
+
+    private boolean resultIsOnItsWay(String id) {
+        return asyncTasks.containsKey(id);
+    }
+
+    private boolean resultIsInDatabase(String id) {
+        return databaseAccessor.keyExistsInDatabase(id);
     }
 
 }

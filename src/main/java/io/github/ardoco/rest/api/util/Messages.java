@@ -23,7 +23,9 @@ public final class Messages {
 
     public static final String INVALID_ARGUMENT = "The provided argument is invalid.";
 
-    public static final String REQUEST_TIMED_OUT = "The request timed out before the traceLinks could be retrieved. Please try again using the id.";
+    public static final String REQUEST_TIMED_OUT = "The request timed out before the traceLinks could be retrieved. Please try again using the projectId.";
+
+    public static final String REQUEST_TIMED_OUT_START_AND_WAIT = "The request timed out before the traceLinks could be retrieved. Please try querying only the result using the projectId.";
 
     public static String noResultForKey(String id) {
         return "No result with key " + id + " found.";

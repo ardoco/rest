@@ -1,11 +1,13 @@
 package io.github.ardoco.rest.api.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.ardoco.rest.ArDoCoRestApplication;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.ErrorResponse;
 import io.github.ardoco.rest.api.repository.RedisAccessor;
 import io.github.ardoco.rest.api.util.Messages;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.Test;
@@ -14,10 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.testcontainers.containers.GenericContainer;
@@ -32,9 +31,6 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.springframework.boot.test.web.client.TestRestTemplate;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 
 @Testcontainers
 @SpringBootTest(
@@ -63,33 +59,23 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
      * ******************************
      */
     @Test
-    void shouldGetId() {
-        // "/api/sad-code/start"
-        LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
-        parameters.add("projectName", "bigBlueButton");
-        parameters.add("inputText", new org.springframework.core.io.ClassPathResource("bigBlueButton/bigbluebutton.txt"));
-        parameters.add("inputCode", new org.springframework.core.io.ClassPathResource("bigBlueButton/codeModel.acm"));
+    void shouldGetId() throws JsonProcessingException {
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
-
-        ResponseEntity<ArdocoResultResponse> responseEntity = restTemplate.exchange(
-                "/api/sad-code/start",
-                HttpMethod.POST,
-                requestEntity,
-                ArdocoResultResponse.class
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                "/api/sad-code/start", HttpMethod.POST, requestEntity, String.class
         );
 
         assertNotNull(responseEntity.getBody());
-        assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
+        ArdocoResultResponse response = parseResponseEntityToArdocoResponse(responseEntity);
 
-        ArdocoResultResponse response = responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(response.getProjectId());
         assertEquals(response.getMessage(), Messages.RESULT_IS_BEING_PROCESSED, "Expected: " + Messages.RESULT_IS_BEING_PROCESSED + ", but was: " + response.getMessage());
         assertEquals(responseEntity.getStatusCode(), response.getStatus());
         assertNull(response.getSamSadTraceLinks());
+        redisAccessor.deleteResult(response.getProjectId());
     }
 
     @Test
@@ -105,10 +91,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
 
         ResponseEntity<ErrorResponse> responseEntity = restTemplate.exchange(
-                "/api/sad-code/start",
-                HttpMethod.POST,
-                requestEntity,
-                ErrorResponse.class
+                "/api/sad-code/start", HttpMethod.POST, requestEntity, ErrorResponse.class
         );
 
         assertEquals(responseEntity.getStatusCode(), HttpStatus.UNPROCESSABLE_ENTITY); // 422 for file not found
@@ -118,7 +101,6 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
         assertEquals(response.getMessage(), Messages.FILE_NOT_FOUND, "Expected: " + Messages.RESULT_IS_BEING_PROCESSED + ", but was: " + response.getMessage());
         assertEquals(responseEntity.getStatusCode(), response.getStatus());
         assertNotNull(response.getTimestamp());
-        System.out.println(response.getDebugMessage());
     }
 
     @Test
@@ -137,10 +119,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
 
         ResponseEntity<ErrorResponse> responseEntity = restTemplate.exchange(
-                "/api/sad-code/start",
-                HttpMethod.POST,
-                requestEntity,
-                ErrorResponse.class
+                "/api/sad-code/start", HttpMethod.POST, requestEntity, ErrorResponse.class
         );
 
         assertEquals(responseEntity.getStatusCode(), HttpStatus.UNPROCESSABLE_ENTITY); // 422 for file not found
@@ -150,7 +129,6 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
         assertEquals(response.getMessage(), Messages.FILE_NOT_FOUND, "Expected: " + Messages.RESULT_IS_BEING_PROCESSED + ", but was: " + response.getMessage());
         assertEquals(responseEntity.getStatusCode(), response.getStatus());
         assertNotNull(response.getTimestamp());
-        System.out.println(response.getDebugMessage());
     }
 
     /*
@@ -163,70 +141,108 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
 
     @Test
     void shouldGetResultNotReady() throws IOException, InterruptedException {
-        // Step 1: Start the pipeline and get the id
-        LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("projectName", "bigBlueButton");
-        parameters.add("inputText", new org.springframework.core.io.ClassPathResource("bigBlueButton/bigbluebutton.txt"));
-        parameters.add("inputCode", new org.springframework.core.io.ClassPathResource("bigBlueButton/codeModel.acm"));
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
-
-        ResponseEntity<ArdocoResultResponse> responseEntity = restTemplate.exchange(
-                "/api/sad-code/start",
-                HttpMethod.POST,
-                requestEntity,
-                ArdocoResultResponse.class
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                "/api/sad-code/start", HttpMethod.POST, requestEntity, String.class
         );
 
         assertNotNull(responseEntity.getBody());
+        ArdocoResultResponse response = parseResponseEntityToArdocoResponse(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        ArdocoResultResponse response = responseEntity.getBody();
-        assertNotNull(response.getProjectId());
-        String id = response.getProjectId();
+        String projectId = response.getProjectId();
 
-        // Step 2: Polling the result (expected to be not ready initially)
-        int maxRetries = 1000;
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < maxRetries; i++) {
-            responseEntity = restTemplate.getForEntity("/api/sad-code/{id}", ArdocoResultResponse.class, id);
+        ResponseEntity<String> resultResponseEntity;
+        do {
+            TimeUnit.SECONDS.sleep(1);
+            resultResponseEntity = restTemplate.getForEntity("/api/sad-code/{id}", String.class, projectId);
+            ArdocoResultResponse waitingResult = parseResponseEntityToArdocoResponse(resultResponseEntity);
 
-            if (responseEntity.getStatusCode() == HttpStatus.ACCEPTED) {
-                ArdocoResultResponse resultResponse = responseEntity.getBody();
-                assertNotNull(resultResponse);
-                assertEquals(id, resultResponse.getProjectId());
-                assertEquals(Messages.RESULT_NOT_READY, resultResponse.getMessage());
-                assertNull(resultResponse.getSamSadTraceLinks());
-            } else if (responseEntity.getStatusCode() == HttpStatus.OK) {
-                long estimatedTime = System.currentTimeMillis() - startTime;
-                long minutes = TimeUnit.MILLISECONDS.toMinutes(estimatedTime);
-                long seconds = TimeUnit.MILLISECONDS.toSeconds(estimatedTime) - TimeUnit.MINUTES.toSeconds(minutes);
-                logger.log(Level.INFO, "Time passed to retrieve result: " + minutes + " min " + seconds + " s.");
+            if (HttpStatus.ACCEPTED == resultResponseEntity.getStatusCode()) {
+                assertSame( HttpStatus.ACCEPTED, resultResponseEntity.getStatusCode());
+                assertNotNull(waitingResult);
+                assertNull(waitingResult.getSamSadTraceLinks());
+                assertEquals(Messages.RESULT_NOT_READY, waitingResult.getMessage());
+                assertEquals(waitingResult.getStatus(), resultResponseEntity.getStatusCode());
+                assertEquals(projectId, waitingResult.getProjectId());
+                assertNotNull(response.getProjectId());
 
+            } else if (HttpStatus.OK == resultResponseEntity.getStatusCode()) {
                 assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-                ArdocoResultResponse finalResponse = responseEntity.getBody();
-                assertNotNull(finalResponse);
-                assertNotNull(finalResponse.getSamSadTraceLinks());
-                assertEquals(Messages.RESULT_IS_READY, finalResponse.getMessage());
-                assertEquals(finalResponse.getStatus(), responseEntity.getStatusCode());
+                assertNotNull(waitingResult.getStatus());  // Should not be null at this point
+                assertEquals(Messages.RESULT_IS_READY, waitingResult.getMessage());
+                assertEquals(waitingResult.getStatus(), responseEntity.getStatusCode());
+                assertEquals(projectId, waitingResult.getProjectId());
 
                 // Test to retrieve already ready result again:
-                responseEntity = restTemplate.getForEntity("/api/sad-code/{id}", ArdocoResultResponse.class, id);
-                assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-                finalResponse = responseEntity.getBody();
-                assertNotNull(finalResponse);
-                assertNotNull(finalResponse.getSamSadTraceLinks());
-                assertEquals(Messages.RESULT_IS_READY, finalResponse.getMessage());
-                assertEquals(finalResponse.getStatus(), responseEntity.getStatusCode());
-                return;
+                resultResponseEntity = restTemplate.getForEntity("/api/sad-code/{id}", String.class, projectId);
+                waitingResult = parseResponseEntityToArdocoResponse(resultResponseEntity);
+                testReadyResult(waitingResult, responseEntity);
+                assertEquals(projectId, waitingResult.getProjectId());
+
+                assertTrue(redisAccessor.deleteResult(waitingResult.getProjectId()));
+            } else {
+                fail();
             }
 
-            TimeUnit.SECONDS.sleep(1);  // Wait for 1 second before retrying
-        }
-        fail("The result was not ready after " + maxRetries + " retries.");
+            TimeUnit.SECONDS.sleep(1);
+
+        } while (HttpStatus.ACCEPTED == resultResponseEntity.getStatusCode());
+    }
+
+    @Test
+    void shouldImediatlyReturnResultWhenRunPipeline() throws IOException, InterruptedException {
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                "/api/sad-code/start", HttpMethod.POST, requestEntity, String.class
+        );
+
+        assertNotNull(responseEntity.getBody());
+        ArdocoResultResponse response = parseResponseEntityToArdocoResponse(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        String projectId = response.getProjectId();
+
+        ResponseEntity<String> resultResponseEntity;
+        do {
+            TimeUnit.SECONDS.sleep(1);
+            resultResponseEntity = restTemplate.getForEntity("/api/sad-code/{id}", String.class, projectId);
+            ArdocoResultResponse waitingResult = parseResponseEntityToArdocoResponse(resultResponseEntity);
+
+            if (HttpStatus.ACCEPTED == resultResponseEntity.getStatusCode()) {
+                assertSame( HttpStatus.ACCEPTED, resultResponseEntity.getStatusCode());
+                assertNotNull(waitingResult);
+                assertNull(waitingResult.getSamSadTraceLinks());
+                assertEquals(Messages.RESULT_NOT_READY, waitingResult.getMessage());
+                assertEquals(waitingResult.getStatus(), resultResponseEntity.getStatusCode());
+                assertEquals(projectId, waitingResult.getProjectId());
+                assertNotNull(response.getProjectId());
+
+            } else if (HttpStatus.OK == resultResponseEntity.getStatusCode()) {
+                assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+                assertNotNull(waitingResult.getStatus());  // Should not be null at this point
+                assertEquals(Messages.RESULT_IS_READY, waitingResult.getMessage());
+                assertEquals(waitingResult.getStatus(), responseEntity.getStatusCode());
+                assertEquals(projectId, waitingResult.getProjectId());
+
+                // Test to retrieve already ready result again:
+                resultResponseEntity = restTemplate.exchange(
+                        "/api/sad-code/start", HttpMethod.POST, requestEntity, String.class
+                );
+                waitingResult = parseResponseEntityToArdocoResponse(resultResponseEntity);
+                testReadyResult(waitingResult, responseEntity);
+                assertEquals(projectId, waitingResult.getProjectId());
+
+                assertTrue(redisAccessor.deleteResult(waitingResult.getProjectId()));
+            } else {
+                fail();
+            }
+
+            TimeUnit.SECONDS.sleep(1);
+
+        } while (HttpStatus.ACCEPTED == resultResponseEntity.getStatusCode());
     }
 
     @Test
@@ -251,53 +267,49 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
      */
 
     @Test
-    void shouldReturnResultWhenReady() throws InterruptedException {
-        LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("projectName", "bigBlueButton");
-        parameters.add("inputText", new ClassPathResource("bigBlueButton/bigbluebutton.txt"));
-        parameters.add("inputCode", new ClassPathResource("bigBlueButton/codeModel.acm"));
+    void shouldReturnResultWhenReady() throws InterruptedException, JsonProcessingException {
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
-
-        ResponseEntity<ArdocoResultResponse> startResponse = restTemplate.exchange(
-                "/api/sad-code/start",
-                HttpMethod.POST,
-                requestEntity,
-                ArdocoResultResponse.class
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                "/api/sad-code/start", HttpMethod.POST, requestEntity, String.class
         );
 
-        assertNotNull(startResponse.getBody());
-        assertEquals(HttpStatus.OK, startResponse.getStatusCode());
+        assertNotNull(responseEntity.getBody());
+        ArdocoResultResponse response = parseResponseEntityToArdocoResponse(responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        String id = startResponse.getBody().getProjectId();
+        String projectId = response.getProjectId();
 
-        // Polling the result and waiting until it's ready
-        ResponseEntity<ArdocoResultResponse> resultResponseEntity;
-        int maxRetries = 1000;
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < maxRetries; i++) {
-            resultResponseEntity = restTemplate.getForEntity("/api/sad-code/wait/{id}", ArdocoResultResponse.class, id);
+        ResponseEntity<String> resultResponseEntity;
+        do {
+            resultResponseEntity = restTemplate.getForEntity("/api/sad-code/wait/{id}", String.class, projectId);
+            ArdocoResultResponse waitingResult = parseResponseEntityToArdocoResponse(resultResponseEntity);
 
-            if (resultResponseEntity.getStatusCode() == HttpStatus.OK) {
-                // Result is ready
-                long estimatedTime = System.currentTimeMillis() - startTime;
-                long minutes = TimeUnit.MILLISECONDS.toMinutes(estimatedTime);
-                long seconds = TimeUnit.MILLISECONDS.toSeconds(estimatedTime) - TimeUnit.MINUTES.toSeconds(minutes);
-                logger.log(Level.INFO, "Time passed to retrieve result: " + minutes + " min" + seconds + " s.");
+            if (HttpStatus.ACCEPTED == resultResponseEntity.getStatusCode()) {
+                assertSame( HttpStatus.ACCEPTED, resultResponseEntity.getStatusCode());
+                assertNotNull(waitingResult);
+                assertNull(waitingResult.getSamSadTraceLinks());
+                assertEquals(Messages.REQUEST_TIMED_OUT, waitingResult.getMessage());
+                assertEquals(waitingResult.getStatus(), resultResponseEntity.getStatusCode());
+                assertEquals(projectId, waitingResult.getProjectId());
 
-                ArdocoResultResponse resultResponse = resultResponseEntity.getBody();
-                assertNotNull(resultResponse);
-                assertNotNull(resultResponse.getSamSadTraceLinks());
-                assertEquals(Messages.RESULT_IS_READY, resultResponse.getMessage());
-                assertEquals(resultResponse.getStatus(), resultResponseEntity.getStatusCode());
-                return;
+            } else if (HttpStatus.OK == resultResponseEntity.getStatusCode()) {
+                testReadyResult(waitingResult, resultResponseEntity);
+
+                assertEquals(projectId, waitingResult.getProjectId());
+
+                // try to get the result right away again since it is ready
+                resultResponseEntity = restTemplate.getForEntity("/api/sad-code/wait/{id}", String.class, projectId);
+                waitingResult = parseResponseEntityToArdocoResponse(resultResponseEntity);
+                testReadyResult(waitingResult, resultResponseEntity);
+                assertEquals(projectId, waitingResult.getProjectId());
+                assertTrue(redisAccessor.deleteResult(waitingResult.getProjectId()));
+
+            } else {
+                fail();
             }
-            TimeUnit.SECONDS.sleep(1);  // Wait and retry until result is ready
-        }
-        fail("The result was not ready after 10 attempts");
+
+        } while (HttpStatus.ACCEPTED == resultResponseEntity.getStatusCode());
     }
 
 
@@ -310,7 +322,34 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
      */
 
     @Test
-    void shouldStartPipelineAndReturnResultWhenReady() {
+    void shouldStartPipelineAndReturnResultWhenReady() throws IOException {
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB();
+        ResponseEntity<String> responseEntity;
+
+        do {
+            responseEntity = restTemplate.exchange("/api/sad-code/start-and-wait", HttpMethod.POST, requestEntity, String.class);
+            assertNotNull(responseEntity.getBody());
+
+            ArdocoResultResponse response = parseResponseEntityToArdocoResponse(responseEntity);
+
+            if (HttpStatus.ACCEPTED == responseEntity.getStatusCode()) {
+                assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
+                assertNull(response.getSamSadTraceLinks());  // Should be null in this case
+                assertEquals(Messages.REQUEST_TIMED_OUT_START_AND_WAIT, response.getMessage());
+                assertEquals(response.getStatus(), responseEntity.getStatusCode());
+                assertNotNull(response.getProjectId());
+
+            } else {
+                testReadyResult(response, responseEntity);
+                assertTrue(redisAccessor.deleteResult(response.getProjectId()));
+            }
+
+        } while (HttpStatus.ACCEPTED == responseEntity.getStatusCode());
+    }
+
+
+
+    private HttpEntity<MultiValueMap<String, Object>> setUpRequestParamToStartPipelineBBB() {
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("projectName", "bigBlueButton");
         parameters.add("inputText", new ClassPathResource("bigBlueButton/bigbluebutton.txt"));
@@ -319,20 +358,38 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(parameters, headers);
+        return new HttpEntity<>(parameters, headers);
+    }
 
-        ResponseEntity<ArdocoResultResponse> responseEntity = restTemplate.exchange(
-                "/api/sad-code/start-and-wait",
-                HttpMethod.POST,
-                requestEntity,
-                ArdocoResultResponse.class
-        );
+    private ArdocoResultResponse parseResponseEntityToArdocoResponse(ResponseEntity<String> responseEntity) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
 
-        assertNotNull(responseEntity.getBody());
+        // Parse the response body into a JsonNode
+        JsonNode rootNode = objectMapper.readTree(responseEntity.getBody());
+
+        // extract fields
+        String projectId = rootNode.has("projectId") ? rootNode.get("projectId").asText() : null;
+        String message = rootNode.has("message") ? rootNode.get("message").asText() : null;
+        String statusString = rootNode.has("status") ? rootNode.get("status").asText() : null;
+        HttpStatus status = statusString != null ? HttpStatus.valueOf(statusString) : null;
+
+        JsonNode samSadTraceLinksNode = rootNode.get("samSadTraceLinks");
+        String samSadTraceLinks;
+        if (samSadTraceLinksNode == null || samSadTraceLinksNode.isNull()) {
+            samSadTraceLinks = null;
+        } else {
+            samSadTraceLinks = samSadTraceLinksNode.asText();
+        }
+
+        return  new ArdocoResultResponse(projectId, status, samSadTraceLinks, message);
+    }
+
+    private void testReadyResult(ArdocoResultResponse response, ResponseEntity<String> responseEntity) {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        ArdocoResultResponse response = responseEntity.getBody();
-        assertNotNull(response.getSamSadTraceLinks());
+        assertNotNull(response.getSamSadTraceLinks());  // Should not be null at this point
         assertEquals(Messages.RESULT_IS_READY, response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
+        assertNotNull(response.getProjectId());
     }
+
 }
