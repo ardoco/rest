@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
+import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ public class ArdocoResultResponseDeserializer extends StdDeserializer<ArdocoResu
         String projectId = node.has("projectId") && !node.get("projectId").isNull() ? node.get("projectId").asText() : null;
         String message = node.has("message") && !node.get("message").isNull() ? node.get("message").asText() : null;
         String statusString = node.has("status") && !node.get("status").isNull() ? node.get("status").asText() : null;
+        String traceLinkType = node.has("traceLinkType") ? node.get("traceLinkType").asText() : null;
         HttpStatus status = statusString != null ? HttpStatus.valueOf(statusString) : null;
 
         // Treat `samSadTraceLinks` as raw JSON and store it as a string
@@ -39,10 +41,11 @@ public class ArdocoResultResponseDeserializer extends StdDeserializer<ArdocoResu
 
         // Create the ArdocoResultResponse object and return it
         ArdocoResultResponse resultResponse = new ArdocoResultResponse();
-        resultResponse.setProjectId(projectId);
+        resultResponse.setRequestId(projectId);
         resultResponse.setMessage(message);
         resultResponse.setStatus(status);
         resultResponse.setTraceLinks(samSadTraceLinks);
+        resultResponse.setTraceLinkType(TraceLinkType.valueOf(traceLinkType)); //TODO idk if this is correct
 
         return resultResponse;
     }

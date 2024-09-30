@@ -2,6 +2,7 @@ package io.github.ardoco.rest.api.controller;
 
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.ResultBag;
+import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.exception.*;
 import io.github.ardoco.rest.api.service.RunnerTLRService;
 import io.github.ardoco.rest.api.util.Messages;
@@ -28,10 +29,13 @@ import org.springframework.http.MediaType;
 @RestController
 public class ArDoCoForSadCodeTLRController {
 
+    private final TraceLinkType traceLinkType;
+
     private final RunnerTLRService runnerTLRService;
 
     public ArDoCoForSadCodeTLRController(@Qualifier("sadCodeTLRService") RunnerTLRService runnerTLRService) {
         this.runnerTLRService = runnerTLRService;
+        this.traceLinkType = TraceLinkType.SAD_CODE;
     }
 
 
@@ -54,7 +58,7 @@ public class ArDoCoForSadCodeTLRController {
         ResultBag result = runnerTLRService.runPipeline(projectName, inputText, inputCode, additionalConfigs);
         ArdocoResultResponse response;
         if (result.traceLinks() != null) {
-            response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
+            response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY, traceLinkType);
         } else {
             response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, Messages.RESULT_IS_BEING_PROCESSED);
         }
@@ -82,7 +86,7 @@ public class ArDoCoForSadCodeTLRController {
         if (result.isEmpty()) {
             response = new ArdocoResultResponse(id, HttpStatus.ACCEPTED, Messages.RESULT_NOT_READY);
         } else {
-            response = new ArdocoResultResponse(id, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
+            response = new ArdocoResultResponse(id, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY, traceLinkType);
         }
         return new ResponseEntity<>(response, response.getStatus());
     }
@@ -105,7 +109,7 @@ public class ArDoCoForSadCodeTLRController {
         ArdocoResultResponse response;
         try {
             String result = runnerTLRService.waitForResult(id);
-            response = new ArdocoResultResponse(id, HttpStatus.OK, result, Messages.RESULT_IS_READY);
+            response = new ArdocoResultResponse(id, HttpStatus.OK, result, Messages.RESULT_IS_READY, traceLinkType);
         } catch (TimeoutException e) {
             response = new ArdocoResultResponse(id, HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT);
         }
@@ -132,7 +136,7 @@ public class ArDoCoForSadCodeTLRController {
             ArdocoResultResponse response;
             try {
                 ResultBag result = runnerTLRService.runPipelineAndWaitForResult(projectName, inputText, inputCode, additionalConfigs);
-                response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
+                response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY, traceLinkType);
             } catch (TimeoutException e) {
                 response = new ArdocoResultResponse(e.getId(), HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT_START_AND_WAIT);
             }

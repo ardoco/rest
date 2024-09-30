@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
+import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.util.Messages;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
@@ -39,6 +40,7 @@ public final class TestUtils {
         String projectId = rootNode.has("projectId") ? rootNode.get("projectId").asText() : null;
         String message = rootNode.has("message") ? rootNode.get("message").asText() : null;
         String statusString = rootNode.has("status") ? rootNode.get("status").asText() : null;
+        String traceLinkType = rootNode.has("traceLinkType") ? rootNode.get("traceLinkType").asText() : null;
         HttpStatus status = statusString != null ? HttpStatus.valueOf(statusString) : null;
 
         JsonNode samSadTraceLinksNode = rootNode.get("samSadTraceLinks");
@@ -49,7 +51,7 @@ public final class TestUtils {
             samSadTraceLinks = samSadTraceLinksNode.asText();
         }
 
-        return  new ArdocoResultResponse(projectId, status, samSadTraceLinks, message);
+        return  new ArdocoResultResponse(projectId, status, samSadTraceLinks, message, TraceLinkType.valueOf(traceLinkType));
     }
 
     public static void testReadyResult(ArdocoResultResponse response, ResponseEntity<String> responseEntity) {
@@ -57,6 +59,6 @@ public final class TestUtils {
         assertNotNull(response.getTraceLinks());  // Should not be null at this point
         assertEquals(Messages.RESULT_IS_READY, response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
-        assertNotNull(response.getProjectId());
+        assertNotNull(response.getRequestId());
     }
 }

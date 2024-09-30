@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.ardoco.rest.ArDoCoRestApplication;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.ErrorResponse;
+import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.repository.RedisAccessor;
 import io.github.ardoco.rest.api.util.Messages;
 import org.apache.logging.log4j.LogManager;
@@ -71,11 +72,11 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
 
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertNotNull(response.getProjectId());
+        assertNotNull(response.getRequestId());
         assertEquals(response.getMessage(), Messages.RESULT_IS_BEING_PROCESSED, "Expected: " + Messages.RESULT_IS_BEING_PROCESSED + ", but was: " + response.getMessage());
         assertEquals(responseEntity.getStatusCode(), response.getStatus());
         assertNull(response.getTraceLinks());
-        redisAccessor.deleteResult(response.getProjectId());
+        redisAccessor.deleteResult(response.getRequestId());
     }
 
     @Test
@@ -151,7 +152,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
         ArdocoResultResponse response = parseResponseEntityToArdocoResponse(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        String projectId = response.getProjectId();
+        String projectId = response.getRequestId();
 
         ResponseEntity<String> resultResponseEntity;
         do {
@@ -165,23 +166,23 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
                 assertNull(waitingResult.getTraceLinks());
                 assertEquals(Messages.RESULT_NOT_READY, waitingResult.getMessage());
                 assertEquals(waitingResult.getStatus(), resultResponseEntity.getStatusCode());
-                assertEquals(projectId, waitingResult.getProjectId());
-                assertNotNull(response.getProjectId());
+                assertEquals(projectId, waitingResult.getRequestId());
+                assertNotNull(response.getRequestId());
 
             } else if (HttpStatus.OK == resultResponseEntity.getStatusCode()) {
                 assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
                 assertNotNull(waitingResult.getStatus());  // Should not be null at this point
                 assertEquals(Messages.RESULT_IS_READY, waitingResult.getMessage());
                 assertEquals(waitingResult.getStatus(), responseEntity.getStatusCode());
-                assertEquals(projectId, waitingResult.getProjectId());
+                assertEquals(projectId, waitingResult.getRequestId());
 
                 // Test to retrieve already ready result again:
                 resultResponseEntity = restTemplate.getForEntity("/api/sad-code/{id}", String.class, projectId);
                 waitingResult = parseResponseEntityToArdocoResponse(resultResponseEntity);
                 testReadyResult(waitingResult, responseEntity);
-                assertEquals(projectId, waitingResult.getProjectId());
+                assertEquals(projectId, waitingResult.getRequestId());
 
-                assertTrue(redisAccessor.deleteResult(waitingResult.getProjectId()));
+                assertTrue(redisAccessor.deleteResult(waitingResult.getRequestId()));
             } else {
                 fail();
             }
@@ -203,7 +204,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
         ArdocoResultResponse response = parseResponseEntityToArdocoResponse(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        String projectId = response.getProjectId();
+        String projectId = response.getRequestId();
 
         ResponseEntity<String> resultResponseEntity;
         do {
@@ -217,15 +218,15 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
                 assertNull(waitingResult.getTraceLinks());
                 assertEquals(Messages.RESULT_NOT_READY, waitingResult.getMessage());
                 assertEquals(waitingResult.getStatus(), resultResponseEntity.getStatusCode());
-                assertEquals(projectId, waitingResult.getProjectId());
-                assertNotNull(response.getProjectId());
+                assertEquals(projectId, waitingResult.getRequestId());
+                assertNotNull(response.getRequestId());
 
             } else if (HttpStatus.OK == resultResponseEntity.getStatusCode()) {
                 assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
                 assertNotNull(waitingResult.getStatus());  // Should not be null at this point
                 assertEquals(Messages.RESULT_IS_READY, waitingResult.getMessage());
                 assertEquals(waitingResult.getStatus(), responseEntity.getStatusCode());
-                assertEquals(projectId, waitingResult.getProjectId());
+                assertEquals(projectId, waitingResult.getRequestId());
 
                 // Test to retrieve already ready result again:
                 resultResponseEntity = restTemplate.exchange(
@@ -233,9 +234,9 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
                 );
                 waitingResult = parseResponseEntityToArdocoResponse(resultResponseEntity);
                 testReadyResult(waitingResult, responseEntity);
-                assertEquals(projectId, waitingResult.getProjectId());
+                assertEquals(projectId, waitingResult.getRequestId());
 
-                assertTrue(redisAccessor.deleteResult(waitingResult.getProjectId()));
+                assertTrue(redisAccessor.deleteResult(waitingResult.getRequestId()));
             } else {
                 fail();
             }
@@ -278,7 +279,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
         ArdocoResultResponse response = parseResponseEntityToArdocoResponse(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        String projectId = response.getProjectId();
+        String projectId = response.getRequestId();
 
         ResponseEntity<String> resultResponseEntity;
         do {
@@ -291,19 +292,19 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
                 assertNull(waitingResult.getTraceLinks());
                 assertEquals(Messages.REQUEST_TIMED_OUT, waitingResult.getMessage());
                 assertEquals(waitingResult.getStatus(), resultResponseEntity.getStatusCode());
-                assertEquals(projectId, waitingResult.getProjectId());
+                assertEquals(projectId, waitingResult.getRequestId());
 
             } else if (HttpStatus.OK == resultResponseEntity.getStatusCode()) {
                 testReadyResult(waitingResult, resultResponseEntity);
 
-                assertEquals(projectId, waitingResult.getProjectId());
+                assertEquals(projectId, waitingResult.getRequestId());
 
                 // try to get the result right away again since it is ready
                 resultResponseEntity = restTemplate.getForEntity("/api/sad-code/wait/{id}", String.class, projectId);
                 waitingResult = parseResponseEntityToArdocoResponse(resultResponseEntity);
                 testReadyResult(waitingResult, resultResponseEntity);
-                assertEquals(projectId, waitingResult.getProjectId());
-                assertTrue(redisAccessor.deleteResult(waitingResult.getProjectId()));
+                assertEquals(projectId, waitingResult.getRequestId());
+                assertTrue(redisAccessor.deleteResult(waitingResult.getRequestId()));
 
             } else {
                 fail();
@@ -337,11 +338,11 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
                 assertNull(response.getTraceLinks());  // Should be null in this case
                 assertEquals(Messages.REQUEST_TIMED_OUT_START_AND_WAIT, response.getMessage());
                 assertEquals(response.getStatus(), responseEntity.getStatusCode());
-                assertNotNull(response.getProjectId());
+                assertNotNull(response.getRequestId());
 
             } else {
                 testReadyResult(response, responseEntity);
-                assertTrue(redisAccessor.deleteResult(response.getProjectId()));
+                assertTrue(redisAccessor.deleteResult(response.getRequestId()));
             }
 
         } while (HttpStatus.ACCEPTED == responseEntity.getStatusCode());
@@ -371,6 +372,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
         String projectId = rootNode.has("projectId") ? rootNode.get("projectId").asText() : null;
         String message = rootNode.has("message") ? rootNode.get("message").asText() : null;
         String statusString = rootNode.has("status") ? rootNode.get("status").asText() : null;
+        String traceLinkType = rootNode.has("traceLinkType") ? rootNode.get("traceLinkType").asText() : null;
         HttpStatus status = statusString != null ? HttpStatus.valueOf(statusString) : null;
 
         JsonNode samSadTraceLinksNode = rootNode.get("samSadTraceLinks");
@@ -381,7 +383,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
             samSadTraceLinks = samSadTraceLinksNode.asText();
         }
 
-        return  new ArdocoResultResponse(projectId, status, samSadTraceLinks, message);
+        return  new ArdocoResultResponse(projectId, status, samSadTraceLinks, message, TraceLinkType.valueOf(traceLinkType));
     }
 
     private void testReadyResult(ArdocoResultResponse response, ResponseEntity<String> responseEntity) {
@@ -389,7 +391,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
         assertNotNull(response.getTraceLinks());  // Should not be null at this point
         assertEquals(Messages.RESULT_IS_READY, response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
-        assertNotNull(response.getProjectId());
+        assertNotNull(response.getRequestId());
     }
 
 }

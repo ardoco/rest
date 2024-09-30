@@ -1,31 +1,34 @@
 package io.github.ardoco.rest.api.controller;
 
+import com.github.jsonldjava.shaded.com.google.common.io.Files;
 import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
+import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSamCodeTraceabilityLinkRecovery;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.ResultBag;
+import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.exception.*;
-import io.github.ardoco.rest.api.service.ArDoCoForSamCodeTLRService;
-import io.github.ardoco.rest.api.service.RunnerTLRService;
-import io.github.ardoco.rest.api.util.Messages;
+import io.github.ardoco.rest.api.service.AbstractRunnerTLRService;
+import io.github.ardoco.rest.api.util.FileConverter;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.io.File;
+import java.util.*;
 
 @RestController
-public class ArDoCoForSamCodeTLRController {
+public class ArDoCoForSamCodeTLRController extends AbstractController {
 
-    private ArDoCoForSamCodeTLRService service;
+    private static final Logger logger = LogManager.getLogger(ArDoCoForSamCodeTLRController.class);
 
-    public ArDoCoForSamCodeTLRController(ArDoCoForSamCodeTLRService service) {
-        this.service = service;
+    public ArDoCoForSamCodeTLRController(@Qualifier("samCodeTLRService") AbstractRunnerTLRService service) {
+        super(service, TraceLinkType.SAM_CODE);
     }
 
 
@@ -37,15 +40,13 @@ public class ArDoCoForSamCodeTLRController {
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
             throws FileNotFoundException, FileConversionException, HashingException {
 
-        SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
-        ResultBag result = service.runPipeline(projectName, inputCode, inputArchitectureModel, architectureModelType, additionalConfigs);
-        ArdocoResultResponse response;
-        if (result.traceLinks() != null) {
-            response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
-        } else {
-            response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, Messages.RESULT_IS_BEING_PROCESSED);
-        }
-        return new ResponseEntity<>(response, response.getStatus());
+        Map<String, File> inputFileMap = convertInputFilesHelper(inputCode, inputArchitectureModel);
+        List <File> inputFiles = new ArrayList<>(inputFileMap.values());
+
+        String id = generateRequestId(inputFiles, projectName);
+        ArDoCoForSamCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, architectureModelType, projectName);
+
+        return handleRunPipeLineResult(runner, id, inputFiles);
     }
 
     @PostMapping(value = "/api/sam-code/start-and-wait", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -56,15 +57,13 @@ public class ArDoCoForSamCodeTLRController {
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
             throws FileNotFoundException, FileConversionException, HashingException {
 
-        SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
-        ArdocoResultResponse response;
-        try {
-            ResultBag result = service.runPipelineAndWaitForResult(projectName, inputCode, inputArchitectureModel, architectureModelType, additionalConfigs);
-            response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
-        } catch (TimeoutException e) {
-            response = new ArdocoResultResponse(e.getId(), HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT_START_AND_WAIT);
-        }
-        return new ResponseEntity<>(response, response.getStatus());
+        Map<String, File> inputFileMap = convertInputFilesHelper(inputCode, inputArchitectureModel);
+        List <File> inputFiles = new ArrayList<>(inputFileMap.values());
+
+        String id = generateRequestId(inputFiles, projectName);
+        ArDoCoForSamCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, architectureModelType, projectName);
+
+        return handleRunPipelineAndWaitForResult(runner, id, inputFiles);
     }
 
 
@@ -72,16 +71,7 @@ public class ArDoCoForSamCodeTLRController {
     public ResponseEntity<ArdocoResultResponse> getResult(
             @Parameter(description = "The ID of the result to query", required = true)  @PathVariable("id") String id)
             throws ArdocoException, IllegalArgumentException {
-
-        //TODO this method is a duplicate from the controller of sadcode
-        Optional<String> result = service.getResult(id);
-        ArdocoResultResponse response;
-        if (result.isEmpty()) {
-            response = new ArdocoResultResponse(id, HttpStatus.ACCEPTED, Messages.RESULT_NOT_READY);
-        } else {
-            response = new ArdocoResultResponse(id, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
-        }
-        return new ResponseEntity<>(response, response.getStatus());
+        return handleGetResult(id);
     }
 
 
@@ -89,16 +79,30 @@ public class ArDoCoForSamCodeTLRController {
     public ResponseEntity<ArdocoResultResponse> waitForResult(
             @Parameter(description = "The ID of the result to query", required = true) @PathVariable("id") String id)
             throws ArdocoException, InterruptedException, IllegalArgumentException, TimeoutException {
+        return handleWaitForResult(id);
+    }
 
-        //TODO this method is a duplicate from the controller of sadcode
-        ArdocoResultResponse response;
-        try {
-            String result = service.waitForResult(id);
-            response = new ArdocoResultResponse(id, HttpStatus.OK, result, Messages.RESULT_IS_READY);
-        } catch (TimeoutException e) {
-            response = new ArdocoResultResponse(id, HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT);
-        }
-        return new ResponseEntity<>(response, response.getStatus());
+    private Map<String, File> convertInputFilesHelper(MultipartFile inputCode, MultipartFile inputArchitectureModel) {
+        logger.log(Level.DEBUG, "Convert multipartFiles to files");
+        Map<String, File> inputFiles = new HashMap<>();
+
+        inputFiles.put("inputCodeFile", FileConverter.convertMultipartFileToFile(inputCode));
+        inputFiles.put("inputArchitectureModelFile", FileConverter.convertMultipartFileToFile(inputArchitectureModel));
+
+        return inputFiles;
+    }
+
+    private ArDoCoForSamCodeTraceabilityLinkRecovery setUpRunner(Map<String, File> inputFileMap, ArchitectureModelType modelType, String projectName) {
+        SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
+
+        logger.log(Level.INFO, "Setting up Runner...");
+        ArDoCoForSamCodeTraceabilityLinkRecovery runner = new ArDoCoForSamCodeTraceabilityLinkRecovery(projectName);
+        runner.setUp(
+                inputFileMap.get("inputArchitectureModelFile"),
+                modelType,
+                inputFileMap.get("inputCodeFile"),
+                additionalConfigs,
+                Files.createTempDir());
+        return runner;
     }
 }
-

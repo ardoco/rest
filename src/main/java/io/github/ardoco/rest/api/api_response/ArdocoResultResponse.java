@@ -5,9 +5,10 @@ import org.springframework.http.HttpStatus;
 
 
 public class ArdocoResultResponse {
-    private String projectId;
+    private String requestId;
     private HttpStatus status;
     private String message;
+    private TraceLinkType traceLinkType;
 
     @JsonRawValue
     //@JsonDeserialize(using = ArdocoResultResponseDeserializer.class)
@@ -15,35 +16,37 @@ public class ArdocoResultResponse {
 
     public ArdocoResultResponse() {}
 
-    public ArdocoResultResponse(String projectId, HttpStatus status) {
-        this.projectId = projectId;
+    public ArdocoResultResponse(String requestId, HttpStatus status) {
+        this.requestId = requestId;
         this.status = status;
     }
 
-    public ArdocoResultResponse(String projectId, HttpStatus status, String message) {
-        this.projectId = projectId;
+    public ArdocoResultResponse(String requestId, HttpStatus status, String message) {
+        this.requestId = requestId;
         this.status = status;
         this.message = message;
     }
 
-    public ArdocoResultResponse(HttpStatus status, String traceLinks) {
+    public ArdocoResultResponse(HttpStatus status, String traceLinks, TraceLinkType traceLinkType) {
         this.status = status;
         this.traceLinks = traceLinks;
+        this.traceLinkType = traceLinkType;
     }
 
-    public ArdocoResultResponse(String projectId, HttpStatus status, String traceLinks, String message) {
-        this.projectId = projectId;
+    public ArdocoResultResponse(String requestId, HttpStatus status, String traceLinks, String message, TraceLinkType traceLinkType) {
+        this.requestId = requestId;
         this.status = status;
         this.traceLinks = traceLinks;
         this.message = message;
+        this.traceLinkType = traceLinkType;
     }
 
-    public String getProjectId() {
-        return projectId;
+    public String getRequestId() {
+        return requestId;
     }
 
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
     public HttpStatus getStatus() {
@@ -68,5 +71,13 @@ public class ArdocoResultResponse {
 
     public void setTraceLinks(String traceLinks) {
         this.traceLinks = traceLinks;
+    }
+
+    public TraceLinkType getTraceLinkType() {
+        return traceLinkType;
+    }
+
+    public void setTraceLinkType(TraceLinkType traceLinkType) {
+        this.traceLinkType = traceLinkType;
     }
 }
