@@ -54,7 +54,7 @@ public final class TestUtils {
 
     public static void testReadyResult(ArdocoResultResponse response, ResponseEntity<String> responseEntity) {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertNotNull(response.getSamSadTraceLinks());  // Should not be null at this point
+        assertNotNull(response.getTraceLinks());  // Should not be null at this point
         assertEquals(Messages.RESULT_IS_READY, response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
         assertNotNull(response.getProjectId());

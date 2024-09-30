@@ -42,7 +42,7 @@ public class ArdocoResultResponseDeserializer extends StdDeserializer<ArdocoResu
         resultResponse.setProjectId(projectId);
         resultResponse.setMessage(message);
         resultResponse.setStatus(status);
-        resultResponse.setSamSadTraceLinks(samSadTraceLinks);
+        resultResponse.setTraceLinks(samSadTraceLinks);
 
         return resultResponse;
     }

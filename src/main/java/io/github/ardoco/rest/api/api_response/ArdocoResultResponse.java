@@ -1,8 +1,6 @@
 package io.github.ardoco.rest.api.api_response;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.github.ardoco.rest.api.util.ArdocoResultResponseDeserializer;
 import org.springframework.http.HttpStatus;
 
 
@@ -13,7 +11,7 @@ public class ArdocoResultResponse {
 
     @JsonRawValue
     //@JsonDeserialize(using = ArdocoResultResponseDeserializer.class)
-    private String samSadTraceLinks;
+    private String traceLinks;
 
     public ArdocoResultResponse() {}
 
@@ -28,15 +26,15 @@ public class ArdocoResultResponse {
         this.message = message;
     }
 
-    public ArdocoResultResponse(HttpStatus status, String samSadTraceLinks) {
+    public ArdocoResultResponse(HttpStatus status, String traceLinks) {
         this.status = status;
-        this.samSadTraceLinks = samSadTraceLinks;
+        this.traceLinks = traceLinks;
     }
 
-    public ArdocoResultResponse(String projectId, HttpStatus status, String samSadTraceLinks, String message) {
+    public ArdocoResultResponse(String projectId, HttpStatus status, String traceLinks, String message) {
         this.projectId = projectId;
         this.status = status;
-        this.samSadTraceLinks = samSadTraceLinks;
+        this.traceLinks = traceLinks;
         this.message = message;
     }
 
@@ -64,11 +62,11 @@ public class ArdocoResultResponse {
         this.message = message;
     }
 
-    public String getSamSadTraceLinks() {
-        return samSadTraceLinks;
+    public String getTraceLinks() {
+        return traceLinks;
     }
 
-    public void setSamSadTraceLinks(String samSadTraceLinks) {
-        this.samSadTraceLinks = samSadTraceLinks;
+    public void setTraceLinks(String traceLinks) {
+        this.traceLinks = traceLinks;
     }
 }

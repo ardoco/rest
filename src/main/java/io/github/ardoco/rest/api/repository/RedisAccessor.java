@@ -1,5 +1,6 @@
 package io.github.ardoco.rest.api.repository;
 
+import io.github.ardoco.rest.api.util.Messages;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -37,7 +38,7 @@ public class RedisAccessor implements DatabaseAccessor {
 
     @Override
     public void saveError(String id, String error) {
-        template.opsForValue().set(id, error, 24, TimeUnit.HOURS);
+        template.opsForValue().set(id, Messages.ERROR_PREFIX + error, 24, TimeUnit.HOURS);
     }
 
     @Override

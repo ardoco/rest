@@ -42,7 +42,7 @@ class TraceLinkConverterTest {
 
         // Test the conversion
         List<SadCodeTraceLink> traceLinks = Collections.singletonList(traceLink);
-        String jsonString = traceLinkConverter.convertListOfTraceLinksToJSONString(traceLinks);
+        String jsonString = traceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
 
         // Expected JSON format
         String expectedJson = "[[\"Entity1\",\"Entity2\"]]";
@@ -52,7 +52,7 @@ class TraceLinkConverterTest {
     }
 
     @Test
-    void testConvertListOfTraceLinksToJSONString_withMultipleLinks() throws JsonProcessingException {
+    void testConvertListOfSadCodeTraceLinksToJSONString_withMultipleLinks() throws JsonProcessingException {
         // Mocking entities and endpoint tuples for multiple links
         Entity entityA1 = mock(Entity.class);
         Entity entityA2 = mock(Entity.class);
@@ -78,7 +78,7 @@ class TraceLinkConverterTest {
 
         // Test the conversion
         List<SadCodeTraceLink> traceLinks = Arrays.asList(traceLink1, traceLink2);
-        String jsonString = traceLinkConverter.convertListOfTraceLinksToJSONString(traceLinks);
+        String jsonString = traceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
 
         // Expected JSON format
         String expectedJson = "[[\"A1\",\"A2\"],[\"B1\",\"B2\"]]";
@@ -88,10 +88,10 @@ class TraceLinkConverterTest {
     }
 
     @Test
-    void testConvertListOfTraceLinksToJSONString_withEmptyList() throws JsonProcessingException {
+    void testConvertListOfTraceLinksToJSONString_withEmptyListSamSad() throws JsonProcessingException {
         // Test the conversion with an empty list
         List<SadCodeTraceLink> traceLinks = Collections.emptyList();
-        String jsonString = traceLinkConverter.convertListOfTraceLinksToJSONString(traceLinks);
+        String jsonString = traceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
 
         // Expected empty JSON array
         String expectedJson = "[]";
@@ -101,7 +101,7 @@ class TraceLinkConverterTest {
     }
 
     @Test
-    void testConvertListOfTraceLinksToJSONString_withException() throws JsonProcessingException {
+    void testConvertListOfSadCodeTraceLinksToJSONString_withException() throws JsonProcessingException {
         // Mocking a valid endpoint tuple and entity
         Entity entity1 = mock(Entity.class);
         Entity entity2 = mock(Entity.class);
@@ -116,11 +116,11 @@ class TraceLinkConverterTest {
 
         // Spy on the TraceLinkConverter to mock the exception
         TraceLinkConverter converterSpy = spy(traceLinkConverter);
-        doThrow(JsonProcessingException.class).when(converterSpy).convertListOfTraceLinksToJSONString(anyList());
+        doThrow(JsonProcessingException.class).when(converterSpy).convertListOfSadCodeTraceLinksToJSONString(anyList());
 
         // Assert that JsonProcessingException is thrown
         assertThrows(JsonProcessingException.class, () -> {
-            converterSpy.convertListOfTraceLinksToJSONString(Collections.singletonList(traceLink));
+            converterSpy.convertListOfSadCodeTraceLinksToJSONString(Collections.singletonList(traceLink));
         });
     }
 }

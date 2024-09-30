@@ -30,4 +30,16 @@ public final class Messages {
     public static String noResultForKey(String id) {
         return "No result with key " + id + " found.";
     }
+
+    /*
+    Error Message in Database
+     */
+
+    public static final String ERROR_PREFIX = "ERROR: ";
+
+    public static final String ERROR_RUNNING_PIPELINE = "Error occurred while running the pipeline asynchronously";
+
+    public static String errorRunningPipeline(String id, String errorMessage) {
+        return "Error occurred while running the pipeline asynchronously for ID " + id + ": " + errorMessage;
+    }
 }

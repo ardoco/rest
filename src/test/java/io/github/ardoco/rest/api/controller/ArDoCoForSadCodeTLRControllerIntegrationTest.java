@@ -74,7 +74,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
         assertNotNull(response.getProjectId());
         assertEquals(response.getMessage(), Messages.RESULT_IS_BEING_PROCESSED, "Expected: " + Messages.RESULT_IS_BEING_PROCESSED + ", but was: " + response.getMessage());
         assertEquals(responseEntity.getStatusCode(), response.getStatus());
-        assertNull(response.getSamSadTraceLinks());
+        assertNull(response.getTraceLinks());
         redisAccessor.deleteResult(response.getProjectId());
     }
 
@@ -162,7 +162,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
             if (HttpStatus.ACCEPTED == resultResponseEntity.getStatusCode()) {
                 assertSame( HttpStatus.ACCEPTED, resultResponseEntity.getStatusCode());
                 assertNotNull(waitingResult);
-                assertNull(waitingResult.getSamSadTraceLinks());
+                assertNull(waitingResult.getTraceLinks());
                 assertEquals(Messages.RESULT_NOT_READY, waitingResult.getMessage());
                 assertEquals(waitingResult.getStatus(), resultResponseEntity.getStatusCode());
                 assertEquals(projectId, waitingResult.getProjectId());
@@ -214,7 +214,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
             if (HttpStatus.ACCEPTED == resultResponseEntity.getStatusCode()) {
                 assertSame( HttpStatus.ACCEPTED, resultResponseEntity.getStatusCode());
                 assertNotNull(waitingResult);
-                assertNull(waitingResult.getSamSadTraceLinks());
+                assertNull(waitingResult.getTraceLinks());
                 assertEquals(Messages.RESULT_NOT_READY, waitingResult.getMessage());
                 assertEquals(waitingResult.getStatus(), resultResponseEntity.getStatusCode());
                 assertEquals(projectId, waitingResult.getProjectId());
@@ -288,7 +288,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
             if (HttpStatus.ACCEPTED == resultResponseEntity.getStatusCode()) {
                 assertSame( HttpStatus.ACCEPTED, resultResponseEntity.getStatusCode());
                 assertNotNull(waitingResult);
-                assertNull(waitingResult.getSamSadTraceLinks());
+                assertNull(waitingResult.getTraceLinks());
                 assertEquals(Messages.REQUEST_TIMED_OUT, waitingResult.getMessage());
                 assertEquals(waitingResult.getStatus(), resultResponseEntity.getStatusCode());
                 assertEquals(projectId, waitingResult.getProjectId());
@@ -334,7 +334,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
 
             if (HttpStatus.ACCEPTED == responseEntity.getStatusCode()) {
                 assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
-                assertNull(response.getSamSadTraceLinks());  // Should be null in this case
+                assertNull(response.getTraceLinks());  // Should be null in this case
                 assertEquals(Messages.REQUEST_TIMED_OUT_START_AND_WAIT, response.getMessage());
                 assertEquals(response.getStatus(), responseEntity.getStatusCode());
                 assertNotNull(response.getProjectId());
@@ -386,7 +386,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
 
     private void testReadyResult(ArdocoResultResponse response, ResponseEntity<String> responseEntity) {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertNotNull(response.getSamSadTraceLinks());  // Should not be null at this point
+        assertNotNull(response.getTraceLinks());  // Should not be null at this point
         assertEquals(Messages.RESULT_IS_READY, response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
         assertNotNull(response.getProjectId());

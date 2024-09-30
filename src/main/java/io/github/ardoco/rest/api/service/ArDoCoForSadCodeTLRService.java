@@ -58,7 +58,7 @@ public class ArDoCoForSadCodeTLRService implements RunnerTLRService {
         String id = generateHashFromFiles(List.of(inputCodeFile, inputTextFile), projectName);
 
         if (!resultIsInDatabase(id) && !resultIsOnItsWay(id)) {
-            logger.log(Level.INFO, "Start new samSadTLR for: " + id);
+            logger.log(Level.INFO, "Start new SadCodeTLR for: " + id);
             CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> {
                 try {
                     return runPipelineAsync(id, projectName, inputTextFile, inputCodeFile, outputDir, additionalConfigs);
@@ -141,7 +141,7 @@ public class ArDoCoForSadCodeTLRService implements RunnerTLRService {
             logger.log(Level.DEBUG, "Converting found TraceLinks...");
             List<SadCodeTraceLink> traceLinks = result.getSadCodeTraceLinks();
             TraceLinkConverter converter = new TraceLinkConverter();
-            traceLinkJson = converter.convertListOfTraceLinksToJSONString(traceLinks);
+            traceLinkJson = converter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
 
             logger.log(Level.INFO, "Saving found TraceLinks...");
             databaseAccessor.saveResult(id, traceLinkJson);
