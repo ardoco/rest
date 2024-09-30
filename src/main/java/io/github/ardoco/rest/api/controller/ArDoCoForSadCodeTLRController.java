@@ -26,6 +26,7 @@ import java.util.TreeMap;
 
 import org.springframework.http.MediaType;
 
+@Tag(name = "Sad-Code TraceLinkRecovery")
 @RestController
 public class ArDoCoForSadCodeTLRController {
 
@@ -39,7 +40,6 @@ public class ArDoCoForSadCodeTLRController {
     }
 
 
-    @Tag(name = "Start Sad-Code TraceLinkRecovery")
     @Operation(
             summary = "Starts the processing pipeline",
             description = "Starts the sad-code processing pipeline with the given project name and files."
@@ -66,7 +66,6 @@ public class ArDoCoForSadCodeTLRController {
     }
 
 
-    @Tag(name = "Retrieve Sad-Code TraceLinks")
     @Operation(
             summary = "Queries whether the ArDoCoResult is already there.",
             description = "Queries whether the SadCodeTraceLinks is already there using the id which was returned by tue runPipeline method. " +
@@ -92,7 +91,6 @@ public class ArDoCoForSadCodeTLRController {
     }
 
 
-    @Tag(name = "Retrieve Sad-Code TraceLinks")
     @Operation(
             summary = "Queries the SadCodeTraceLinks and returns them when they are ready.",
             description = "Queries the SamSadTraceLinks and returns them when the previously started pipeline (using the runPipeline Method) has finished." +
@@ -117,7 +115,6 @@ public class ArDoCoForSadCodeTLRController {
     }
 
 
-    @Tag(name = "Start Sad-Code TraceLinkRecovery")
     @Operation(
             summary = "Starts the ardoco-pipeline to get a SadCodeTraceLinks and waits until the result is obtained",
             description = "performs the sadCode trace link recovery of ArDoCo with the given project name and files and waits until the SadCodeTraceLinks are obtained."
