@@ -1,7 +1,6 @@
 package io.github.ardoco.rest.api.service;
 
 import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
-import io.github.ardoco.rest.api.api_response.ResultBag;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.exception.ArdocoException;
 import io.github.ardoco.rest.api.repository.DatabaseAccessor;

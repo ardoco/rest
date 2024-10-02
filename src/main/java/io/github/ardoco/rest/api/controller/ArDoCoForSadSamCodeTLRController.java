@@ -3,7 +3,6 @@ package io.github.ardoco.rest.api.controller;
 import com.github.jsonldjava.shaded.com.google.common.io.Files;
 import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
 import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSadSamCodeTraceabilityLinkRecovery;
-import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSadSamTraceabilityLinkRecovery;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.exception.*;
@@ -87,7 +86,7 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
     }
 
     private Map<String, File> convertInputFilesHelper(MultipartFile inputText, MultipartFile inputArchitectureModel, MultipartFile inputCode) {
-        logger.log(Level.DEBUG, "Convert multipartFiles to files");
+        logger.log(Level.INFO, "Convert multipartFiles to files");
         Map<String, File> inputFiles = new HashMap<>();
 
         inputFiles.put("inputText", FileConverter.convertMultipartFileToFile(inputText));

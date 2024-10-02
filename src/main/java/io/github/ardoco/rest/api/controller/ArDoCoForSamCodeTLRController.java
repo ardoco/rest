@@ -4,7 +4,6 @@ import com.github.jsonldjava.shaded.com.google.common.io.Files;
 import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
 import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSamCodeTraceabilityLinkRecovery;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
-import io.github.ardoco.rest.api.api_response.ResultBag;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.exception.*;
 import io.github.ardoco.rest.api.service.AbstractRunnerTLRService;

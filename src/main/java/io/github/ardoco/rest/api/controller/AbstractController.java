@@ -2,7 +2,6 @@ package io.github.ardoco.rest.api.controller;
 
 import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
-import io.github.ardoco.rest.api.api_response.ResultBag;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.exception.*;
 import io.github.ardoco.rest.api.service.AbstractRunnerTLRService;

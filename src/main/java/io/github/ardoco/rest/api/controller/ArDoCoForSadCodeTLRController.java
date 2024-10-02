@@ -1,11 +1,12 @@
 package io.github.ardoco.rest.api.controller;
 
+import com.google.common.io.Files;
+import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSadCodeTraceabilityLinkRecovery;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
-import io.github.ardoco.rest.api.api_response.ResultBag;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.exception.*;
-import io.github.ardoco.rest.api.service.RunnerTLRService;
-import io.github.ardoco.rest.api.util.Messages;
+import io.github.ardoco.rest.api.service.AbstractRunnerTLRService;
+import io.github.ardoco.rest.api.util.FileConverter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,30 +14,27 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.net.http.HttpTimeoutException;
-import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.io.File;
+import java.util.*;
 
 import org.springframework.http.MediaType;
 
 @Tag(name = "Sad-Code TraceLinkRecovery")
 @RestController
-public class ArDoCoForSadCodeTLRController {
+public class ArDoCoForSadCodeTLRController extends AbstractController{
 
-    private final TraceLinkType traceLinkType;
+    private static final Logger logger = LogManager.getLogger(ArDoCoForSadCodeTLRController.class);
 
-    private final RunnerTLRService runnerTLRService;
-
-    public ArDoCoForSadCodeTLRController(@Qualifier("sadCodeTLRService") RunnerTLRService runnerTLRService) {
-        this.runnerTLRService = runnerTLRService;
-        this.traceLinkType = TraceLinkType.SAD_CODE;
+    public ArDoCoForSadCodeTLRController(@Qualifier("sadCodeTLRService") AbstractRunnerTLRService service) {
+        super(service, TraceLinkType.SAD_CODE);
     }
 
 
@@ -46,6 +44,7 @@ public class ArDoCoForSadCodeTLRController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "The id which can be used to later retrieve the samSadCode traceLinks.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArdocoResultResponse.class))),
+
     })
     @PostMapping(value = "/api/sad-code/start", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArdocoResultResponse> runPipeline(
@@ -54,15 +53,36 @@ public class ArDoCoForSadCodeTLRController {
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
             throws FileNotFoundException, FileConversionException, HashingException {
 
-        SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
-        ResultBag result = runnerTLRService.runPipeline(projectName, inputText, inputCode, additionalConfigs);
-        ArdocoResultResponse response;
-        if (result.traceLinks() != null) {
-            response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
-        } else {
-            response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, Messages.RESULT_IS_BEING_PROCESSED);
-        }
-        return new ResponseEntity<>(response, response.getStatus());
+        Map<String, File> inputFileMap = convertInputFilesHelper(inputText, inputCode);
+        List<File> inputFiles = new ArrayList<>(inputFileMap.values());
+
+        String id = generateRequestId(inputFiles, projectName);
+        ArDoCoForSadCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, projectName);
+
+        return handleRunPipeLineResult(runner, id, inputFiles);
+    }
+
+    @Operation(
+            summary = "Starts the ardoco-pipeline to get a SadCodeTraceLinks and waits until the result is obtained",
+            description = "performs the sadCode trace link recovery of ArDoCo with the given project name and files and waits until the SadCodeTraceLinks are obtained."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "the sadCodeTraceLinks found by ardoco", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArdocoResultResponse.class))),
+    })
+    @PostMapping(value = "/api/sad-code/start-and-wait", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ArdocoResultResponse> runPipelineAndWaitForResult(
+            @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
+            @Parameter(description = "The documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
+            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
+            throws FileConversionException, HashingException, ArdocoException, TimeoutException {
+
+        Map<String, File> inputFileMap = convertInputFilesHelper(inputText, inputCode);
+        List <File> inputFiles = new ArrayList<>(inputFileMap.values());
+
+        String id = generateRequestId(inputFiles, projectName);
+        ArDoCoForSadCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, projectName);
+
+        return handleRunPipelineAndWaitForResult(runner, id, inputFiles);
     }
 
 
@@ -79,15 +99,7 @@ public class ArDoCoForSadCodeTLRController {
     public ResponseEntity<ArdocoResultResponse> getResult(
             @Parameter(description = "The ID of the result to query", required = true)  @PathVariable("id") String id)
             throws ArdocoException, IllegalArgumentException {
-
-        Optional<String> result = runnerTLRService.getResult(id);
-        ArdocoResultResponse response;
-        if (result.isEmpty()) {
-            response = new ArdocoResultResponse(id, HttpStatus.ACCEPTED, Messages.RESULT_NOT_READY);
-        } else {
-            response = new ArdocoResultResponse(id, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
-        }
-        return new ResponseEntity<>(response, response.getStatus());
+        return handleGetResult(id);
     }
 
 
@@ -98,48 +110,38 @@ public class ArDoCoForSadCodeTLRController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "the sadCodeTraceLinks found by ardoco", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArdocoResultResponse.class))),
+            @ApiResponse(responseCode = "202", description = "the sadCodeTraceLinks are not ready yet, the waiting timed out", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArdocoResultResponse.class))),
+
     })
     @GetMapping("/api/sad-code/wait/{id}")
     public ResponseEntity<ArdocoResultResponse> waitForResult(
             @Parameter(description = "The ID of the result to query", required = true) @PathVariable("id") String id)
             throws ArdocoException, InterruptedException, IllegalArgumentException, TimeoutException {
-
-        ArdocoResultResponse response;
-        try {
-            String result = runnerTLRService.waitForResult(id);
-            response = new ArdocoResultResponse(id, HttpStatus.OK, result, Messages.RESULT_IS_READY);
-        } catch (TimeoutException e) {
-            response = new ArdocoResultResponse(id, HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT);
-        }
-        return new ResponseEntity<>(response, response.getStatus());
+        return handleWaitForResult(id);
     }
 
+    private Map<String, File> convertInputFilesHelper(MultipartFile inputText, MultipartFile inputCode) {
+        logger.log(Level.INFO, "Convert multipartFiles to files");
+        Map<String, File> inputFiles = new HashMap<>();
 
-    @Operation(
-            summary = "Starts the ardoco-pipeline to get a SadCodeTraceLinks and waits until the result is obtained",
-            description = "performs the sadCode trace link recovery of ArDoCo with the given project name and files and waits until the SadCodeTraceLinks are obtained."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "the sadCodeTraceLinks found by ardoco", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArdocoResultResponse.class))),
-    })
-    @PostMapping(value = "/api/sad-code/start-and-wait", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ArdocoResultResponse> runPipelineAndWaitForResult(
-            @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
-            @Parameter(description = "The documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
-            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
-            throws FileConversionException, HashingException, ArdocoException, TimeoutException {
-        {
-            SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
-            ArdocoResultResponse response;
-            try {
-                ResultBag result = runnerTLRService.runPipelineAndWaitForResult(projectName, inputText, inputCode, additionalConfigs);
-                response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
-            } catch (TimeoutException e) {
-                response = new ArdocoResultResponse(e.getId(), HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT_START_AND_WAIT);
-            }
-            return new ResponseEntity<>(response, response.getStatus());
-        }
+        inputFiles.put("inputText", FileConverter.convertMultipartFileToFile(inputText));
+        inputFiles.put("inputCode", FileConverter.convertMultipartFileToFile(inputCode));
+
+        return inputFiles;
     }
 
+    private ArDoCoForSadCodeTraceabilityLinkRecovery setUpRunner(Map<String, File> inputFileMap, String projectName) {
+        SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
 
+        logger.log(Level.INFO, "Setting up Runner...");
+        ArDoCoForSadCodeTraceabilityLinkRecovery runner = new ArDoCoForSadCodeTraceabilityLinkRecovery(projectName);
+
+        runner.setUp(
+                inputFileMap.get("inputText"),
+                inputFileMap.get("inputCode"),
+                additionalConfigs,
+                Files.createTempDir()
+        );
+        return runner;
+    }
 }
