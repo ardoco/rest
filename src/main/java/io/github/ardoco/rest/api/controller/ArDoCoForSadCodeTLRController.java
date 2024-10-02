@@ -1,6 +1,6 @@
 package io.github.ardoco.rest.api.controller;
 
-import com.google.common.io.Files;
+import com.github.jsonldjava.shaded.com.google.common.io.Files;
 import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSadCodeTraceabilityLinkRecovery;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;

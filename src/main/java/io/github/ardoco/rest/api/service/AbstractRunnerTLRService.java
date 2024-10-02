@@ -1,5 +1,7 @@
 package io.github.ardoco.rest.api.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import edu.kit.kastel.mcse.ardoco.core.api.output.ArDoCoResult;
 import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.exception.ArdocoException;
@@ -36,7 +38,7 @@ public abstract class AbstractRunnerTLRService {
         this.traceLinkType = traceLinkType;
     }
 
-    protected abstract String runPipelineAsync(ArDoCoRunner runner, String id, List<File> inputFiles);
+    abstract protected String convertResultToJSONString(ArDoCoResult result) throws JsonProcessingException;
 
 
     public Optional<String> runPipeline(ArDoCoRunner runner, String id, List<File> inputFiles) {
@@ -47,8 +49,6 @@ public abstract class AbstractRunnerTLRService {
         return runPipelineHelper(runner, id, inputFiles, true);
     }
 
-
-    // templateMethod for starting the pipeline
     private Optional<String> runPipelineHelper(ArDoCoRunner runner, String id, List<File> inputFiles, boolean waitForResult)
             throws ArdocoException, io.github.ardoco.rest.api.exception.TimeoutException {
 
@@ -66,6 +66,34 @@ public abstract class AbstractRunnerTLRService {
             return waitForResultHelper(id);
         }
         return Optional.empty();
+    }
+
+    // templateMethod for starting the pipeline
+    private String runPipelineAsync(ArDoCoRunner runner, String id, List<File> inputFiles) {
+        String traceLinkJson;
+        try {
+            // Run the pipeline
+            logger.log(Level.INFO, "Starting Pipeline...");
+            ArDoCoResult result = runner.run();
+
+            logger.log(Level.DEBUG, "Converting found TraceLinks...");
+            traceLinkJson = convertResultToJSONString(result);
+
+            logger.log(Level.INFO, "Saving found TraceLinks...");
+            databaseAccessor.saveResult(id, traceLinkJson);
+
+        } catch (Exception e) {
+            String message = "Error occurred while running the pipeline asynchronously for ID " + id + ": " + e.getMessage();
+            logger.error(message, e);
+            databaseAccessor.saveResult(id, ERROR_PREFIX + message);
+            return null;
+        } finally {
+            asyncTasks.remove(id);
+            for (File file : inputFiles) {
+                file.delete();
+            }
+        }
+        return traceLinkJson;
     }
 
 
