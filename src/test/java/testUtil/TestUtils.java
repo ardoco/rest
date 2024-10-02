@@ -51,7 +51,7 @@ public final class TestUtils {
             samSadTraceLinks = samSadTraceLinksNode.asText();
         }
 
-        return  new ArdocoResultResponse(projectId, status, samSadTraceLinks, message, TraceLinkType.valueOf(traceLinkType));
+        return  new ArdocoResultResponse(projectId, status, samSadTraceLinks, message);
     }
 
     public static void testReadyResult(ArdocoResultResponse response, ResponseEntity<String> responseEntity) {

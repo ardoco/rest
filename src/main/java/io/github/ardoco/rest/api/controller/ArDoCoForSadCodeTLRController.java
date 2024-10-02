@@ -58,7 +58,7 @@ public class ArDoCoForSadCodeTLRController {
         ResultBag result = runnerTLRService.runPipeline(projectName, inputText, inputCode, additionalConfigs);
         ArdocoResultResponse response;
         if (result.traceLinks() != null) {
-            response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY, traceLinkType);
+            response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
         } else {
             response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, Messages.RESULT_IS_BEING_PROCESSED);
         }
@@ -85,7 +85,7 @@ public class ArDoCoForSadCodeTLRController {
         if (result.isEmpty()) {
             response = new ArdocoResultResponse(id, HttpStatus.ACCEPTED, Messages.RESULT_NOT_READY);
         } else {
-            response = new ArdocoResultResponse(id, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY, traceLinkType);
+            response = new ArdocoResultResponse(id, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
         }
         return new ResponseEntity<>(response, response.getStatus());
     }
@@ -107,7 +107,7 @@ public class ArDoCoForSadCodeTLRController {
         ArdocoResultResponse response;
         try {
             String result = runnerTLRService.waitForResult(id);
-            response = new ArdocoResultResponse(id, HttpStatus.OK, result, Messages.RESULT_IS_READY, traceLinkType);
+            response = new ArdocoResultResponse(id, HttpStatus.OK, result, Messages.RESULT_IS_READY);
         } catch (TimeoutException e) {
             response = new ArdocoResultResponse(id, HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT);
         }
@@ -133,7 +133,7 @@ public class ArDoCoForSadCodeTLRController {
             ArdocoResultResponse response;
             try {
                 ResultBag result = runnerTLRService.runPipelineAndWaitForResult(projectName, inputText, inputCode, additionalConfigs);
-                response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY, traceLinkType);
+                response = new ArdocoResultResponse(result.projectId(), HttpStatus.OK, result.traceLinks(), Messages.RESULT_IS_READY);
             } catch (TimeoutException e) {
                 response = new ArdocoResultResponse(e.getId(), HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT_START_AND_WAIT);
             }

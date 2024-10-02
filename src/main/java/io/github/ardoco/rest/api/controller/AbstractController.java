@@ -41,7 +41,7 @@ public abstract class AbstractController {
         if (result.isEmpty()) {
             response = new ArdocoResultResponse(requestId, HttpStatus.OK, Messages.RESULT_IS_BEING_PROCESSED);
         } else {
-            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY, traceLinkType);
+            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
         }
         return new ResponseEntity<>(response, response.getStatus());
     }
@@ -53,7 +53,7 @@ public abstract class AbstractController {
         if (result.isEmpty()) {
             response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, Messages.RESULT_NOT_READY);
         } else {
-            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY, TraceLinkType.fromId(requestId));
+            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
         }
         return new ResponseEntity<>(response, response.getStatus());
     }
@@ -65,7 +65,7 @@ public abstract class AbstractController {
         if (result.isEmpty()) {
             response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT);
         } else {
-            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY, TraceLinkType.fromId(requestId));
+            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
         }
         return new ResponseEntity<>(response, response.getStatus());
     }
@@ -77,7 +77,7 @@ public abstract class AbstractController {
         if (result.isEmpty()) {
              response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT_START_AND_WAIT);
         } else {
-            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY, TraceLinkType.fromId(requestId));
+            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
 
         }
         return new ResponseEntity<>(response, response.getStatus());

@@ -383,7 +383,7 @@ public class ArDoCoForSadCodeTLRControllerIntegrationTest {
             samSadTraceLinks = samSadTraceLinksNode.asText();
         }
 
-        return  new ArdocoResultResponse(projectId, status, samSadTraceLinks, message, TraceLinkType.valueOf(traceLinkType));
+        return  new ArdocoResultResponse(projectId, status, samSadTraceLinks, message);
     }
 
     private void testReadyResult(ArdocoResultResponse response, ResponseEntity<String> responseEntity) {

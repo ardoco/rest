@@ -64,7 +64,28 @@ by the classes which use the database.
 ## API Response schemas
 The API has 2 response schemas: 
 1. **Schema for expected behaviour** \
-    Example: 
+    - #### Sad-Code
+   ```json
+   {
+        "requestId": "SadCodeResult:bigBlueButtonF2BD94533508F2F2DE4130AB43403B63",
+        "status": "OK",
+        "message": "The result is ready.",
+        "traceLinkType": "SAD_CODE",
+        "traceLinks": [
+        {
+        "sentenceNumber": 56,
+        "codeCompilationUnit": "bbb-fsesl-client/src/main/java/org/freeswitch/esl/client/internal/debug/ExecutionHandler.java"
+        },
+        {
+        "sentenceNumber": 57,
+        "codeCompilationUnit": "bbb-fsesl-client/src/main/java/org/freeswitch/esl/client/internal/debug/ExecutionHandler.java"
+        }]
+   }
+   ```
+    - #### Sam-Code
+    - #### Sad-Sam
+    - #### Sad-Sam-Code
+       Example: 
 ```json
 {
   "projectId": "SadCodeResult:bigbluebutton67C34469A21A66DC94FD39531C9C1E6C",

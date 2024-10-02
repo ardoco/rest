@@ -19,26 +19,22 @@ public class ArdocoResultResponse {
     public ArdocoResultResponse(String requestId, HttpStatus status) {
         this.requestId = requestId;
         this.status = status;
+        this.traceLinkType = TraceLinkType.fromId(requestId);
     }
 
     public ArdocoResultResponse(String requestId, HttpStatus status, String message) {
         this.requestId = requestId;
         this.status = status;
         this.message = message;
+        this.traceLinkType = TraceLinkType.fromId(requestId);
     }
 
-    public ArdocoResultResponse(HttpStatus status, String traceLinks, TraceLinkType traceLinkType) {
-        this.status = status;
-        this.traceLinks = traceLinks;
-        this.traceLinkType = traceLinkType;
-    }
-
-    public ArdocoResultResponse(String requestId, HttpStatus status, String traceLinks, String message, TraceLinkType traceLinkType) {
+    public ArdocoResultResponse(String requestId, HttpStatus status, String traceLinks, String message) {
         this.requestId = requestId;
         this.status = status;
         this.traceLinks = traceLinks;
         this.message = message;
-        this.traceLinkType = traceLinkType;
+        this.traceLinkType = TraceLinkType.fromId(requestId);
     }
 
     public String getRequestId() {
