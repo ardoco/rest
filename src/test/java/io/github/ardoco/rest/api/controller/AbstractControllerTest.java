@@ -1,0 +1,215 @@
+package io.github.ardoco.rest.api.controller;
+
+import io.github.ardoco.rest.ArDoCoRestApplication;
+import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
+import io.github.ardoco.rest.api.api_response.ErrorResponse;
+import io.github.ardoco.rest.api.api_response.TraceLinkType;
+import io.github.ardoco.rest.api.repository.RedisAccessor;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.util.MultiValueMap;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import testUtil.TestUtils;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@Testcontainers
+@SpringBootTest(
+        classes = ArDoCoRestApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
+public abstract class AbstractControllerTest {
+
+    private final String runPipelineEndpoint;
+    private final String runPipelineAndWaitEndpoint;
+    private final String getResultEndpoint;
+    private final String waitForResultEndpoint;
+    private final TraceLinkType traceLinkType;
+
+    @Autowired
+    protected TestRestTemplate restTemplate;
+
+    @Autowired
+    protected RedisAccessor redisAccessor;
+
+    // Redis container shared across all subclasses
+    @Container
+    @ServiceConnection
+    public static GenericContainer<?> redisContainer = new GenericContainer<>("redis:7-alpine").withExposedPorts(6379);
+
+        @DynamicPropertySource
+    static void redisProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.redis.host", redisContainer::getHost);
+        registry.add("spring.redis.port", () -> redisContainer.getMappedPort(6379));
+    }
+
+    public AbstractControllerTest(TraceLinkType traceLinkType) {
+        this.traceLinkType = traceLinkType;
+        String endpointName = traceLinkType.getEndpointName();
+        this.runPipelineEndpoint = String.format("/api/%s/start", endpointName);
+        this.runPipelineAndWaitEndpoint = String.format("/api/%s/start-and-wait", endpointName);
+        this.getResultEndpoint = String.format("/api/%s/{id}", endpointName);
+        this.waitForResultEndpoint = String.format("/api/%s/wait/{id}", endpointName);
+    }
+
+
+
+    // Common test method for starting pipeline and getting results
+    @Timeout(value = 3, unit = TimeUnit.MINUTES)
+    protected void runPipeline_start_and_getResult(HttpEntity<MultiValueMap<String, Object>> requestEntity) throws IOException {
+        // Start the pipeline
+        ArdocoResultResponse response = startNewPipeline_test(requestEntity);
+        String projectId = response.getRequestId();
+
+        tryGetResultWhenNotReady_test(projectId);
+        waitForResultUntilReady_test(projectId);
+
+        // Now the result should be ready
+        getResult_hasResult_test(projectId);
+        runPipeLineDirectlyHasResult_test(requestEntity);
+        runPipeLineAndWaitDirectlyHasResult_test(requestEntity);
+
+        // Clean up
+        redisAccessor.deleteResult(response.getRequestId());
+    }
+
+    @Test
+    void testRetrievingResultForInvalidId() {
+        String invalidId = "invalid-project-id";
+
+        // testGetResult
+        ResponseEntity<ErrorResponse> responseEntity = restTemplate.getForEntity(getResultEndpoint, ErrorResponse.class, invalidId);
+        TestUtils.testInvalidRequestId(responseEntity, invalidId);
+
+        // testWaitForResult
+        responseEntity = restTemplate.getForEntity(waitForResultEndpoint, ErrorResponse.class, invalidId);
+        TestUtils.testInvalidRequestId(responseEntity, invalidId);
+    }
+
+    @Test
+    void testHandleEmptyFile() {
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = prepareRequestEntityForEmptyFileTest("emptyFileProject");
+
+        ResponseEntity<ErrorResponse> responseEntity = restTemplate.exchange(
+                runPipelineEndpoint, HttpMethod.POST, requestEntity, ErrorResponse.class
+        );
+        TestUtils.testsForHandelingEmptyFiles(responseEntity);
+
+        responseEntity = restTemplate.exchange(
+                runPipelineAndWaitEndpoint, HttpMethod.POST, requestEntity, ErrorResponse.class
+        );
+        TestUtils.testsForHandelingEmptyFiles(responseEntity);
+    }
+
+    protected abstract HttpEntity<MultiValueMap<String, Object>> prepareRequestEntityForEmptyFileTest(String projectName);
+
+    protected void test_runPipelineAndWaitForResult_helper(HttpEntity<MultiValueMap<String, Object>> requestEntity) throws IOException {
+        // test whether runPipeLineAndWait() directly has the result
+        ResponseEntity<String> responseEntity = restTemplate.exchange(runPipelineAndWaitEndpoint, HttpMethod.POST, requestEntity, String.class);
+        assertNotNull(responseEntity.getBody());
+        ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
+
+        String projectId = response.getRequestId();
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            // result is ready
+            TestUtils.testWaitForResult_ready(response, responseEntity, traceLinkType);
+            resultIsInDatabase(projectId);
+        } else if (responseEntity.getStatusCode() == HttpStatus.ACCEPTED) {
+            // continue waiting
+            TestUtils.testRunPipelineAndWaitForResult_notReady(response, responseEntity, traceLinkType);
+            waitForResultUntilReady_test(projectId);
+        } else {
+            fail();
+        }
+
+        // now the result should be ready: test getResult() when result is ready
+        getResult_hasResult_test(projectId);
+        runPipeLineDirectlyHasResult_test(requestEntity);
+        runPipeLineAndWaitDirectlyHasResult_test(requestEntity);
+
+        // clean up after test
+        redisAccessor.deleteResult(projectId);
+    }
+
+    // Helper methods for common test logic
+    protected ArdocoResultResponse startNewPipeline_test(HttpEntity<MultiValueMap<String, Object>> requestEntity) throws IOException {
+        ResponseEntity<String> responseEntity = restTemplate.exchange(runPipelineEndpoint, HttpMethod.POST, requestEntity, String.class);
+        assertNotNull(responseEntity.getBody());
+        return TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
+    }
+
+    protected void tryGetResultWhenNotReady_test(String projectId) throws IOException {
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(getResultEndpoint, String.class, projectId);
+        ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
+        TestUtils.testGetResult_notReady(response, responseEntity, traceLinkType);
+        resultIsNotInDatabase(response.getRequestId());
+    }
+
+    protected void waitForResultUntilReady_test(String projectId) throws IOException {
+        ResponseEntity<String> waitingEntity;
+        do {
+            waitingEntity = restTemplate.getForEntity(waitForResultEndpoint, String.class, projectId);
+            ArdocoResultResponse waitingResponse = TestUtils.parseResponseEntityToArdocoResponse(waitingEntity);
+
+            if (waitingEntity.getStatusCode() == HttpStatus.ACCEPTED) {
+                resultIsNotInDatabase(projectId);
+                TestUtils.testWaitForResult_notReady(waitingResponse, waitingEntity, traceLinkType);
+            } else if (waitingEntity.getStatusCode() == HttpStatus.OK) {
+                TestUtils.testWaitForResult_ready(waitingResponse, waitingEntity, traceLinkType);
+                resultIsInDatabase(projectId);
+            } else {
+                fail();
+            }
+
+        } while (waitingEntity.getStatusCode() == HttpStatus.ACCEPTED);
+    }
+
+    protected void getResult_hasResult_test(String projectId) throws IOException {
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(getResultEndpoint, String.class, projectId);
+        ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
+        TestUtils.testGetResult_ready(response, responseEntity, traceLinkType);
+        resultIsInDatabase(response.getRequestId());
+    }
+
+    protected void runPipeLineDirectlyHasResult_test(HttpEntity<MultiValueMap<String, Object>> requestEntity) throws IOException {
+        ResponseEntity<String> responseEntity = restTemplate.exchange(runPipelineEndpoint, HttpMethod.POST, requestEntity, String.class);
+        assertNotNull(responseEntity.getBody());
+        ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
+        TestUtils.testStartPipeline_resultIsInDatabase(response, responseEntity, traceLinkType);
+        resultIsInDatabase(response.getRequestId());
+    }
+
+    protected void runPipeLineAndWaitDirectlyHasResult_test(HttpEntity<MultiValueMap<String, Object>> requestEntity) throws IOException {
+        ResponseEntity<String> responseEntity = restTemplate.exchange(runPipelineAndWaitEndpoint, HttpMethod.POST, requestEntity, String.class);
+        assertNotNull(responseEntity.getBody());
+        ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
+        TestUtils.testStartPipeline_resultIsInDatabase(response, responseEntity, traceLinkType);
+        resultIsInDatabase(response.getRequestId());
+    }
+
+    // Utility methods for checking database state
+    protected void resultIsNotInDatabase(String requestID) {
+        assertFalse(redisAccessor.keyExistsInDatabase(requestID));
+    }
+
+    protected void resultIsInDatabase(String requestID) {
+        assertTrue(redisAccessor.keyExistsInDatabase(requestID));
+    }
+
+}

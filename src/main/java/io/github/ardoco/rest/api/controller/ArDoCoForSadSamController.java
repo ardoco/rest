@@ -30,7 +30,7 @@ public class ArDoCoForSadSamController extends AbstractController {
 
 
     public ArDoCoForSadSamController(@Qualifier("sadSamTLRService") AbstractRunnerTLRService service) {
-        super(service, TraceLinkType.SAM_CODE);
+        super(service, TraceLinkType.SAD_SAM);
     }
 
     @PostMapping(value = "/api/sad-sam/start", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

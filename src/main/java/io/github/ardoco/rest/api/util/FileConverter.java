@@ -63,22 +63,6 @@ public final class FileConverter {
         if (multipartFile.isEmpty()) {
             throw new FileNotFoundException("The file with name " + multipartFile.getOriginalFilename() + " is empty");
         }
-//
-//            File file = new File(System.getProperty("java.io.tmpdir") + File.separator + multipartFile.getOriginalFilename());
-//            multipartFile.transferTo(file);
-////            return file;
-//            File file = new File(multipartFile.getOriginalFilename());
-//            file.createNewFile();
-//
-//
-//
-//            FileOutputStream fos = new FileOutputStream(file);
-//            fos.write(multipartFile.getBytes());
-//            fos.close();
-//            return file;
-//        } catch (Exception e) {
-//            throw new FileConversionException("Error occurred while transferring the MultipartFile to File: " + e.getMessage());
-//        }
 
         try {
             // Create a temporary file to store the converted content
