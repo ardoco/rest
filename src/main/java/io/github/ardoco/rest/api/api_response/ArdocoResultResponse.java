@@ -11,7 +11,6 @@ public class ArdocoResultResponse {
     private TraceLinkType traceLinkType;
 
     @JsonRawValue
-    //@JsonDeserialize(using = ArdocoResultResponseDeserializer.class)
     private String traceLinks;
 
     public ArdocoResultResponse() {}

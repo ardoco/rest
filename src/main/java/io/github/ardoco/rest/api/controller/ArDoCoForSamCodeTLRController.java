@@ -8,6 +8,7 @@ import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.exception.*;
 import io.github.ardoco.rest.api.service.AbstractRunnerTLRService;
 import io.github.ardoco.rest.api.util.FileConverter;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.logging.log4j.Level;
@@ -33,6 +34,10 @@ public class ArDoCoForSamCodeTLRController extends AbstractController {
     }
 
 
+    @Operation(
+            summary = "Starts the sam-code processing pipeline",
+            description = "Starts the sam-code processing pipeline with the given project name, the type of the architecture model and files."
+    )
     @PostMapping(value = "/api/sam-code/start", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArdocoResultResponse> runPipeline(
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
@@ -50,6 +55,10 @@ public class ArDoCoForSamCodeTLRController extends AbstractController {
         return handleRunPipeLineResult(runner, id, inputFiles);
     }
 
+    @Operation(
+            summary = "Starts the ardoco-pipeline to get a SamCodeTraceLinks and waits until the result is obtained",
+            description = "performs the SamCodeTraceLinks link recovery of ArDoCo with the given project name and files and waits until the SamCodeTraceLinks are obtained."
+    )
     @PostMapping(value = "/api/sam-code/start-and-wait", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArdocoResultResponse> runPipelineAndWaitForResult(
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
@@ -68,6 +77,11 @@ public class ArDoCoForSamCodeTLRController extends AbstractController {
     }
 
 
+    @Operation(
+            summary = "Queries the TraceLinks for a given resultID, and returns it if it is ready",
+            description = "Queries whether the TraceLinks are ready using the id, which was returned by tue runPipeline method. " +
+                    "In case the result is not yet ready, the user gets informed about it via an appropriate message"
+    )
     @GetMapping("/api/sam-code/{id}")
     public ResponseEntity<ArdocoResultResponse> getResult(
             @Parameter(description = "The ID of the result to query", required = true)  @PathVariable("id") String id)
@@ -76,6 +90,11 @@ public class ArDoCoForSamCodeTLRController extends AbstractController {
     }
 
 
+    @Operation(
+            summary = "Waits up to 60s for the TraceLinks and returns them when they are ready.",
+            description = "Queries the TraceLinks and returns them when the previously started pipeline (using the runPipeline Method) has finished." +
+                    "In case the result is not there within 60s of waiting, the user gets informed about it via an appropriate message"
+    )
     @GetMapping("/api/sam-code/wait/{id}")
     public ResponseEntity<ArdocoResultResponse> waitForResult(
             @Parameter(description = "The ID of the result to query", required = true) @PathVariable("id") String id)

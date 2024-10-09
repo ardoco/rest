@@ -6,10 +6,13 @@ import io.github.ardoco.rest.api.exception.HashingException;
 
 import javax.xml.bind.DatatypeConverter;
 import java.io.File;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+/**
+ * This class provides hasing capabilites. It is used as part of generating a unique ID for a request.
+ */
 
 public class HashGenerator {
 

@@ -17,7 +17,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * The {@code AbstractController} class provides foundational methods for handling various REST responses
+ * for traceability link recovery (TLR) processes. It is designed to work with specific types of trace links
+ * and delegate processing to the {@link AbstractRunnerTLRService}.
+ * <p>
+ * This abstract class is intended to be extended by specific controller implementations that can handle
+ * different types of trace links, represented by the {@link TraceLinkType} enum.
+ */
 public abstract class AbstractController {
 
     protected final TraceLinkType traceLinkType;
@@ -26,13 +33,29 @@ public abstract class AbstractController {
 
     private static final Logger logger = LogManager.getLogger(AbstractController.class);
 
+    /**
+     * Constructs a new {@code AbstractController} with the specified service and trace link type.
+     *
+     * @param service the service responsible for trace link recovery operations
+     * @param traceLinkType the type of trace link this controller manages
+     */
     public AbstractController(AbstractRunnerTLRService service, TraceLinkType traceLinkType) {
         this.traceLinkType = traceLinkType;
         this. service = service;
     }
 
 
-    // build result for runPipeline
+    /**
+     * Handles the process of running a pipeline and building a response based on the result status.
+     *
+     * @param runner the {@link ArDoCoRunner} instance to execute
+     * @param requestId the unique request ID associated with the pipeline run
+     * @param inputFiles the list of input files for the pipeline run
+     * @return a {@link ResponseEntity} containing the {@link ArdocoResultResponse} with the status and result message
+     * @throws FileNotFoundException if any of the input files cannot be found
+     * @throws FileConversionException if there's an error converting any file during the pipeline process
+     * @throws HashingException if hashing the files for the request ID fails
+     */
     protected ResponseEntity<ArdocoResultResponse> handleRunPipeLineResult(ArDoCoRunner runner, String requestId, List<File> inputFiles)
             throws FileNotFoundException, FileConversionException, HashingException {
         Optional<String> result = service.runPipeline(runner, requestId, inputFiles);
@@ -45,7 +68,14 @@ public abstract class AbstractController {
         return new ResponseEntity<>(response, response.getStatus());
     }
 
-    // build result for getResult
+    /**
+     * Handles the retrieval of a result and builds an appropriate response based on the result status.
+     *
+     * @param requestId the unique request ID for retrieving the result
+     * @return a {@link ResponseEntity} containing the {@link ArdocoResultResponse} with the status and result message
+     * @throws ArdocoException if an error occurs while fetching the result
+     * @throws IllegalArgumentException if the provided requestId is invalid
+     */
     protected ResponseEntity<ArdocoResultResponse> handleGetResult(String requestId) throws ArdocoException, IllegalArgumentException  {
         Optional<String> result = service.getResult(requestId);
         ArdocoResultResponse response;
@@ -57,7 +87,16 @@ public abstract class AbstractController {
         return new ResponseEntity<>(response, response.getStatus());
     }
 
-    // build result for waitForResult
+
+    /**
+     * Handles the process of waiting for a result to become available, building a response based on the status.
+     *
+     * @param requestId the unique request ID for retrieving the result
+     * @return a {@link ResponseEntity} containing the {@link ArdocoResultResponse} with the status and result message
+     * @throws ArdocoException if an error occurs while waiting for the result
+     * @throws IllegalArgumentException if the provided requestId is invalid
+     * @throws TimeoutException if waiting for the result times out
+     */
     protected ResponseEntity<ArdocoResultResponse> handleWaitForResult(String requestId) throws ArdocoException, IllegalArgumentException, TimeoutException {
         Optional<String> result = service.waitForResult(requestId);
         ArdocoResultResponse response;
@@ -69,7 +108,15 @@ public abstract class AbstractController {
         return new ResponseEntity<>(response, response.getStatus());
     }
 
-    // build result for runPipelineAndWaitForResult
+    /**
+     * Handles the process of running a pipeline and waiting for the result, building a response accordingly.
+     *
+     * @param runner the {@link ArDoCoRunner} instance to execute
+     * @param requestId the unique request ID associated with the pipeline run
+     * @param inputFiles the list of input files for the pipeline run
+     * @return a {@link ResponseEntity} containing the {@link ArdocoResultResponse} with the status and result message
+     * @throws ArdocoException if an error occurs during the pipeline process or waiting for the result
+     */
     protected ResponseEntity<ArdocoResultResponse> handleRunPipelineAndWaitForResult(ArDoCoRunner runner, String requestId, List<File> inputFiles) throws ArdocoException{
         Optional<String> result = service.runPipelineAndWaitForResult(runner, requestId, inputFiles);
         ArdocoResultResponse response;

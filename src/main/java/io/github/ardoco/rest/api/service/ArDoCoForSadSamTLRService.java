@@ -25,7 +25,6 @@ public class ArDoCoForSadSamTLRService extends AbstractRunnerTLRService {
     protected String convertResultToJSONString(ArDoCoResult result) throws JsonProcessingException {
         ImmutableList<SadSamTraceLink> traceLinksImmutable = result.getAllTraceLinks();
         List<SadSamTraceLink> traceLinks = traceLinksImmutable.toSortedList(Comparator.comparingInt(SadSamTraceLink::getSentenceNumber));
-        TraceLinkConverter converter = new TraceLinkConverter();
-        return  converter.convertListOfSadSamTraceLinksToJSONString(traceLinks);
+        return  TraceLinkConverter.convertListOfSadSamTraceLinksToJSONString(traceLinks);
     }
 }

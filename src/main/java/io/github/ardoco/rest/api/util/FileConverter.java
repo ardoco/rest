@@ -14,6 +14,8 @@ import java.util.regex.Pattern;
 
 /**
  * This is a utility class for converting files and handling file-related operations.
+ * It provides methods to convert files to byte arrays, convert multipart files to regular files,
+ * and detect character encoding in files.
  */
 public final class FileConverter {
 
@@ -29,8 +31,8 @@ public final class FileConverter {
      *
      * @param files the list of {@link File} objects to convert to a byte array
      * @return a byte array representing the concatenated contents of all files
-     * @throws FileConversionException
-     * @throws FileNotFoundException
+     * @throws FileConversionException if an error occurs during file reading or conversion
+     * @throws FileNotFoundException if the provided file list is empty
      */
     public static byte[] convertFilesToByte(List<File> files) throws FileConversionException, FileNotFoundException {
         if (files.isEmpty()) {
@@ -51,9 +53,13 @@ public final class FileConverter {
 
     /**
      * Converts a {@link MultipartFile} to a {@link File} object.
+     * If the multipart file is empty or null, an exception is thrown.
+     * Otherwise, the file is saved in the system’s temporary directory.
      *
      * @param multipartFile the {@link MultipartFile} to convert
      * @return a {@link File} object containing the contents of the {@link MultipartFile}
+     * @throws FileNotFoundException if the file is empty or null
+     * @throws FileConversionException if an error occurs during file conversion
      */
     public static File convertMultipartFileToFile(MultipartFile multipartFile) throws FileNotFoundException, FileConversionException {
         if (multipartFile == null) {
@@ -88,10 +94,12 @@ public final class FileConverter {
 
 
     /**
-     * Detects the encoding from the XML prolog in the MultipartFile. Defaults to UTF-8 if no encoding is specified.
+     * Detects the encoding from the XML prolog in the MultipartFile.
+     * If no encoding is specified, UTF-8 is used by default.
+     * This method reads the first line of the file and attempts to parse the encoding from an XML declaration.
      *
      * @param multipartFile the multipart file to check for encoding
-     * @return the detected Charset, or UTF-8 as the default
+     * @return the detected Charset, or UTF-8 as the default if no encoding is specified
      * @throws IOException if an I/O error occurs
      */
     private static Charset detectEncodingOfFile(MultipartFile multipartFile) throws IOException {
@@ -99,7 +107,6 @@ public final class FileConverter {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(multipartFile.getInputStream(), StandardCharsets.UTF_8))) {
             String firstLine = reader.readLine();
 
-            // Check if the first line contains an encoding declaration (e.g., <?xml version="1.0" encoding="UTF-8"?>)
             if (firstLine != null && firstLine.startsWith("<?xml")) {
                 Matcher matcher = ENCODING_PATTERN.matcher(firstLine);
                 if (matcher.find()) {
@@ -109,7 +116,6 @@ public final class FileConverter {
             }
         }
 
-        // Default to UTF-8 if no encoding is found or if it's not an XML file
         return StandardCharsets.UTF_8;
     }
 }

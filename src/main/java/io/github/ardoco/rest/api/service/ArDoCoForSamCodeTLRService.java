@@ -22,7 +22,6 @@ public class ArDoCoForSamCodeTLRService extends AbstractRunnerTLRService {
     @Override
     protected String convertResultToJSONString(ArDoCoResult result) throws JsonProcessingException {
         List<SamCodeTraceLink> traceLinks = result.getSamCodeTraceLinks();
-        TraceLinkConverter converter = new TraceLinkConverter();
-        return converter.convertListOfSamCodeTraceLinksToJSONString(traceLinks);
+        return TraceLinkConverter.convertListOfSamCodeTraceLinksToJSONString(traceLinks);
     }
 }

@@ -1,5 +1,10 @@
 package io.github.ardoco.rest.api.api_response;
 
+/**
+ * Enum which represents the different types of tracelinks/ runner-names.
+ * It is used primarily in controllers and services to differentiate the types of trace links
+ * during processing and determine the appropriate handler for each request based on the type.
+ */
 public enum TraceLinkType {
     SAD_CODE("SadCodeResult:", "sad-code"),
     SAM_CODE("SamCodeResult:", "sam-code"),

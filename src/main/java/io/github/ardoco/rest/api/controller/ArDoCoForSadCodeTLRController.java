@@ -87,9 +87,9 @@ public class ArDoCoForSadCodeTLRController extends AbstractController{
 
 
     @Operation(
-            summary = "Queries whether the ArDoCoResult is already there.",
-            description = "Queries whether the SadCodeTraceLinks is already there using the id which was returned by tue runPipeline method. " +
-                    "In case the result is not yet ready, the user gets informed about that as well via an appropriate message"
+            summary = "Queries the TraceLinks for a given resultID, and returns it if it is ready",
+            description = "Queries whether the TraceLinks are ready using the id, which was returned by tue runPipeline method. " +
+                    "In case the result is not yet ready, the user gets informed about it via an appropriate message and the user retrieves the unique id to query the result later"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "the sadCodeTraceLinks found by ardoco", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArdocoResultResponse.class))),
@@ -104,9 +104,9 @@ public class ArDoCoForSadCodeTLRController extends AbstractController{
 
 
     @Operation(
-            summary = "Queries the SadCodeTraceLinks and returns them when they are ready.",
-            description = "Queries the SamSadTraceLinks and returns them when the previously started pipeline (using the runPipeline Method) has finished." +
-                    "In case it is not ready yet, it performs busy-waiting, meaning it waits until the result ready "
+            summary = "Waits up to 60s for the TraceLinks and returns them when they are ready.",
+            description = "Queries the TraceLinks and returns them when the previously started pipeline (using the runPipeline Method) has finished." +
+                    "In case the result is not there within 60s of waiting, the user gets informed about it via an appropriate message"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "the sadCodeTraceLinks found by ardoco", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArdocoResultResponse.class))),

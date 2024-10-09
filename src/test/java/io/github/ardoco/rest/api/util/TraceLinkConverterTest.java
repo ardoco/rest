@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.kit.kastel.mcse.ardoco.core.api.models.Entity;
 import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.EndpointTuple;
 import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.SadCodeTraceLink;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -12,20 +11,12 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-class TraceLinkConverterTest {
-
-    private TraceLinkConverter traceLinkConverter;
-
-    @BeforeEach
-    void setUp() {
-        traceLinkConverter = new TraceLinkConverter();
-    }
+class TraceLinkConverterTest { //TODO
 
     @Test
-    void testConvertListOfTraceLinksToJSONString_withValidData() throws JsonProcessingException {
+    void testConvertListOfTraceLinksToJSONString_withValidData() throws JsonProcessingException { //TODO outdated
         // Mocking Entity objects
         Entity entity1 = mock(Entity.class);
         Entity entity2 = mock(Entity.class);
@@ -42,7 +33,7 @@ class TraceLinkConverterTest {
 
         // Test the conversion
         List<SadCodeTraceLink> traceLinks = Collections.singletonList(traceLink);
-        String jsonString = traceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
+        String jsonString = TraceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
 
         // Expected JSON format
         String expectedJson = "[[\"Entity1\",\"Entity2\"]]";
@@ -52,7 +43,7 @@ class TraceLinkConverterTest {
     }
 
     @Test
-    void testConvertListOfSadCodeTraceLinksToJSONString_withMultipleLinks() throws JsonProcessingException {
+    void testConvertListOfSadCodeTraceLinksToJSONString_withMultipleLinks() throws JsonProcessingException { //TODO outdated
         // Mocking entities and endpoint tuples for multiple links
         Entity entityA1 = mock(Entity.class);
         Entity entityA2 = mock(Entity.class);
@@ -78,7 +69,7 @@ class TraceLinkConverterTest {
 
         // Test the conversion
         List<SadCodeTraceLink> traceLinks = Arrays.asList(traceLink1, traceLink2);
-        String jsonString = traceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
+        String jsonString = TraceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
 
         // Expected JSON format
         String expectedJson = "[[\"A1\",\"A2\"],[\"B1\",\"B2\"]]";
@@ -91,36 +82,12 @@ class TraceLinkConverterTest {
     void testConvertListOfTraceLinksToJSONString_withEmptyListSamSad() throws JsonProcessingException {
         // Test the conversion with an empty list
         List<SadCodeTraceLink> traceLinks = Collections.emptyList();
-        String jsonString = traceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
+        String jsonString = TraceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
 
         // Expected empty JSON array
         String expectedJson = "[]";
 
         // Assert the result
         assertEquals(expectedJson, jsonString);
-    }
-
-    @Test
-    void testConvertListOfSadCodeTraceLinksToJSONString_withException() throws JsonProcessingException {
-        // Mocking a valid endpoint tuple and entity
-        Entity entity1 = mock(Entity.class);
-        Entity entity2 = mock(Entity.class);
-        when(entity1.getName()).thenReturn("Entity1");
-        when(entity2.getName()).thenReturn("Entity2");
-
-        EndpointTuple endpointTuple = mock(EndpointTuple.class);
-        when(endpointTuple.firstEndpoint()).thenReturn(entity1);
-        when(endpointTuple.secondEndpoint()).thenReturn(entity2);
-
-        SadCodeTraceLink traceLink = new SadCodeTraceLink(endpointTuple);
-
-        // Spy on the TraceLinkConverter to mock the exception
-        TraceLinkConverter converterSpy = spy(traceLinkConverter);
-        doThrow(JsonProcessingException.class).when(converterSpy).convertListOfSadCodeTraceLinksToJSONString(anyList());
-
-        // Assert that JsonProcessingException is thrown
-        assertThrows(JsonProcessingException.class, () -> {
-            converterSpy.convertListOfSadCodeTraceLinksToJSONString(Collections.singletonList(traceLink));
-        });
     }
 }

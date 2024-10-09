@@ -1,33 +1,41 @@
 package io.github.ardoco.rest.api.repository;
 
+/**
+ * Interface for the repository of the used database to implement, allowing for easy database switching.
+ * This interface provides methods to store, retrieve, check, and delete results by key.
+ */
 public interface DatabaseAccessor {
 
     /**
-     * Stores a result in the database for 24 hours
+     * Stores a result in the database for a defined period (typically 24 hours).
      *
-     * @param id the key that should be used to retrieve the jsonResult from the database
-     * @param jsonResult the value that should be saved to the database
-     * @return the id which can be used to retrieve the result
+     * @param id the unique key that will be used to retrieve the result from the database
+     * @param jsonResult the JSON-formatted result to save in the database
+     * @return the id used to store and retrieve the result, for confirmation
      */
     String saveResult(String id, String jsonResult);
 
     /**
-     * Retrieves a result from the database by its key.
+     * Retrieves a stored result from the database by its unique key.
      *
-     * @param id the key that should be used to retrieve the jsonResult from the database
-     * @return the jsonResult retrieved from the database
+     * @param id the unique key for identifying and retrieving the result from the database
+     * @return the JSON-formatted result corresponding to the provided key, or null if no result is found
      */
     String getResult(String id);
 
     /**
-     * Checks if a key exists in the database.
+     * Checks if a specified key exists in the database.
      *
-     * @param key the key to check in the database
-     * @return true if the key exists, false otherwise
+     * @param key the unique key to check in the database
+     * @return {@code true} if the key exists in the database; {@code false} otherwise
      */
     boolean keyExistsInDatabase(String key);
 
-    void saveError(String id, String errorMessage);
-
+    /**
+     * Deletes a result from the database based on its unique key.
+     *
+     * @param id the unique key identifying the result to delete
+     * @return {@code true} if the result was successfully deleted; {@code false} if the key does not exist
+     */
     boolean deleteResult(String id);
 }

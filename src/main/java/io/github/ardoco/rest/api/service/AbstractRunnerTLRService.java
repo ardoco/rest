@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -18,37 +19,122 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.*;
 
+/**
+ * The {@code AbstractRunnerTLRService} provides a template for services that
+ * handle TraceLink Recovery (TLR) operations.
+ * <p>
+ * This class provides methods for running pipeline and waiting for pipelines, handling
+ * asynchronous tasks, and interacting with a database for storing and retrieving
+ * results.
+ * <p>
+ * Implementing classes are responsible for defining how the {@link ArDoCoResult} is
+ * converted to JSON format by implementing the {@link #convertResultToJSONString(ArDoCoResult)} method.
+ */
 @Service
 public abstract class AbstractRunnerTLRService {
 
+    /** Prefix for error messages stored in the database. */
     protected static final String ERROR_PREFIX = "Error: ";
-    protected static final int SECONDS_UNTIL_TIMEOUT = 60;
+
+    /** Timeout for waiting for a result, in seconds. */
+    @Value("${tlr.timeout.seconds}")
+    protected int secondsUntilTimeout;
 
     private static final Logger logger = LogManager.getLogger(AbstractRunnerTLRService.class);
 
-    /** Map to track the progress of async tasks*/
+    /** Map for tracking currently asynchronous task. */
     protected static ConcurrentHashMap<String, CompletableFuture<String>> asyncTasks = new ConcurrentHashMap<>();
 
-
+    /** Database accessor to save and retrieve results from the database. */
     protected final DatabaseAccessor databaseAccessor;
+
+    /** The type of trace link handled by this service. */
     protected final TraceLinkType traceLinkType;
 
+    /**
+     * Constructor to initialize database accessor and trace link type.
+     *
+     * @param databaseAccessor the database accessor used for storing and retrieving results
+     * @param traceLinkType the trace link type for which this service is for
+     */
     public AbstractRunnerTLRService(@Autowired DatabaseAccessor databaseAccessor, @Autowired(required = false) TraceLinkType traceLinkType) {
         this.databaseAccessor = databaseAccessor;
         this.traceLinkType = traceLinkType;
     }
 
+    /**
+     * Takes the {@link ArDoCoResult} and convertes the contained tracelinks of the service's type to JSON format.
+     *
+     * @param result the ArDoCo result containing trace links
+     * @return JSON representation of trace links
+     * @throws JsonProcessingException if there is an error during conversion
+     */
     abstract protected String convertResultToJSONString(ArDoCoResult result) throws JsonProcessingException;
 
+    /**
+     * Retrieves the result from the database if it is available.
+     *
+     * @param id the unique identifier of the result
+     * @return an optional containing the result if available, otherwise empty
+     * @throws ArdocoException if an error occurs retrieving the result from the database
+     * @throws IllegalArgumentException if the id is invalid
+     */
+    public Optional<String> getResult(String id) throws ArdocoException, IllegalArgumentException {
+        if (resultIsOnItsWay(id)) {
+            logger.log(Level.DEBUG, "Result is not yet available for " + id);
+            return Optional.empty();
+        }
+        return Optional.of(getResultFromDatabase(id));
+    }
 
+    /**
+     * Waits for a result until it is available, with a timeout.
+     *
+     * @param id the unique identifier of the result
+     * @return an optional containing the result if available, otherwise empty
+     * @throws ArdocoException if an error occurs while waiting for the result
+     * @throws IllegalArgumentException if the id is invalid
+     */
+    public Optional<String> waitForResult(String id) throws ArdocoException, IllegalArgumentException, io.github.ardoco.rest.api.exception.TimeoutException {
+        if (resultIsOnItsWay(id)) {
+            return waitForResultHelper(id);
+        }
+        return Optional.of(getResultFromDatabase(id));
+    }
+
+    /**
+     * Starts a new pipeline asynchronously, if the result is not already available or in progress.
+     *
+     * @param runner the ArDoCoRunner to execute the pipeline
+     * @param id the unique identifier of the pipeline
+     * @param inputFiles the input files for the pipeline
+     * @return an optional containing the result if available, otherwise empty
+     */
     public Optional<String> runPipeline(ArDoCoRunner runner, String id, List<File> inputFiles) {
         return runPipelineHelper(runner, id, inputFiles, false);
     }
 
+    /**
+     * Starts a new pipeline synchronously, waiting for the result.
+     *
+     * @param runner the ArDoCoRunner to execute the pipeline
+     * @param id the unique identifier of the pipeline
+     * @param inputFiles the input files for the pipeline
+     * @return an optional containing the result if available, otherwise empty
+     */
     public Optional<String> runPipelineAndWaitForResult(ArDoCoRunner runner, String id, List<File> inputFiles) {
         return runPipelineHelper(runner, id, inputFiles, true);
     }
 
+    /**
+     * Helper method to start the pipeline, either synchronously or asynchronously.
+     *
+     * @param runner the ArDoCoRunner to execute the pipeline
+     * @param id the unique identifier of the pipeline
+     * @param inputFiles the input files for the pipeline
+     * @param waitForResult if true, waits for the result synchronously
+     * @return an optional containing the result if available, otherwise empty
+     */
     private Optional<String> runPipelineHelper(ArDoCoRunner runner, String id, List<File> inputFiles, boolean waitForResult)
             throws ArdocoException, io.github.ardoco.rest.api.exception.TimeoutException {
 
@@ -68,11 +154,17 @@ public abstract class AbstractRunnerTLRService {
         return Optional.empty();
     }
 
-    // templateMethod for starting the pipeline
+    /**
+     * Asynchronously runs the pipeline and processes the results.
+     *
+     * @param runner the ArDoCoRunner to execute the pipeline
+     * @param id the unique identifier of the pipeline
+     * @param inputFiles the input files for the pipeline
+     * @return the result in JSON format, or null if an error occurred
+     */
     private String runPipelineAsync(ArDoCoRunner runner, String id, List<File> inputFiles) {
         String traceLinkJson;
         try {
-            // Run the pipeline
             logger.log(Level.INFO, "Starting Pipeline...");
             ArDoCoResult result = runner.run();
 
@@ -96,29 +188,16 @@ public abstract class AbstractRunnerTLRService {
         return traceLinkJson;
     }
 
-
-    public Optional<String> getResult(String id) throws ArdocoException, IllegalArgumentException {
-        if (resultIsOnItsWay(id)) {
-            logger.log(Level.DEBUG, "Result is not yet available for " + id);
-            return Optional.empty();
-        }
-        return Optional.of(getResultFromDatabase(id));
-    }
-
-    public Optional<String> waitForResult(String id)
-            throws ArdocoException, IllegalArgumentException, io.github.ardoco.rest.api.exception.TimeoutException {
-
-        if (resultIsOnItsWay(id)) {
-            return waitForResultHelper(id);
-        }
-        return Optional.of(getResultFromDatabase(id));
-    }
-
-
+    /**
+     * Helper method to wait for a result until it is available or the timeout is reached.
+     *
+     * @param id the unique identifier of the result
+     * @return an optional containing the result if available, otherwise empty
+     */
     private Optional<String> waitForResultHelper(String id) {
         try {
             logger.log(Level.INFO, "Waiting for the result of " + id);
-            return Optional.of(asyncTasks.get(id).get(SECONDS_UNTIL_TIMEOUT, TimeUnit.SECONDS));
+            return Optional.of(asyncTasks.get(id).get(secondsUntilTimeout, TimeUnit.SECONDS));
         } catch (TimeoutException e) {
             logger.log(Level.INFO, "Waiting for " + id + " took too long...");
             return Optional.empty();
@@ -127,6 +206,14 @@ public abstract class AbstractRunnerTLRService {
         }
     }
 
+    /**
+     * Retrieves the result from the database if it is available.
+     *
+     * @param id the unique identifier of the result
+     * @return the result in JSON format
+     * @throws IllegalArgumentException if the result is not in the database
+     * @throws ArdocoException if there is an error with the retrieved result
+     */
     private String getResultFromDatabase(String id) throws IllegalArgumentException, ArdocoException {
         if (!resultIsInDatabase(id)) {
             throw new IllegalArgumentException(Messages.noResultForKey(id));

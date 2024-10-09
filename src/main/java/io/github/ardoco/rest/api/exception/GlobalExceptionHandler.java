@@ -1,6 +1,5 @@
 package io.github.ardoco.rest.api.exception;
 
-import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.ErrorResponse;
 import io.github.ardoco.rest.api.util.Messages;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,9 +13,16 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Global exception handler that captures and processes various exceptions throughout the application,
+ * and returns HTTP responses for each exception type.
+ * <p>
+ * This handler provides specific methods for exceptions commonly encountered in the application, and it also includes
+ * a general fallback handler for any other exceptions. The handler uses the {@link ErrorResponse} class to format error
+ * details in the response body.
+ */
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {

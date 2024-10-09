@@ -34,3 +34,4 @@ build/
 /redis/redis.conf
 /redis/redis.env
 /.env
+/redis/redis.acl
