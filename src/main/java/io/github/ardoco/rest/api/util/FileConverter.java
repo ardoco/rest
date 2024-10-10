@@ -80,9 +80,14 @@ public final class FileConverter {
                  BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(convertedFile), encoding))) { // try-with-resources
 
                 String line;
+                boolean firstLine = true;
+
                 while ((line = reader.readLine()) != null) {
+                    if (!firstLine) {
+                        writer.newLine();
+                    }
                     writer.write(line);
-                    writer.newLine();
+                    firstLine = false;
                 }
             }
 

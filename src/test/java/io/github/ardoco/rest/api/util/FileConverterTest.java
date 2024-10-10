@@ -88,7 +88,7 @@ class FileConverterTest {
         assertNotNull(convertedFile);
         assertTrue(convertedFile.exists());
         assertEquals("testfile.txt", convertedFile.getName());
-        assertEquals("This is a test file content.", new String(java.nio.file.Files.readAllBytes(convertedFile.toPath())));
+        assertEquals("This is a test file content.", new String(Files.readAllBytes(convertedFile.toPath())));
     }
 
     @Test
