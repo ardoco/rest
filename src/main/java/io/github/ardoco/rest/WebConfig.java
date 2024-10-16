@@ -1,6 +1,6 @@
 package io.github.ardoco.rest;
 
-import io.github.ardoco.rest.api.util.ArchitectureModelTypeConverter;
+import io.github.ardoco.rest.api.converter.ArchitectureModelTypeConverter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

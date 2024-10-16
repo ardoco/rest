@@ -3,11 +3,13 @@ package io.github.ardoco.rest.api.controller;
 import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
-import io.github.ardoco.rest.api.exception.*;
+import io.github.ardoco.rest.api.exception.ArdocoException;
+import io.github.ardoco.rest.api.exception.FileConversionException;
+import io.github.ardoco.rest.api.exception.FileNotFoundException;
+import io.github.ardoco.rest.api.exception.TimeoutException;
 import io.github.ardoco.rest.api.service.AbstractRunnerTLRService;
 import io.github.ardoco.rest.api.util.HashGenerator;
 import io.github.ardoco.rest.api.util.Messages;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -41,7 +43,7 @@ public abstract class AbstractController {
      */
     public AbstractController(AbstractRunnerTLRService service, TraceLinkType traceLinkType) {
         this.traceLinkType = traceLinkType;
-        this. service = service;
+        this.service = service;
     }
 
 
@@ -54,10 +56,9 @@ public abstract class AbstractController {
      * @return a {@link ResponseEntity} containing the {@link ArdocoResultResponse} with the status and result message
      * @throws FileNotFoundException if any of the input files cannot be found
      * @throws FileConversionException if there's an error converting any file during the pipeline process
-     * @throws HashingException if hashing the files for the request ID fails
      */
     protected ResponseEntity<ArdocoResultResponse> handleRunPipeLineResult(ArDoCoRunner runner, String requestId, List<File> inputFiles)
-            throws FileNotFoundException, FileConversionException, HashingException {
+            throws FileNotFoundException, FileConversionException {
         Optional<String> result = service.runPipeline(runner, requestId, inputFiles);
         ArdocoResultResponse response;
         if (result.isEmpty()) {
@@ -124,17 +125,15 @@ public abstract class AbstractController {
              response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT_START_AND_WAIT);
         } else {
             response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
-
         }
         return new ResponseEntity<>(response, response.getStatus());
     }
 
 
     protected String generateRequestId(List<File> files, String projectName)
-            throws HashingException, FileNotFoundException, FileConversionException {
-        logger.log(Level.DEBUG, "Generating ID...");
-        HashGenerator hashGenerator = new HashGenerator();
-        String hash = hashGenerator.getMD5HashFromFiles(files);
+            throws FileNotFoundException, FileConversionException {
+        logger.info("Generating ID...");
+        String hash = HashGenerator.getMD5HashFromFiles(files);
         return traceLinkType.getKeyPrefix() + projectName + hash;
     }
 }

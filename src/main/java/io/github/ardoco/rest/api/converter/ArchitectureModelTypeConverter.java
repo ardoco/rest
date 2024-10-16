@@ -1,4 +1,4 @@
-package io.github.ardoco.rest.api.util;
+package io.github.ardoco.rest.api.converter;
 
 import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
 import org.springframework.core.convert.converter.Converter;
@@ -16,7 +16,7 @@ public class ArchitectureModelTypeConverter implements Converter<String, Archite
         try {
             return ArchitectureModelType.valueOf(source.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid architecture model type: " + source);
+            throw new IllegalArgumentException("Invalid architecture model type: " + source, e);
         }
     }
 }

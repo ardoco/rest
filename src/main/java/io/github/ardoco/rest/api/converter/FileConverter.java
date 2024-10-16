@@ -1,13 +1,17 @@
-package io.github.ardoco.rest.api.util;
+package io.github.ardoco.rest.api.converter;
 
 import io.github.ardoco.rest.api.exception.FileConversionException;
 import io.github.ardoco.rest.api.exception.FileNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,8 +50,8 @@ public final class FileConverter {
                 outputStream.write(bytes);
             }
             return outputStream.toByteArray();
-        } catch (Exception e) {
-            throw new FileConversionException("Error occurred while transferring the MultipartFile to File: " + e.getMessage());
+        } catch (IOException e) {
+            throw new FileConversionException("Error occurred while transferring the MultipartFile to File: " + e.getMessage(), e);
         }
     }
 
@@ -71,29 +75,16 @@ public final class FileConverter {
         }
 
         try {
-            // Create a temporary file to store the converted content
+            // Create a temporary file
             File convertedFile = new File(System.getProperty("java.io.tmpdir") + File.separator + multipartFile.getOriginalFilename());
             convertedFile.createNewFile();
 
-            Charset encoding = detectEncodingOfFile(multipartFile);
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(multipartFile.getInputStream(), encoding));
-                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(convertedFile), encoding))) { // try-with-resources
-
-                String line;
-                boolean firstLine = true;
-
-                while ((line = reader.readLine()) != null) {
-                    if (!firstLine) {
-                        writer.newLine();
-                    }
-                    writer.write(line);
-                    firstLine = false;
-                }
-            }
+            // Transfer content to the file
+            multipartFile.transferTo(convertedFile);
 
             return convertedFile;
-        } catch (Exception e) {
-            throw new FileConversionException("Error occurred while transferring the MultipartFile to File: " + e.getMessage());
+        } catch (IOException e) {
+            throw new FileConversionException("Error occurred while transferring the MultipartFile to File: " + e.getMessage(), e);
         }
     }
 

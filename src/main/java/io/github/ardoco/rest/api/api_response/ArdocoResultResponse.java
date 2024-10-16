@@ -15,12 +15,6 @@ public class ArdocoResultResponse {
 
     public ArdocoResultResponse() {}
 
-    public ArdocoResultResponse(String requestId, HttpStatus status) {
-        this.requestId = requestId;
-        this.status = status;
-        this.traceLinkType = TraceLinkType.fromId(requestId);
-    }
-
     public ArdocoResultResponse(String requestId, HttpStatus status, String message) {
         this.requestId = requestId;
         this.status = status;

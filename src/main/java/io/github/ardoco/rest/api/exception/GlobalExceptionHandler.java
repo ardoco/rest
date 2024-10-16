@@ -45,14 +45,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(error, error.getStatus());
     }
 
-    @ExceptionHandler(HashingException.class)
-    @ApiResponse(responseCode = "500", description = "When an error occurred while generating the project_ID", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
-    public ResponseEntity<ErrorResponse> handleHashingException(HashingException ex) {
-        logger.error(ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        return new ResponseEntity<>(error, error.getStatus());
-    }
-
     @ExceptionHandler(ArdocoException.class)
     @ApiResponse(responseCode = "500", description = "When querying ardoco resulted in an error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     public ResponseEntity<ErrorResponse> handleArdocoException(ArdocoException ex) {

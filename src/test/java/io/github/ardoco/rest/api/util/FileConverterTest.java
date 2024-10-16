@@ -1,11 +1,11 @@
 package io.github.ardoco.rest.api.util;
 
+import io.github.ardoco.rest.api.converter.FileConverter;
 import io.github.ardoco.rest.api.exception.FileConversionException;
 import io.github.ardoco.rest.api.exception.FileNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.Mockito;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 

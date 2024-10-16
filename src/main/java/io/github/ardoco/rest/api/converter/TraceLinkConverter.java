@@ -1,11 +1,15 @@
-package io.github.ardoco.rest.api.util;
+package io.github.ardoco.rest.api.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.kit.kastel.mcse.ardoco.core.api.models.arcotl.code.CodeCompilationUnit;
-import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.*;
+import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.EndpointTuple;
+import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.SadCodeTraceLink;
+import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.SadSamTraceLink;
+import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.SamCodeTraceLink;
+import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.TransitiveTraceLink;
 import edu.kit.kastel.mcse.ardoco.core.api.recommendationgenerator.RecommendedInstance;
 import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 
@@ -30,7 +34,7 @@ public final class TraceLinkConverter {
      * @return a JSON string representation of the list of {@link SadCodeTraceLink} objects
      * @throws JsonProcessingException if the conversion to JSON fails
      */
-    public static String convertListOfSadCodeTraceLinksToJSONString(List<SadCodeTraceLink> sadCodeTraceLinks) throws JsonProcessingException {
+    public static String convertListOfSadCodeTraceLinksToJsonString(List<SadCodeTraceLink> sadCodeTraceLinks) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayNode arrayNode = objectMapper.createArrayNode();
 
@@ -65,7 +69,7 @@ public final class TraceLinkConverter {
      * @return a JSON string representation of the list of {@link SamCodeTraceLink} objects
      * @throws JsonProcessingException if the conversion to JSON fails
      */
-    public static String convertListOfSamCodeTraceLinksToJSONString(List<SamCodeTraceLink> samCodeTraceLinks) throws JsonProcessingException {
+    public static String convertListOfSamCodeTraceLinksToJsonString(List<SamCodeTraceLink> samCodeTraceLinks) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayNode arrayNode = objectMapper.createArrayNode();
 
@@ -93,7 +97,7 @@ public final class TraceLinkConverter {
      * @return a JSON string representation of the list of {@link SadSamTraceLink} objects
      * @throws JsonProcessingException if the conversion to JSON fails
      */
-    public static String convertListOfSadSamTraceLinksToJSONString(List<SadSamTraceLink> sadSamTraceLinks) throws JsonProcessingException {
+    public static String convertListOfSadSamTraceLinksToJsonString(List<SadSamTraceLink> sadSamTraceLinks) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayNode arrayNode = objectMapper.createArrayNode();
 

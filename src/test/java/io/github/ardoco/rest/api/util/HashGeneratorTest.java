@@ -24,8 +24,6 @@ class HashGeneratorTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        hashGenerator = new HashGenerator();
-
         // Create temporary files for testing
         tempFile1 = File.createTempFile("tempFile1", ".txt");
         tempFile2 = File.createTempFile("tempFile2", ".txt");
@@ -47,10 +45,10 @@ class HashGeneratorTest {
     void testHashesAreEqualForSameFileContent() throws NoSuchAlgorithmException, IOException {
         // Single file hash test
         List<File> file1 = Collections.singletonList(tempFile1);
-        String hash1 = hashGenerator.getMD5HashFromFiles(file1);
+        String hash1 = HashGenerator.getMD5HashFromFiles(file1);
 
         List<File> file2 = Collections.singletonList(tempFile2);
-        String hash2 = hashGenerator.getMD5HashFromFiles(file2);
+        String hash2 = HashGenerator.getMD5HashFromFiles(file2);
 
         assertNotNull(hash1);
         assertNotNull(hash2);
@@ -62,10 +60,10 @@ class HashGeneratorTest {
     void testMultipleFilesHash() throws NoSuchAlgorithmException, IOException {
         // Multiple files hash test
         List<File> files = Arrays.asList(tempFile1, tempFile2);
-        String hash = hashGenerator.getMD5HashFromFiles(files);
+        String hash = HashGenerator.getMD5HashFromFiles(files);
 
         List<File> file1 = Collections.singletonList(tempFile1);
-        String hash2 = hashGenerator.getMD5HashFromFiles(file1);
+        String hash2 = HashGenerator.getMD5HashFromFiles(file1);
 
         assertNotNull(hash);
         assertNotNull(hash2);
@@ -78,7 +76,7 @@ class HashGeneratorTest {
         // Empty file list test
         List<File> files = Collections.emptyList();
 
-        assertThrows(FileNotFoundException.class, () -> hashGenerator.getMD5HashFromFiles(files));
+        assertThrows(FileNotFoundException.class, () -> HashGenerator.getMD5HashFromFiles(files));
     }
 
     @Test
@@ -86,7 +84,7 @@ class HashGeneratorTest {
         // Non-existing file test
         File nonExistingFile = new File("nonExistingFile.txt");
         List<File> files = Collections.singletonList(nonExistingFile);
-        assertThrows(FileConversionException.class, () -> hashGenerator.getMD5HashFromFiles(files));
+        assertThrows(FileConversionException.class, () -> HashGenerator.getMD5HashFromFiles(files));
     }
 
     @Test
@@ -95,8 +93,8 @@ class HashGeneratorTest {
         List<File> files1 = Collections.singletonList(tempFile1);
         List<File> files2 = Collections.singletonList(tempFile3);
 
-        String hash1 = hashGenerator.getMD5HashFromFiles(files1);
-        String hash2 = hashGenerator.getMD5HashFromFiles(files2);
+        String hash1 = HashGenerator.getMD5HashFromFiles(files1);
+        String hash2 = HashGenerator.getMD5HashFromFiles(files2);
 
         assertNotEquals(hash1, hash2);
     }

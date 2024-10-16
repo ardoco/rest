@@ -1,39 +1,30 @@
 package io.github.ardoco.rest.api.util;
 
+import io.github.ardoco.rest.api.converter.FileConverter;
 import io.github.ardoco.rest.api.exception.FileConversionException;
 import io.github.ardoco.rest.api.exception.FileNotFoundException;
-import io.github.ardoco.rest.api.exception.HashingException;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.File;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.UUID;
 
 /**
- * This class provides hasing capabilites. It is used as part of generating a unique ID for a request.
+ * This class provides hashing capabilities. It is used as part of generating a unique ID for a request.
  */
 
-public class HashGenerator {
+public final class HashGenerator {
+
+    private HashGenerator() {}
 
     /**
      * Method to generate an MD5 hash for a given string.
      *
      * @param files The List of Files from which one hash value should be generated
      * @return The MD5 hash as a hex string.
-     * @throws HashingException If MD5 algorithm is not available.
      */
-    public String getMD5HashFromFiles(List<File> files) throws HashingException, FileNotFoundException, FileConversionException {
-        MessageDigest messageDigest;
-        try {
-            messageDigest = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException | NullPointerException e) {
-            throw new HashingException();
-        }
+    public static String getMD5HashFromFiles(List<File> files) throws FileNotFoundException, FileConversionException {
         byte[] filesInByte = FileConverter.convertFilesToByte(files);
-        byte[] hashBytes = messageDigest.digest(filesInByte);
-        String hash = DatatypeConverter.printHexBinary(hashBytes);
-        return hash;
+        return UUID.nameUUIDFromBytes(filesInByte).toString();
     }
 
 }

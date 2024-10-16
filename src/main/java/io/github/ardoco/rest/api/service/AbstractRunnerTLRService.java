@@ -12,12 +12,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * The {@code AbstractRunnerTLRService} provides a template for services that
@@ -28,9 +31,8 @@ import java.util.concurrent.*;
  * results.
  * <p>
  * Implementing classes are responsible for defining how the {@link ArDoCoResult} is
- * converted to JSON format by implementing the {@link #convertResultToJSONString(ArDoCoResult)} method.
+ * converted to JSON format by implementing the {@link #convertResultToJsonString(ArDoCoResult)} method.
  */
-@Service
 public abstract class AbstractRunnerTLRService {
 
     /** Prefix for error messages stored in the database. */
@@ -46,7 +48,8 @@ public abstract class AbstractRunnerTLRService {
     protected static ConcurrentHashMap<String, CompletableFuture<String>> asyncTasks = new ConcurrentHashMap<>();
 
     /** Database accessor to save and retrieve results from the database. */
-    protected final DatabaseAccessor databaseAccessor;
+    @Autowired
+    protected DatabaseAccessor databaseAccessor;
 
     /** The type of trace link handled by this service. */
     protected final TraceLinkType traceLinkType;
@@ -54,22 +57,20 @@ public abstract class AbstractRunnerTLRService {
     /**
      * Constructor to initialize database accessor and trace link type.
      *
-     * @param databaseAccessor the database accessor used for storing and retrieving results
      * @param traceLinkType the trace link type for which this service is for
      */
-    public AbstractRunnerTLRService(@Autowired DatabaseAccessor databaseAccessor, @Autowired(required = false) TraceLinkType traceLinkType) {
-        this.databaseAccessor = databaseAccessor;
+    public AbstractRunnerTLRService(TraceLinkType traceLinkType) {
         this.traceLinkType = traceLinkType;
     }
 
     /**
-     * Takes the {@link ArDoCoResult} and convertes the contained tracelinks of the service's type to JSON format.
+     * Takes the {@link ArDoCoResult} and converts the contained trace links of the service's type to JSON format.
      *
      * @param result the ArDoCo result containing trace links
      * @return JSON representation of trace links
      * @throws JsonProcessingException if there is an error during conversion
      */
-    abstract protected String convertResultToJSONString(ArDoCoResult result) throws JsonProcessingException;
+    abstract protected String convertResultToJsonString(ArDoCoResult result) throws JsonProcessingException;
 
     /**
      * Retrieves the result from the database if it is available.
@@ -81,7 +82,7 @@ public abstract class AbstractRunnerTLRService {
      */
     public Optional<String> getResult(String id) throws ArdocoException, IllegalArgumentException {
         if (resultIsOnItsWay(id)) {
-            logger.log(Level.DEBUG, "Result is not yet available for " + id);
+            logger.log(Level.DEBUG, "Result is not yet available for {}", id);
             return Optional.empty();
         }
         return Optional.of(getResultFromDatabase(id));
@@ -95,7 +96,7 @@ public abstract class AbstractRunnerTLRService {
      * @throws ArdocoException if an error occurs while waiting for the result
      * @throws IllegalArgumentException if the id is invalid
      */
-    public Optional<String> waitForResult(String id) throws ArdocoException, IllegalArgumentException, io.github.ardoco.rest.api.exception.TimeoutException {
+    public Optional<String> waitForResult(String id) throws ArdocoException, IllegalArgumentException {
         if (resultIsOnItsWay(id)) {
             return waitForResultHelper(id);
         }
@@ -110,7 +111,8 @@ public abstract class AbstractRunnerTLRService {
      * @param inputFiles the input files for the pipeline
      * @return an optional containing the result if available, otherwise empty
      */
-    public Optional<String> runPipeline(ArDoCoRunner runner, String id, List<File> inputFiles) {
+    public Optional<String> runPipeline(ArDoCoRunner runner, String id, List<File> inputFiles)
+            throws ArdocoException {
         return runPipelineHelper(runner, id, inputFiles, false);
     }
 
@@ -122,7 +124,8 @@ public abstract class AbstractRunnerTLRService {
      * @param inputFiles the input files for the pipeline
      * @return an optional containing the result if available, otherwise empty
      */
-    public Optional<String> runPipelineAndWaitForResult(ArDoCoRunner runner, String id, List<File> inputFiles) {
+    public Optional<String> runPipelineAndWaitForResult(ArDoCoRunner runner, String id, List<File> inputFiles)
+            throws ArdocoException {
         return runPipelineHelper(runner, id, inputFiles, true);
     }
 
@@ -136,10 +139,10 @@ public abstract class AbstractRunnerTLRService {
      * @return an optional containing the result if available, otherwise empty
      */
     private Optional<String> runPipelineHelper(ArDoCoRunner runner, String id, List<File> inputFiles, boolean waitForResult)
-            throws ArdocoException, io.github.ardoco.rest.api.exception.TimeoutException {
+            throws ArdocoException {
 
         if (!resultIsInDatabase(id) && !resultIsOnItsWay(id)) {
-            logger.log(Level.INFO, "Start new TLR of type " + this.traceLinkType + " for: " + id);
+            logger.info("Start new TLR of type {} for {}", this.traceLinkType, id);
             CompletableFuture<String> future = CompletableFuture.supplyAsync(() ->
                     runPipelineAsync(runner, id, inputFiles)
             );
@@ -162,23 +165,23 @@ public abstract class AbstractRunnerTLRService {
      * @param inputFiles the input files for the pipeline
      * @return the result in JSON format, or null if an error occurred
      */
-    private String runPipelineAsync(ArDoCoRunner runner, String id, List<File> inputFiles) {
+    private String runPipelineAsync(ArDoCoRunner runner, String id, List<File> inputFiles) throws ArdocoException {
         String traceLinkJson;
         try {
-            logger.log(Level.INFO, "Starting Pipeline...");
+            logger.info("Starting Pipeline...");
             ArDoCoResult result = runner.run();
 
             logger.log(Level.DEBUG, "Converting found TraceLinks...");
-            traceLinkJson = convertResultToJSONString(result);
+            traceLinkJson = convertResultToJsonString(result);
 
-            logger.log(Level.INFO, "Saving found TraceLinks...");
+            logger.info("Saving found TraceLinks...");
             databaseAccessor.saveResult(id, traceLinkJson);
 
         } catch (Exception e) {
-            String message = "Error occurred while running the pipeline asynchronously for ID " + id + ": " + e.getMessage();
+            String message = Messages.errorRunningPipeline(id, e.getMessage());
             logger.error(message, e);
             databaseAccessor.saveResult(id, ERROR_PREFIX + message);
-            return null;
+            throw new ArdocoException(message, e);
         } finally {
             asyncTasks.remove(id);
             for (File file : inputFiles) {
@@ -196,13 +199,13 @@ public abstract class AbstractRunnerTLRService {
      */
     private Optional<String> waitForResultHelper(String id) {
         try {
-            logger.log(Level.INFO, "Waiting for the result of " + id);
+            logger.info("Waiting for the result of {}", id);
             return Optional.of(asyncTasks.get(id).get(secondsUntilTimeout, TimeUnit.SECONDS));
         } catch (TimeoutException e) {
-            logger.log(Level.INFO, "Waiting for " + id + " took too long...");
+            logger.info("Waiting for {} took too long...", id);
             return Optional.empty();
         } catch (ExecutionException | InterruptedException e) {
-            throw new ArdocoException(e.getMessage());
+            throw new ArdocoException(e.getMessage(), e);
         }
     }
 
@@ -223,7 +226,7 @@ public abstract class AbstractRunnerTLRService {
         if (result == null || result.startsWith(ERROR_PREFIX)) {
             throw new ArdocoException(result);
         }
-        logger.log(Level.INFO, "Result is available for " + id);
+        logger.info("Result is available for {}", id);
         return result;
     }
 

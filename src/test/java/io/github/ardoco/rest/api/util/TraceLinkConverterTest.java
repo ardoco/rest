@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.kit.kastel.mcse.ardoco.core.api.models.Entity;
 import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.EndpointTuple;
 import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.SadCodeTraceLink;
+import io.github.ardoco.rest.api.converter.TraceLinkConverter;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -33,7 +34,7 @@ class TraceLinkConverterTest { //TODO
 
         // Test the conversion
         List<SadCodeTraceLink> traceLinks = Collections.singletonList(traceLink);
-        String jsonString = TraceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
+        String jsonString = TraceLinkConverter.convertListOfSadCodeTraceLinksToJsonString(traceLinks);
 
         // Expected JSON format
         String expectedJson = "[[\"Entity1\",\"Entity2\"]]";
@@ -69,7 +70,7 @@ class TraceLinkConverterTest { //TODO
 
         // Test the conversion
         List<SadCodeTraceLink> traceLinks = Arrays.asList(traceLink1, traceLink2);
-        String jsonString = TraceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
+        String jsonString = TraceLinkConverter.convertListOfSadCodeTraceLinksToJsonString(traceLinks);
 
         // Expected JSON format
         String expectedJson = "[[\"A1\",\"A2\"],[\"B1\",\"B2\"]]";
@@ -82,7 +83,7 @@ class TraceLinkConverterTest { //TODO
     void testConvertListOfTraceLinksToJSONString_withEmptyListSamSad() throws JsonProcessingException {
         // Test the conversion with an empty list
         List<SadCodeTraceLink> traceLinks = Collections.emptyList();
-        String jsonString = TraceLinkConverter.convertListOfSadCodeTraceLinksToJSONString(traceLinks);
+        String jsonString = TraceLinkConverter.convertListOfSadCodeTraceLinksToJsonString(traceLinks);
 
         // Expected empty JSON array
         String expectedJson = "[]";
