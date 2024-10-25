@@ -5,6 +5,7 @@ import edu.kit.kastel.mcse.ardoco.core.api.output.ArDoCoResult;
 import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.exception.ArdocoException;
+import io.github.ardoco.rest.api.repository.CurrentlyRunningRequestsRepository;
 import io.github.ardoco.rest.api.repository.DatabaseAccessor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,7 +16,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -42,8 +42,8 @@ public abstract class AbstractRunnerTLRService {
 
     private static final Logger logger = LogManager.getLogger(AbstractRunnerTLRService.class);
 
-    /** Map for tracking currently asynchronous task. */
-    protected static ConcurrentHashMap<String, CompletableFuture<String>> asyncTasks = new ConcurrentHashMap<>();
+    @Autowired
+    private CurrentlyRunningRequestsRepository currentlyRunningRequestsRepository;
 
     /** Database accessor to save and retrieve results from the database. */
     @Autowired
@@ -144,7 +144,7 @@ public abstract class AbstractRunnerTLRService {
             CompletableFuture<String> future = CompletableFuture.supplyAsync(() ->
                     runPipelineAsync(runner, id, inputFiles)
             );
-            asyncTasks.put(id, future);
+            currentlyRunningRequestsRepository.addRequest(id, future);
         } else if (resultIsInDatabase(id)) {
             return Optional.of(getResultFromDatabase(id));
         }
@@ -181,7 +181,7 @@ public abstract class AbstractRunnerTLRService {
             databaseAccessor.saveResult(id, ERROR_PREFIX + message);
             throw new ArdocoException(message, e);
         } finally {
-            asyncTasks.remove(id);
+            currentlyRunningRequestsRepository.removeRequest(id);
             for (File file : inputFiles) {
                 file.delete();
             }
@@ -198,7 +198,7 @@ public abstract class AbstractRunnerTLRService {
     private Optional<String> waitForResultHelper(String id) {
         try {
             logger.info("Waiting for the result of {}", id);
-            return Optional.of(asyncTasks.get(id).get(secondsUntilTimeout, TimeUnit.SECONDS));
+            return Optional.of(currentlyRunningRequestsRepository.getRequest(id).get(secondsUntilTimeout, TimeUnit.SECONDS));
         } catch (TimeoutException e) {
             logger.info("Waiting for {} took too long...", id);
             return Optional.empty();
@@ -229,7 +229,7 @@ public abstract class AbstractRunnerTLRService {
     }
 
     private boolean resultIsOnItsWay(String id) {
-        return asyncTasks.containsKey(id);
+        return currentlyRunningRequestsRepository.containsRequest(id);
     }
 
     private boolean resultIsInDatabase(String id) {
