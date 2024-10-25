@@ -1,16 +1,12 @@
 package io.github.ardoco.rest.api.exception;
 
-import io.github.ardoco.rest.api.util.Messages;
-
 public class TimeoutException extends RuntimeException {
-    private final String id;
 
-    public TimeoutException(String id) {
-        super(Messages.REQUEST_TIMED_OUT);
-        this.id = id;
+    public TimeoutException(String id, Throwable cause) {
+        super("The request with id " + id + " timed out before the traceLinks could be retrieved. Please try again using the projectId", cause);
     }
 
-    public String getId() {
-        return id;
+    public TimeoutException(String id) {
+        super("The request with id " + id + " timed out before the traceLinks could be retrieved. Please try again using the projectId");
     }
 }

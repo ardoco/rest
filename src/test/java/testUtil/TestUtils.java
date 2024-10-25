@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.ErrorResponse;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
-import io.github.ardoco.rest.api.util.Messages;
+import io.github.ardoco.rest.api.messages.ResultMessages;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
@@ -68,7 +68,7 @@ public final class TestUtils {
     public static void testStartPipeline_new(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
-        assertEquals(Messages.RESULT_IS_BEING_PROCESSED, response.getMessage(), "message: " + response.getMessage());
+        assertEquals(ResultMessages.RESULT_IS_BEING_PROCESSED, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
         assertNull(response.getTraceLinks());
@@ -80,7 +80,7 @@ public final class TestUtils {
     public static void testStartPipeline_resultIsInDatabase(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
-        assertEquals(Messages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
+        assertEquals(ResultMessages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
         assertNotNull(response.getTraceLinks());
@@ -93,7 +93,7 @@ public final class TestUtils {
     public static void testGetResult_notReady(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
-        assertEquals(Messages.RESULT_NOT_READY, response.getMessage(), "message: " + response.getMessage());
+        assertEquals(ResultMessages.RESULT_NOT_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
         assertNull(response.getTraceLinks());
@@ -105,7 +105,7 @@ Tests when trying to get the result, but the result is not ready yet
     public static void testGetResult_ready(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
-        assertEquals(Messages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
+        assertEquals(ResultMessages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
         assertNotNull(response.getTraceLinks());
@@ -117,7 +117,7 @@ Tests when trying to get the result, but the result is not ready yet
     public static void testWaitForResult_notReady(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
-        assertEquals(Messages.REQUEST_TIMED_OUT, response.getMessage(), "message: " + response.getMessage());
+        assertEquals(ResultMessages.REQUEST_TIMED_OUT, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
         assertNull(response.getTraceLinks());
@@ -129,7 +129,7 @@ Tests when trying to get the result, but the result is not ready yet
     public static void testWaitForResult_ready(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
-        assertEquals(Messages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
+        assertEquals(ResultMessages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
         assertNotNull(response.getTraceLinks());
@@ -138,7 +138,7 @@ Tests when trying to get the result, but the result is not ready yet
     public static void testRunPipelineAndWaitForResult_notReady(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
-        assertEquals(Messages.REQUEST_TIMED_OUT_START_AND_WAIT, response.getMessage(), "message: " + response.getMessage());
+        assertEquals(ResultMessages.REQUEST_TIMED_OUT_START_AND_WAIT, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
         assertNull(response.getTraceLinks());
@@ -149,14 +149,12 @@ Tests when trying to get the result, but the result is not ready yet
         assertNotNull(responseEntity.getBody());
         ErrorResponse errorResponse = responseEntity.getBody();
         assertEquals(errorResponse.getStatus(), responseEntity.getStatusCode());
-        assertEquals(Messages.noResultForKey(invalidId), errorResponse.getMessage());
     }
 
     public static void testsForHandelingEmptyFiles(ResponseEntity<ErrorResponse> responseEntity) {
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
         ErrorResponse response = responseEntity.getBody();
-        assertEquals(response.getMessage(), Messages.FILE_NOT_FOUND);
         assertEquals(responseEntity.getStatusCode(), response.getStatus());
         assertNotNull(response.getTimestamp());
     }

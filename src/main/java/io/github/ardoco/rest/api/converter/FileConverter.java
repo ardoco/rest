@@ -44,15 +44,15 @@ public final class FileConverter {
         }
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            for (File file : files) {
+        for (File file : files) {
+            try {
                 byte[] bytes = Files.readAllBytes(file.toPath());
                 outputStream.write(bytes);
+            } catch (IOException e) {
+                throw new FileConversionException("Error occurred while transferring the file with name " + file.getName() + " to Bytes: " + e.getMessage(), e);
             }
-            return outputStream.toByteArray();
-        } catch (IOException e) {
-            throw new FileConversionException("Error occurred while transferring the MultipartFile to File: " + e.getMessage(), e);
         }
+        return outputStream.toByteArray();
     }
 
     /**
@@ -67,11 +67,11 @@ public final class FileConverter {
      */
     public static File convertMultipartFileToFile(MultipartFile multipartFile) throws FileNotFoundException, FileConversionException {
         if (multipartFile == null) {
-            throw new FileConversionException("Multipart file is null");
+            throw new FileConversionException("Multipart file with name" + multipartFile.getOriginalFilename() + "is null.");
         }
 
         if (multipartFile.isEmpty()) {
-            throw new FileNotFoundException("The file with name " + multipartFile.getOriginalFilename() + " is empty");
+            throw new FileNotFoundException("The file with name " + multipartFile.getOriginalFilename() + " is empty.");
         }
 
         try {

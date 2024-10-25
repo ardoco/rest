@@ -1,7 +1,6 @@
 package io.github.ardoco.rest.api.exception;
 
 import io.github.ardoco.rest.api.api_response.ErrorResponse;
-import io.github.ardoco.rest.api.util.Messages;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.concurrent.ExecutionException;
 
 /**
  * Global exception handler that captures and processes various exceptions throughout the application,
@@ -33,7 +31,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ApiResponse(responseCode = "422", description = "When the provided file is empty or doesn't exist", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     public ResponseEntity<ErrorResponse> handleFileNotFoundException(FileNotFoundException ex) {
         logger.error(ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, Messages.FILE_NOT_FOUND);
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -41,7 +39,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ApiResponse(responseCode = "422", description = "When the provided file cannot be converted", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     public ResponseEntity<ErrorResponse> handleFileConversionException(FileConversionException ex) {
         logger.error(ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, Messages.FILE_NOT_CONVERTABLE);
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -50,13 +48,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ErrorResponse> handleArdocoException(ArdocoException ex) {
         logger.error(ex);
         ErrorResponse error = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        return new ResponseEntity<>(error, error.getStatus());
-    }
-
-    @ExceptionHandler(InterruptedException.class)
-    public ResponseEntity<ErrorResponse> handleInterruptedException(ExecutionException ex) {
-        logger.error(ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Error during async querying ardocoTLR");
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -72,7 +63,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ApiResponse(responseCode = "408", description = "The request timed out before the result could be retrieved.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     public ResponseEntity<ErrorResponse> handleTimeoutException(TimeoutException ex) {
         logger.error(ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.REQUEST_TIMEOUT, ex.getMessage() + ": " + ex.getId());
+        ErrorResponse error = new ErrorResponse(HttpStatus.REQUEST_TIMEOUT, ex.getMessage());
         return new ResponseEntity<>(error, error.getStatus());
     }
 

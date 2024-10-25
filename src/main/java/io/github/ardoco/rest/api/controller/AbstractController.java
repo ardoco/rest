@@ -7,9 +7,9 @@ import io.github.ardoco.rest.api.exception.ArdocoException;
 import io.github.ardoco.rest.api.exception.FileConversionException;
 import io.github.ardoco.rest.api.exception.FileNotFoundException;
 import io.github.ardoco.rest.api.exception.TimeoutException;
+import io.github.ardoco.rest.api.messages.ResultMessages;
 import io.github.ardoco.rest.api.service.AbstractRunnerTLRService;
 import io.github.ardoco.rest.api.util.HashGenerator;
-import io.github.ardoco.rest.api.util.Messages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -62,9 +62,9 @@ public abstract class AbstractController {
         Optional<String> result = service.runPipeline(runner, requestId, inputFiles);
         ArdocoResultResponse response;
         if (result.isEmpty()) {
-            response = new ArdocoResultResponse(requestId, HttpStatus.OK, Messages.RESULT_IS_BEING_PROCESSED);
+            response = new ArdocoResultResponse(requestId, HttpStatus.OK, ResultMessages.RESULT_IS_BEING_PROCESSED);
         } else {
-            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
+            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), ResultMessages.RESULT_IS_READY);
         }
         return new ResponseEntity<>(response, response.getStatus());
     }
@@ -81,9 +81,9 @@ public abstract class AbstractController {
         Optional<String> result = service.getResult(requestId);
         ArdocoResultResponse response;
         if (result.isEmpty()) {
-            response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, Messages.RESULT_NOT_READY);
+            response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, ResultMessages.RESULT_NOT_READY);
         } else {
-            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
+            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), ResultMessages.RESULT_IS_READY);
         }
         return new ResponseEntity<>(response, response.getStatus());
     }
@@ -102,9 +102,9 @@ public abstract class AbstractController {
         Optional<String> result = service.waitForResult(requestId);
         ArdocoResultResponse response;
         if (result.isEmpty()) {
-            response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT);
+            response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, ResultMessages.REQUEST_TIMED_OUT);
         } else {
-            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
+            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), ResultMessages.RESULT_IS_READY);
         }
         return new ResponseEntity<>(response, response.getStatus());
     }
@@ -122,9 +122,9 @@ public abstract class AbstractController {
         Optional<String> result = service.runPipelineAndWaitForResult(runner, requestId, inputFiles);
         ArdocoResultResponse response;
         if (result.isEmpty()) {
-             response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, Messages.REQUEST_TIMED_OUT_START_AND_WAIT);
+             response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, ResultMessages.REQUEST_TIMED_OUT_START_AND_WAIT);
         } else {
-            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), Messages.RESULT_IS_READY);
+            response = new ArdocoResultResponse(requestId, HttpStatus.OK, result.get(), ResultMessages.RESULT_IS_READY);
         }
         return new ResponseEntity<>(response, response.getStatus());
     }

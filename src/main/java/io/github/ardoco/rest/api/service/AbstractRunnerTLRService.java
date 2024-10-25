@@ -6,8 +6,6 @@ import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.exception.ArdocoException;
 import io.github.ardoco.rest.api.repository.DatabaseAccessor;
-import io.github.ardoco.rest.api.util.Messages;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +80,7 @@ public abstract class AbstractRunnerTLRService {
      */
     public Optional<String> getResult(String id) throws ArdocoException, IllegalArgumentException {
         if (resultIsOnItsWay(id)) {
-            logger.log(Level.DEBUG, "Result is not yet available for {}", id);
+            logger.debug("Result is not yet available for {}", id);
             return Optional.empty();
         }
         return Optional.of(getResultFromDatabase(id));
@@ -171,14 +169,14 @@ public abstract class AbstractRunnerTLRService {
             logger.info("Starting Pipeline...");
             ArDoCoResult result = runner.run();
 
-            logger.log(Level.DEBUG, "Converting found TraceLinks...");
+            logger.debug("Converting found TraceLinks...");
             traceLinkJson = convertResultToJsonString(result);
 
             logger.info("Saving found TraceLinks...");
             databaseAccessor.saveResult(id, traceLinkJson);
 
         } catch (Exception e) {
-            String message = Messages.errorRunningPipeline(id, e.getMessage());
+            String message = String.format("Error occurred while running the pipeline asynchronously for ID %s : %s", id, e.getMessage());
             logger.error(message, e);
             databaseAccessor.saveResult(id, ERROR_PREFIX + message);
             throw new ArdocoException(message, e);
@@ -219,7 +217,7 @@ public abstract class AbstractRunnerTLRService {
      */
     private String getResultFromDatabase(String id) throws IllegalArgumentException, ArdocoException {
         if (!resultIsInDatabase(id)) {
-            throw new IllegalArgumentException(Messages.noResultForKey(id));
+            throw new IllegalArgumentException(String.format("No result with key %s found.", id));
         }
 
         String result = databaseAccessor.getResult(id);
