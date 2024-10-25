@@ -1,10 +1,11 @@
+/* Licensed under MIT 2024. */
 package io.github.ardoco.rest.api.controller;
 
-import io.github.ardoco.rest.ArDoCoRestApplication;
-import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
-import io.github.ardoco.rest.api.api_response.ErrorResponse;
-import io.github.ardoco.rest.api.api_response.TraceLinkType;
-import io.github.ardoco.rest.api.repository.RedisAccessor;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +22,23 @@ import org.springframework.util.MultiValueMap;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import io.github.ardoco.rest.ArDoCoRestApplication;
+import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
+import io.github.ardoco.rest.api.api_response.ErrorResponse;
+import io.github.ardoco.rest.api.api_response.TraceLinkType;
+import io.github.ardoco.rest.api.repository.RedisAccessor;
 import testUtil.TestUtils;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 @Testcontainers
-@SpringBootTest(
-        classes = ArDoCoRestApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
-public abstract class AbstractControllerTest {
+@SpringBootTest(classes = ArDoCoRestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+public abstract class AbstractTLRControllerTest {
+
+    private static final String GET_RESULT_ENDPOINT = "/api/get-result/{id}";
+    private static final String WAIT_FOR_RESULT_ENDPOINT = "/api/wait-for-result/{id}";
 
     private final String runPipelineEndpoint;
     private final String runPipelineAndWaitEndpoint;
-    private final String getResultEndpoint;
-    private final String waitForResultEndpoint;
     private final TraceLinkType traceLinkType;
 
     @Autowired
@@ -52,22 +52,18 @@ public abstract class AbstractControllerTest {
     @ServiceConnection
     public static GenericContainer<?> redisContainer = new GenericContainer<>("redis:7-alpine").withExposedPorts(6379);
 
-        @DynamicPropertySource
+    @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.redis.host", redisContainer::getHost);
         registry.add("spring.redis.port", () -> redisContainer.getMappedPort(6379));
     }
 
-    public AbstractControllerTest(TraceLinkType traceLinkType) {
+    public AbstractTLRControllerTest(TraceLinkType traceLinkType) {
         this.traceLinkType = traceLinkType;
         String endpointName = traceLinkType.getEndpointName();
         this.runPipelineEndpoint = String.format("/api/%s/start", endpointName);
         this.runPipelineAndWaitEndpoint = String.format("/api/%s/start-and-wait", endpointName);
-        this.getResultEndpoint = String.format("/api/%s/{id}", endpointName);
-        this.waitForResultEndpoint = String.format("/api/%s/wait/{id}", endpointName);
     }
-
-
 
     // Common test method for starting pipeline and getting results
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
@@ -93,11 +89,11 @@ public abstract class AbstractControllerTest {
         String invalidId = "invalid-project-id";
 
         // testGetResult
-        ResponseEntity<ErrorResponse> responseEntity = restTemplate.getForEntity(getResultEndpoint, ErrorResponse.class, invalidId);
+        ResponseEntity<ErrorResponse> responseEntity = restTemplate.getForEntity(GET_RESULT_ENDPOINT, ErrorResponse.class, invalidId);
         TestUtils.testInvalidRequestId(responseEntity, invalidId);
 
         // testWaitForResult
-        responseEntity = restTemplate.getForEntity(waitForResultEndpoint, ErrorResponse.class, invalidId);
+        responseEntity = restTemplate.getForEntity(WAIT_FOR_RESULT_ENDPOINT, ErrorResponse.class, invalidId);
         TestUtils.testInvalidRequestId(responseEntity, invalidId);
     }
 
@@ -105,14 +101,10 @@ public abstract class AbstractControllerTest {
     void testHandleEmptyFile() {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = prepareRequestEntityForEmptyFileTest("emptyFileProject");
 
-        ResponseEntity<ErrorResponse> responseEntity = restTemplate.exchange(
-                runPipelineEndpoint, HttpMethod.POST, requestEntity, ErrorResponse.class
-        );
+        ResponseEntity<ErrorResponse> responseEntity = restTemplate.exchange(runPipelineEndpoint, HttpMethod.POST, requestEntity, ErrorResponse.class);
         TestUtils.testsForHandelingEmptyFiles(responseEntity);
 
-        responseEntity = restTemplate.exchange(
-                runPipelineAndWaitEndpoint, HttpMethod.POST, requestEntity, ErrorResponse.class
-        );
+        responseEntity = restTemplate.exchange(runPipelineAndWaitEndpoint, HttpMethod.POST, requestEntity, ErrorResponse.class);
         TestUtils.testsForHandelingEmptyFiles(responseEntity);
     }
 
@@ -155,7 +147,7 @@ public abstract class AbstractControllerTest {
     }
 
     protected void tryGetResultWhenNotReady_test(String projectId) throws IOException {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(getResultEndpoint, String.class, projectId);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(GET_RESULT_ENDPOINT, String.class, projectId);
         ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
         TestUtils.testGetResult_notReady(response, responseEntity, traceLinkType);
         resultIsNotInDatabase(response.getRequestId());
@@ -164,7 +156,7 @@ public abstract class AbstractControllerTest {
     protected void waitForResultUntilReady_test(String projectId) throws IOException {
         ResponseEntity<String> waitingEntity;
         do {
-            waitingEntity = restTemplate.getForEntity(waitForResultEndpoint, String.class, projectId);
+            waitingEntity = restTemplate.getForEntity(WAIT_FOR_RESULT_ENDPOINT, String.class, projectId);
             ArdocoResultResponse waitingResponse = TestUtils.parseResponseEntityToArdocoResponse(waitingEntity);
 
             if (waitingEntity.getStatusCode() == HttpStatus.ACCEPTED) {
@@ -181,7 +173,7 @@ public abstract class AbstractControllerTest {
     }
 
     protected void getResult_hasResult_test(String projectId) throws IOException {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(getResultEndpoint, String.class, projectId);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(GET_RESULT_ENDPOINT, String.class, projectId);
         ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
         TestUtils.testGetResult_ready(response, responseEntity, traceLinkType);
         resultIsInDatabase(response.getRequestId());

@@ -1,13 +1,8 @@
+/* Licensed under MIT 2024. */
 package io.github.ardoco.rest.api.util;
 
-import io.github.ardoco.rest.api.converter.FileConverter;
-import io.github.ardoco.rest.api.exception.FileConversionException;
-import io.github.ardoco.rest.api.exception.FileNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -20,8 +15,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
+
+import io.github.ardoco.rest.api.converter.FileConverter;
+import io.github.ardoco.rest.api.exception.FileConversionException;
+import io.github.ardoco.rest.api.exception.FileNotFoundException;
 
 class FileConverterTest {
 
@@ -60,7 +62,8 @@ class FileConverterTest {
         expectedContent.write(Files.readAllBytes(pngFile.toPath()));
 
         assertArrayEquals(expectedContent.toByteArray(), byteArray);
-        assertEquals(expectedContent.toString(), new String(byteArray, StandardCharsets.UTF_8) , "Expected: " + expectedContent + " but got: " + new String(byteArray, StandardCharsets.UTF_8));
+        assertEquals(expectedContent.toString(), new String(byteArray, StandardCharsets.UTF_8), "Expected: " + expectedContent + " but got: " + new String(
+                byteArray, StandardCharsets.UTF_8));
     }
 
     @Test
@@ -73,13 +76,11 @@ class FileConverterTest {
         assertEquals("File list is empty", exception.getMessage());
     }
 
-
     @Test
     void testConvertMultipartFileToFile_withMockMultipartFile_Plaintext() throws IOException, FileNotFoundException, FileConversionException {
         // Create a MockMultipartFile
         String fileContent = "This is a test file content.";
-        MockMultipartFile mockMultipartFile = new MockMultipartFile(
-                "file", "testfile.txt", "text/plain", fileContent.getBytes());
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testfile.txt", "text/plain", fileContent.getBytes());
 
         // Use FileConverter to convert the MockMultipartFile to a File
         File convertedFile = FileConverter.convertMultipartFileToFile(mockMultipartFile);
@@ -95,8 +96,7 @@ class FileConverterTest {
     void testConvertMultipartFileToFile_withMockMultipartFile_acmFile() throws IOException, FileNotFoundException, FileConversionException {
         // Create a MockMultipartFile
         String fileContent = "This is a test file content.";
-        MockMultipartFile mockMultipartFile = new MockMultipartFile(
-                "file", "testfile.txt", "text/plain", fileContent.getBytes());
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testfile.txt", "text/plain", fileContent.getBytes());
 
         // Use FileConverter to convert the MockMultipartFile to a File
         File convertedFile = FileConverter.convertMultipartFileToFile(mockMultipartFile);
@@ -111,9 +111,8 @@ class FileConverterTest {
     @Test
     void testConvertMultipartFileToFile_withMockMultipartFile_png() throws IOException, FileNotFoundException, FileConversionException {
         // Create a MockMultipartFile
-        byte[] fileContent = {(byte) 137, (byte) 80, (byte) 78, (byte) 71}  ;
-        MockMultipartFile mockMultipartFile = new MockMultipartFile(
-                "file", "image.png", "image/png", fileContent);
+        byte[] fileContent = { (byte) 137, (byte) 80, (byte) 78, (byte) 71 };
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "image.png", "image/png", fileContent);
 
         // Use FileConverter to convert the MockMultipartFile to a File
         File convertedFile = FileConverter.convertMultipartFileToFile(mockMultipartFile);
@@ -128,14 +127,13 @@ class FileConverterTest {
     void testConvertMultipartFileToFile_withEmptyMultipartFile() {
         // Create a MockMultipartFile
         String fileContent = "";
-        MockMultipartFile mockMultipartFile = new MockMultipartFile(
-                "file", "testfile.txt", "text/plain", fileContent.getBytes());
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "testfile.txt", "text/plain", fileContent.getBytes());
 
         Exception exception = assertThrows(FileNotFoundException.class, () -> {
             FileConverter.convertMultipartFileToFile(mockMultipartFile);
         });
 
-        assertEquals("The file with name testfile.txt is empty", exception.getMessage());
+        assertEquals("The file with name testfile.txt is empty.", exception.getMessage());
     }
 
     @Test
@@ -153,4 +151,3 @@ class FileConverterTest {
         assertTrue(exception.getMessage().contains("Error occurred while transferring the MultipartFile to File"));
     }
 }
-

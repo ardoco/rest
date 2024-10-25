@@ -1,7 +1,9 @@
+/* Licensed under MIT 2024. */
 package io.github.ardoco.rest.api.controller;
 
-import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
-import io.github.ardoco.rest.api.api_response.TraceLinkType;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.core.io.ClassPathResource;
@@ -9,10 +11,10 @@ import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
+import io.github.ardoco.rest.api.api_response.TraceLinkType;
 
-public class ArDoCoForSadSamTLRControllerTest extends AbstractControllerTest {
+public class ArDoCoForSadSamTLRControllerTest extends AbstractTLRControllerTest {
 
     public ArDoCoForSadSamTLRControllerTest() {
         super(TraceLinkType.SAD_SAM);
@@ -46,8 +48,6 @@ public class ArDoCoForSadSamTLRControllerTest extends AbstractControllerTest {
         test_runPipelineAndWaitForResult_helper(requestEntity);
     }
 
-
-
     @Override
     protected HttpEntity<MultiValueMap<String, Object>> prepareRequestEntityForEmptyFileTest(String projectName) {
         HttpHeaders headers = new HttpHeaders();
@@ -55,13 +55,12 @@ public class ArDoCoForSadSamTLRControllerTest extends AbstractControllerTest {
 
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("projectName", projectName);
-        parameters.add("inputArchitectureModel",  new ClassPathResource("bigBlueButton/bbb.repository"));
+        parameters.add("inputArchitectureModel", new ClassPathResource("bigBlueButton/bbb.repository"));
         parameters.add("inputText", new ClassPathResource("emptyFile.txt"));
         parameters.add("architectureModelType", ArchitectureModelType.PCM.toString());
 
         return new HttpEntity<>(parameters, headers);
     }
-
 
     // Utility method to build request entity for multipart files
     private HttpEntity<MultiValueMap<String, Object>> setUpRequestParamToStartPipelineBBB(String projectName, ArchitectureModelType modelType) {

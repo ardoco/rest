@@ -1,7 +1,9 @@
+/* Licensed under MIT 2024. */
 package io.github.ardoco.rest.api.controller;
 
-import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
-import io.github.ardoco.rest.api.api_response.TraceLinkType;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.core.io.ClassPathResource;
@@ -11,10 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
+import io.github.ardoco.rest.api.api_response.TraceLinkType;
 
-public class ArDoCoForSadSamCodeControllerTest extends AbstractControllerTest {
+public class ArDoCoForSadSamCodeControllerTest extends AbstractTLRControllerTest {
 
     public ArDoCoForSadSamCodeControllerTest() {
         super(TraceLinkType.SAD_SAM_CODE);
@@ -57,7 +59,7 @@ public class ArDoCoForSadSamCodeControllerTest extends AbstractControllerTest {
         parameters.add("projectName", projectName);
         parameters.add("inputText", new ClassPathResource("emptyFile.txt"));
         parameters.add("inputCode", new ClassPathResource("bigBlueButton/codeModel.acm"));
-        parameters.add("inputArchitectureModel",  new ClassPathResource("bigBlueButton/bbb.repository"));
+        parameters.add("inputArchitectureModel", new ClassPathResource("bigBlueButton/bbb.repository"));
         parameters.add("architectureModelType", ArchitectureModelType.PCM.toString());
 
         return new HttpEntity<>(parameters, headers);

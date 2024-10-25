@@ -13,8 +13,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,10 +26,8 @@ import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSadSamCodeTraceabilityL
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.converter.FileConverter;
-import io.github.ardoco.rest.api.exception.ArdocoException;
 import io.github.ardoco.rest.api.exception.FileConversionException;
 import io.github.ardoco.rest.api.exception.FileNotFoundException;
-import io.github.ardoco.rest.api.exception.TimeoutException;
 import io.github.ardoco.rest.api.service.ArDoCoForSadSamCodeTLRService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -84,22 +80,6 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
         ArDoCoForSadSamCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, modelType, projectName);
 
         return handleRunPipelineAndWaitForResult(runner, id, inputFiles);
-    }
-
-    @Operation(summary = "Queries the TraceLinks for a given resultID, and returns it if it is ready", description = "Queries whether the TraceLinks are ready using the id, which was returned by tue runPipeline method. " + "In case the result is not yet ready, the user gets informed about it via an appropriate message")
-    @GetMapping("/{id}")
-    public ResponseEntity<ArdocoResultResponse> getResult(
-            @Parameter(description = "The ID of the result to query", required = true) @PathVariable("id") String id) throws ArdocoException,
-            IllegalArgumentException {
-        return handleGetResult(id);
-    }
-
-    @Operation(summary = "Waits up to 60s for the TraceLinks and returns them when they are ready.", description = "Queries the TraceLinks and returns them when the previously started pipeline (using the runPipeline Method) has finished." + "In case the result is not there within 60s of waiting, the user gets informed about it via an appropriate message")
-    @GetMapping("/wait/{id}")
-    public ResponseEntity<ArdocoResultResponse> waitForResult(
-            @Parameter(description = "The ID of the result to query", required = true) @PathVariable("id") String id) throws ArdocoException,
-            IllegalArgumentException, TimeoutException {
-        return handleWaitForResult(id);
     }
 
     private Map<String, File> convertInputFiles(MultipartFile inputText, MultipartFile inputArchitectureModel, MultipartFile inputCode) {

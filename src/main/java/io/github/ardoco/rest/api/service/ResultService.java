@@ -1,0 +1,79 @@
+/* Licensed under MIT 2024. */
+package io.github.ardoco.rest.api.service;
+
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import io.github.ardoco.rest.api.exception.ArdocoException;
+import io.github.ardoco.rest.api.repository.CurrentlyRunningRequestsRepository;
+
+@Service("resultService")
+public class ResultService extends AbstractService {
+
+    /** Timeout for waiting for a result, in seconds. */
+    @Value("${tlr.timeout.seconds}")
+    protected int secondsUntilTimeout;
+
+    private static final Logger logger = LogManager.getLogger(ResultService.class);
+
+    @Autowired
+    private CurrentlyRunningRequestsRepository currentlyRunningRequestsRepository;
+
+    /**
+     * Retrieves the result from the database if it is available.
+     *
+     * @param id the unique identifier of the result
+     * @return an optional containing the result if available, otherwise empty
+     * @throws ArdocoException          if an error occurs retrieving the result from the database
+     * @throws IllegalArgumentException if the id is invalid
+     */
+    public Optional<String> getResult(String id) throws ArdocoException, IllegalArgumentException {
+        if (resultIsOnItsWay(id)) {
+            logger.debug("Result is not yet available for {}", id);
+            return Optional.empty();
+        }
+        return Optional.of(getResultFromDatabase(id));
+    }
+
+    /**
+     * Waits for a result until it is available, with a timeout.
+     *
+     * @param id the unique identifier of the result
+     * @return an optional containing the result if available, otherwise empty
+     * @throws ArdocoException          if an error occurs while waiting for the result
+     * @throws IllegalArgumentException if the id is invalid
+     */
+    public Optional<String> waitForResult(String id) throws ArdocoException, IllegalArgumentException {
+        if (resultIsOnItsWay(id)) {
+            return waitForResultHelper(id);
+        }
+        return Optional.of(getResultFromDatabase(id));
+    }
+
+    /**
+     * Helper method to wait for a result until it is available or the timeout is reached.
+     *
+     * @param id the unique identifier of the result
+     * @return an optional containing the result if available, otherwise empty
+     */
+    private Optional<String> waitForResultHelper(String id) {
+        try {
+            logger.info("Waiting for the result of {}", id);
+            return Optional.of(currentlyRunningRequestsRepository.getRequest(id).get(secondsUntilTimeout, TimeUnit.SECONDS));
+        } catch (TimeoutException e) {
+            logger.info("Waiting for {} took too long...", id);
+            return Optional.empty();
+        } catch (ExecutionException | InterruptedException e) {
+            throw new ArdocoException(e.getMessage(), e);
+        }
+    }
+
+}

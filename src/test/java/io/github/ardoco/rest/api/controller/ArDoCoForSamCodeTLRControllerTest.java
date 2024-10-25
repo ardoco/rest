@@ -1,27 +1,25 @@
+/* Licensed under MIT 2024. */
 package io.github.ardoco.rest.api.controller;
-
-import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
-import io.github.ardoco.rest.ArDoCoRestApplication;
-import io.github.ardoco.rest.api.api_response.TraceLinkType;
-import org.junit.jupiter.api.Timeout;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.*;
-import org.junit.jupiter.api.Test;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
+import io.github.ardoco.rest.ArDoCoRestApplication;
+import io.github.ardoco.rest.api.api_response.TraceLinkType;
 
 @Testcontainers
-@SpringBootTest(
-        classes = ArDoCoRestApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
-class ArDoCoForSamCodeTLRControllerTest extends AbstractControllerTest {
+@SpringBootTest(classes = ArDoCoRestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class ArDoCoForSamCodeTLRControllerTest extends AbstractTLRControllerTest {
 
     public ArDoCoForSamCodeTLRControllerTest() {
         super(TraceLinkType.SAM_CODE);
@@ -55,8 +53,6 @@ class ArDoCoForSamCodeTLRControllerTest extends AbstractControllerTest {
         test_runPipelineAndWaitForResult_helper(requestEntity);
     }
 
-
-
     @Override
     protected HttpEntity<MultiValueMap<String, Object>> prepareRequestEntityForEmptyFileTest(String projectName) {
         HttpHeaders headers = new HttpHeaders();
@@ -64,7 +60,7 @@ class ArDoCoForSamCodeTLRControllerTest extends AbstractControllerTest {
 
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("projectName", projectName);
-        parameters.add("inputArchitectureModel",  new ClassPathResource("emptyFile.txt"));
+        parameters.add("inputArchitectureModel", new ClassPathResource("emptyFile.txt"));
         parameters.add("inputCode", new ClassPathResource("bigBlueButton/codeModel.acm"));
         parameters.add("architectureModelType", ArchitectureModelType.PCM.toString());
 

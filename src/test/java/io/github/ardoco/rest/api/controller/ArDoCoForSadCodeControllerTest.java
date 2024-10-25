@@ -1,6 +1,9 @@
+/* Licensed under MIT 2024. */
 package io.github.ardoco.rest.api.controller;
 
-import io.github.ardoco.rest.api.api_response.TraceLinkType;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.core.io.ClassPathResource;
@@ -10,10 +13,9 @@ import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import io.github.ardoco.rest.api.api_response.TraceLinkType;
 
-public class ArDoCoForSadCodeControllerTest extends AbstractControllerTest {
+public class ArDoCoForSadCodeControllerTest extends AbstractTLRControllerTest {
 
     public ArDoCoForSadCodeControllerTest() {
         super(TraceLinkType.SAD_CODE);
