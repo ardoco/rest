@@ -1,5 +1,6 @@
 package io.github.ardoco.rest.api.repository;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,9 @@ import java.util.concurrent.TimeUnit;
 @Repository
 public class RedisAccessor implements DatabaseAccessor {
 
+    @Value("${redis.time-to-live.hours}")
+    private long timeToLive;
+
     private final RedisTemplate<String, String> template;
 
     public RedisAccessor(RedisTemplate<String, String> template) {
@@ -21,7 +25,7 @@ public class RedisAccessor implements DatabaseAccessor {
 
     @Override
     public String saveResult(String id, String jsonResult) {
-        template.opsForValue().set(id, jsonResult, 24, TimeUnit.HOURS);
+        template.opsForValue().set(id, jsonResult, timeToLive, TimeUnit.HOURS);
         return id;
     }
 
