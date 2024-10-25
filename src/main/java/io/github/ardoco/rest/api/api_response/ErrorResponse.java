@@ -4,20 +4,22 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 
 
 public class ErrorResponse {
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
-    private final LocalDateTime timestamp;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss z")
+    private final ZonedDateTime timestamp;
 
     private HttpStatus status;
     private String message;
 
 
     public ErrorResponse() {
-        timestamp = LocalDateTime.now();
+        timestamp = LocalDateTime.now().atZone(ZoneId.of("Europe/Berlin"));
     }
 
     public ErrorResponse(HttpStatus status) {
@@ -32,7 +34,7 @@ public class ErrorResponse {
         this.message = message;
     }
 
-    public LocalDateTime getTimestamp() {
+    public ZonedDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -57,8 +59,7 @@ public class ErrorResponse {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ErrorResponse that = (ErrorResponse) o;
+        if (!(o instanceof ErrorResponse that)) return false;
         return Objects.equals(timestamp, that.timestamp) &&
                 status == that.status &&
                 Objects.equals(message, that.message);
