@@ -22,31 +22,28 @@ Each controller has 4 Endpoints:
 
 The endpoints that start the pipeline each proceed in a similar way:
 1. convert the inputMultipartFiles into Files
-2. generate a unique id from the input files, the projectName and the runner/tracelink-type (sad-sam,sad-code,...) to
+2. generate a unique id from the input files, the projectName and the runner/tracelink-type (sad-sam, sad-code,...) to
    later identify the result using an md5 hash
 3. set up the runner using the input Files
-4. forward the runner to the service layer, to run the pipeline asynchronously in case no result is in the database yet,
-   or simply get the result from the database
+4. forward the runner to the service layer, which runs the pipeline asynchronously in case no result is in the database yet,
+   or which simply gets the result from the database
 5. case runPipeline: return the unique id
 6. case runPipelineAndWait: return unique id and result if present after 60 seconds
 
 ## Notes on the Architecture
 Handling the result from calling the service is similar for all controllers. This similar behaviour can be found in the AbstractController class.\
 Moreover are the endpoints to retrieve the results the same for each controller (meaning, you can also use the
-getResult-endpoint from sad-sam to query the result from a sam-code pipeline).
-
-Currently, all controllers have the 2 methods so they can function on their own, but in order to minimize code duplicates and to make the API more intuitive
-it might make more sense to put them in a separate controller, whose only task it will be to retrieve the result.
-This idea is implemented in the ``extra-result-controller branch``.
+getResult-endpoint from sad-sam to query the result from a sam-code pipeline). The ResultController allows to retrieve or 
+wait for the result given an id
 
 ### Remarks
 - So far, the API doesn't allow users to define additional Configs (in the Controller classes)
   This is because at the time of implementation, these configs (which can be used to define the pipeline in the
-  ArDoCoForSadCodeTraceabilityLinkRecovery) are not used.
+  ArDoCoForSadCodeTraceabilityLinkRecovery) are not used by ArDoCo.
   They can be added later as param in the methods of the controller.
 
 ### Accepted file types:
-- So far no file checks have been implemented and is left to ardoco itself. It is only checked whether the
+- So far no file checks have been implemented. This is left to ArDoCo itself. It is only checked whether the
   file is empty or not.
 
 ## Service
@@ -55,13 +52,18 @@ This layer is responsible for processing the input and making the needed calls t
 order to retrieve a result.
 
 ### Architectural Remarks
-The Controllers already set up the runner. The controllers then feed the runner to the runPipeline() and
-runPipelineAndWaitForResult() Methods. This has the advantage that runPipeline() and runPipelineAndWaitForResult() have the same
-signature which maximizes code reusability without adding too much complexity. Moreover, there is a unified(?)interface in form of an abstract class
-for the Services which the Controllers can use. This works, since the runner in ardoco are part of an inheritance hierarchy
-as well. However, the current method has the disadvantage that ArdoCo is already invoked in the controller and not only
-in the service layer and that the runner is always set up for the runPipeline-methods ignoring whether the result already
-in the database or not.\
+The Controllers already set up the runner. The controllers then feed the runner to the runPipeline() method. 
+
+The controllers are organised into a 3 level inheritance structure, with AbstractService
+as the parent, which contains the logic needed by all services. ResultService and AbstractRunnerTLRService inherit from it.
+ResultService is responsible for the logic of getResult() and waitForResult, while AbstractRunnerTLRService contains the
+logic for starting the pipelines. Each runner has its own inherited concrete service to ensure the ArDoCoResult is
+handled correctly before it is stored.
+
+
+The current way of doing things has 
+the disadvantage that ArdoCo is already invoked in the controller and not only in the service layer and that the runner 
+is always set up for the runPipeline-methods ignoring whether the result already in the database or not.\
 Another option would be to only invoke ArDoCo in the service layer. This means that setting up the runner would be
 needed to do there as well. But since the setup-methods of the runners each require different parameters, there can't be
 a unified interface containing the startPipeline() methods without introducing a lot of complexity through generics.
