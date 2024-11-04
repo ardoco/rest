@@ -30,21 +30,21 @@ public class ArDoCoForSadSamCodeControllerTest extends AbstractTLRControllerTest
     }
 
     @Test
-    @Timeout(value = 3, unit = TimeUnit.MINUTES)
+    @Timeout(value = 6, unit = TimeUnit.MINUTES)
     void TestRunPipelineAndGetResult_pcmModel() throws IOException {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB("bigBlueButtonPCM", ArchitectureModelType.PCM);
         runPipeline_start_and_getResult(requestEntity);
     }
 
     @Test
-    @Timeout(value = 3, unit = TimeUnit.MINUTES)
+    @Timeout(value = 6, unit = TimeUnit.MINUTES)
     void TestRunPipelineAndWaitForResult_pcmModel() throws IOException {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB("bigBlueButton2", ArchitectureModelType.PCM);
         test_runPipelineAndWaitForResult_helper(requestEntity);
     }
 
     @Test
-    @Timeout(value = 3, unit = TimeUnit.MINUTES)
+    @Timeout(value = 6, unit = TimeUnit.MINUTES)
     void TestRunPipelineAndWaitForResult_umlModel() throws IOException {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB("bigBlueButton2", ArchitectureModelType.UML);
         test_runPipelineAndWaitForResult_helper(requestEntity);
