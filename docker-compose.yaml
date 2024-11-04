@@ -1,4 +1,4 @@
-version: "3.8" # Version of the Docker Compose file format
+version: "3.8"
 
 services:
   redis:
@@ -9,8 +9,9 @@ services:
       - "6379:6379"
     volumes:
       - ./data:/data
-      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf  # Use a custom redis.conf for configuration
-    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]  # Start Redis with the custom configuration
+    command: ["redis-server", "--bind", "0.0.0.0", "--port", "6379"]  # Bind to all interfaces
+    networks:
+      - app-network
 
   redisinsight:
     image: redis/redisinsight:2.54
@@ -22,6 +23,27 @@ services:
       - redis
     volumes:
       - redisinsight:/db
+    networks:
+      - app-network
+
+  app:
+    build:
+      context: .  # Docker context, assuming Dockerfile is in the root
+    container_name: ardoco-rest-api
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+    environment:
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+    networks:
+      - app-network
 
 volumes:
   redisinsight:
+
+networks:
+  app-network:
+    driver: bridge
