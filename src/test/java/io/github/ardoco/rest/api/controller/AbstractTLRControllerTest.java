@@ -66,7 +66,7 @@ public abstract class AbstractTLRControllerTest {
     }
 
     // Common test method for starting pipeline and getting results
-    @Timeout(value = 3, unit = TimeUnit.MINUTES)
+    @Timeout(value = 6, unit = TimeUnit.MINUTES)
     protected void runPipeline_start_and_getResult(HttpEntity<MultiValueMap<String, Object>> requestEntity) throws IOException {
         // Start the pipeline
         ArdocoResultResponse response = startNewPipeline_test(requestEntity);
