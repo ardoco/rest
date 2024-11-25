@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   redis:
-    image: redis:7.4.0-alpine
+    image: redis:7.4.0
     container_name: redis
     restart: always
     ports:
@@ -36,8 +36,7 @@ services:
     depends_on:
       - redis
     environment:
-      SPRING_DATA_REDIS_HOST: redis
-      SPRING_DATA_REDIS_PORT: 6379
+      - SPRING_PROFILES_ACTIVE=docker # select active profile in spring
     networks:
       - app-network
 
