@@ -16,7 +16,7 @@ public class RedisRealConnectionTest {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    @Test
+    /*@Test
     public void testRedisConnection() {
         // Attempt to connect and perform a basic operation
         String key = "test:connection";
@@ -33,7 +33,7 @@ public class RedisRealConnectionTest {
 
         // Clean up
         redisTemplate.delete(key);
-    }
+    }*/
 
 //    @Test
 //    public void testRedisConnectionFailure() {

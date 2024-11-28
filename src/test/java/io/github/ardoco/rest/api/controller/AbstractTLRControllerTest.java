@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.ErrorResponse;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.repository.RedisAccessor;
+import org.testcontainers.utility.DockerImageName;
 import testUtil.TestUtils;
 
 @Testcontainers
@@ -47,16 +49,29 @@ public abstract class AbstractTLRControllerTest {
     @Autowired
     protected RedisAccessor redisAccessor;
 
+    private static GenericContainer<?> redis;
+    private static final String REDIS_IMAGE_NAME = "redis:7.0-alpine";
+    private static final int REDIS_PORT = 6379;
+
+    @BeforeAll
+    static void beforeAll() {
+        redis = new GenericContainer<>(DockerImageName.parse(REDIS_IMAGE_NAME)).withExposedPorts(REDIS_PORT);
+        redis.start();
+        System.setProperty("spring.data.redis.host", redis.getHost());
+        System.setProperty("spring.data.redis.port", redis.getMappedPort(REDIS_PORT).toString());
+        System.out.println(redis.getHost() + ":" + redis.getMappedPort(REDIS_PORT));
+    }
+
     // Redis container shared across all subclasses
-    @Container
+    /*@Container
     @ServiceConnection
     public static GenericContainer<?> redisContainer = new GenericContainer<>("redis:7-alpine").withExposedPorts(6379);
 
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.redis.host", redisContainer::getHost);
-        registry.add("spring.redis.port", () -> redisContainer.getMappedPort(6379));
-    }
+        registry.add("spring.data.redis.host", redisContainer::getHost);
+        registry.add("spring.data.redis.port", () -> redisContainer.getMappedPort(6379));
+    }*/
 
     public AbstractTLRControllerTest(TraceLinkType traceLinkType) {
         this.traceLinkType = traceLinkType;

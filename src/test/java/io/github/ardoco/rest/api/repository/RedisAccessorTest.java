@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -26,7 +28,16 @@ public class RedisAccessorTest {
         redis.start();
         System.setProperty("spring.data.redis.host", redis.getHost());
         System.setProperty("spring.data.redis.port", redis.getMappedPort(REDIS_PORT).toString());
+        System.out.println(redis.getHost() + ":" + redis.getMappedPort(REDIS_PORT));
     }
+
+     @DynamicPropertySource
+     static void configureRedisProperties(DynamicPropertyRegistry registry) {
+         // Dynamically set Redis host and port
+         registry.add("spring.data.redis.host", redis::getHost);
+         registry.add("spring.data.redis.port", () -> redis.getMappedPort(REDIS_PORT));
+         System.out.println(redis.getHost() + ":" + redis.getMappedPort(REDIS_PORT));
+     }
 
     @AfterAll
     static void afterAll() {

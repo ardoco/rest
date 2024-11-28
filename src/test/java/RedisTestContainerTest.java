@@ -17,18 +17,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RedisTestContainerTest {
 
     @Container // define the redis container (will be shared between the test methods and started only once)
-    private static final GenericContainer<?> redisContainer =
+    private static final RedisContainer REDIS_CONTAINER =
             new RedisContainer(DockerImageName.parse("redis:7.4.0-alpine")).withExposedPorts(6379);
 
 
     @DynamicPropertySource
     static void configureRedis(DynamicPropertyRegistry registry) {
-        registry.add("spring.redis.host", redisContainer::getHost);
-        registry.add("spring.redis.port", () -> redisContainer.getMappedPort(6379).toString());
+        System.out.println("\\u001B[45m\\u001B[37m" + REDIS_CONTAINER.getHost() + ":" + REDIS_CONTAINER.getMappedPort(6379).toString() + "\\u001B[0m");
+        registry.add("spring.data.redis.host", REDIS_CONTAINER::getHost);
+        registry.add("spring.data.redis.port", () -> REDIS_CONTAINER.getMappedPort(6379).toString());
     }
 
     @Test
     void givenRedisContainerConfiguredWithDynamicProperties_whenCheckingRunningStatus_thenStatusIsRunning() {
-        assertTrue(redisContainer.isRunning());
+        assertTrue(REDIS_CONTAINER.isRunning());
     }
 }
