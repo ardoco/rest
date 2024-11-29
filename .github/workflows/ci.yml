@@ -64,7 +64,7 @@ jobs:
           cache: 'maven'
 
       - name: Build and Run Tests with Maven
-        run: mvn clean test
+        run: mvn verify
     services:
       redis:
         image: redis
