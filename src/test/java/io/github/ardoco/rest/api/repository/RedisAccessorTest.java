@@ -1,4 +1,7 @@
+/* Licensed under MIT 2024. */
 package io.github.ardoco.rest.api.repository;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,9 +13,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
 
-import static org.junit.jupiter.api.Assertions.*;
-
- @SpringBootTest
+@SpringBootTest
 public class RedisAccessorTest {
     private static final String REDIS_IMAGE_NAME = "redis:7.0-alpine";
     private static final int REDIS_PORT = 6379;
@@ -31,13 +32,13 @@ public class RedisAccessorTest {
         System.out.println(redis.getHost() + ":" + redis.getMappedPort(REDIS_PORT));
     }
 
-     @DynamicPropertySource
-     static void configureRedisProperties(DynamicPropertyRegistry registry) {
-         // Dynamically set Redis host and port
-         registry.add("spring.data.redis.host", redis::getHost);
-         registry.add("spring.data.redis.port", () -> redis.getMappedPort(REDIS_PORT));
-         System.out.println(redis.getHost() + ":" + redis.getMappedPort(REDIS_PORT));
-     }
+    @DynamicPropertySource
+    static void configureRedisProperties(DynamicPropertyRegistry registry) {
+        // Dynamically set Redis host and port
+        registry.add("spring.data.redis.host", redis::getHost);
+        registry.add("spring.data.redis.port", () -> redis.getMappedPort(REDIS_PORT));
+        System.out.println(redis.getHost() + ":" + redis.getMappedPort(REDIS_PORT));
+    }
 
     @AfterAll
     static void afterAll() {

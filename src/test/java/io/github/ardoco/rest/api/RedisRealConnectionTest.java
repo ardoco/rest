@@ -1,5 +1,6 @@
-//package io.github.ardoco.rest.api;
-//
+/* Licensed under MIT 2024. */
+package io.github.ardoco.rest.api;
+
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;

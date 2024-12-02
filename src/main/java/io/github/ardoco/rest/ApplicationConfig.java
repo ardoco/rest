@@ -1,3 +1,4 @@
+/* Licensed under MIT 2024. */
 package io.github.ardoco.rest;
 
 import org.springframework.beans.factory.annotation.Value;

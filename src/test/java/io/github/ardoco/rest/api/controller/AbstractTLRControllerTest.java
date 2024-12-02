@@ -12,24 +12,20 @@ import org.junit.jupiter.api.Timeout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.util.MultiValueMap;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import io.github.ardoco.rest.ArDoCoRestApplication;
 import io.github.ardoco.rest.api.api_response.ArdocoResultResponse;
 import io.github.ardoco.rest.api.api_response.ErrorResponse;
 import io.github.ardoco.rest.api.api_response.TraceLinkType;
 import io.github.ardoco.rest.api.repository.RedisAccessor;
-import org.testcontainers.utility.DockerImageName;
 import testUtil.TestUtils;
 
 @Testcontainers
@@ -66,7 +62,7 @@ public abstract class AbstractTLRControllerTest {
     /*@Container
     @ServiceConnection
     public static GenericContainer<?> redisContainer = new GenericContainer<>("redis:7-alpine").withExposedPorts(6379);
-
+    
     @DynamicPropertySource
     static void redisProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.redis.host", redisContainer::getHost);

@@ -145,22 +145,6 @@
   <build>
     <pluginManagement>
       <plugins>
-        <!-- Spring Boot Maven Plugin to repackage as an executable JAR -->
-        <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-          <version>${springboot.version}</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>repackage</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <mainClass>io.github.ardoco.rest.ArDoCoRestApplication</mainClass>
-          </configuration>
-        </plugin>
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -271,6 +255,22 @@
             <autoReleaseAfterClose>true</autoReleaseAfterClose>
           </configuration>
         </plugin>
+        <!-- Spring Boot Maven Plugin to repackage as an executable JAR -->
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${springboot.version}</version>
+          <configuration>
+            <mainClass>io.github.ardoco.rest.ArDoCoRestApplication</mainClass>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -333,7 +333,6 @@
           </pom>
         </configuration>
       </plugin>
-
 
       <!-- Existing Spring Boot Plugin -->
       <plugin>
