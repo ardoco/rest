@@ -255,7 +255,7 @@
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
           <configuration>
-            <mainClass>io.github.ardoco.rest.ArDoCoRestApplication</mainClass>
+            <mainClass>edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication</mainClass>
           </configuration>
           <executions>
             <execution>
