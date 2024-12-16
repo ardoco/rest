@@ -16,8 +16,7 @@
   <description>The goal of this project is to provide a REST API for the ArDoCo runners</description>
 
   <properties>
-    <error-prone.version>2.27.1</error-prone.version>
-    <spotless.version>2.43.0</spotless.version>
+    <spring-boot.version>3.3.3</spring-boot.version>
   </properties>
 
   <dependencyManagement>
@@ -25,7 +24,7 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>3.3.3</version>
+        <version>${spring-boot.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -254,6 +253,7 @@
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
           <configuration>
             <mainClass>edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication</mainClass>
           </configuration>
@@ -331,6 +331,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot.version}</version>
       </plugin>
     </plugins>
   </build>
