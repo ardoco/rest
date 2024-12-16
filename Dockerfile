@@ -9,5 +9,6 @@ FROM eclipse-temurin:21-jre-alpine
 RUN apk add --no-cache bash
 COPY --from=build /build/target/rest-*.jar /app.jar
 EXPOSE 8080
+ENV SPRING_PROFILES_ACTIVE=docker
 
 ENTRYPOINT ["java", "-jar", "/app.jar"]

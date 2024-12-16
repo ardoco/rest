@@ -1,47 +1,41 @@
-version: "3.8"
-
 services:
   redis:
-    image: redis:7.4.0
+    image: redis
     container_name: redis
     restart: always
     expose:
       - "6379"
     volumes:
       - ./data:/data
-    command: ["redis-server", "--bind", "0.0.0.0", "--port", "6379"]  # Bind to all interfaces
+    command: ["redis-server", "--bind", "0.0.0.0", "--port", "6379"]
     networks:
       - app-network
 
   redisinsight:
-    image: redis/redisinsight:2.54
+    image: redis/redisinsight
     container_name: redisinsight
     restart: always
-    expose:
-      - '5540'
+    ports:
+      - '127.0.0.1:5540:5540'
     depends_on:
       - redis
     volumes:
-      - redisinsight:/db
+      - ./redisinsight:/data
     networks:
       - app-network
 
   app:
     build:
-      context: .  # Docker context, assuming Dockerfile is in the root
+      context: .
+    image: ghcr.io/ardoco/rest
     container_name: ardoco-rest-api
     restart: always
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     depends_on:
       - redis
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker # select active profile in spring
     networks:
       - app-network
-
-volumes:
-  redisinsight:
 
 networks:
   app-network:
