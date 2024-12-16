@@ -5,8 +5,8 @@ services:
     image: redis:7.4.0
     container_name: redis
     restart: always
-    ports:
-      - "6379:6379"
+    expose:
+      - "6379"
     volumes:
       - ./data:/data
     command: ["redis-server", "--bind", "0.0.0.0", "--port", "6379"]  # Bind to all interfaces
@@ -17,8 +17,8 @@ services:
     image: redis/redisinsight:2.54
     container_name: redisinsight
     restart: always
-    ports:
-      - '5540:5540'
+    expose:
+      - '5540'
     depends_on:
       - redis
     volumes:
