@@ -26,16 +26,19 @@ services:
 
   app:
     build:
-      context: .
+      context: ..
+      dockerfile: REST/Dockerfile
     image: ghcr.io/ardoco/rest
     container_name: ardoco-rest-api
     restart: always
     ports:
-      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:8081:8080"
     depends_on:
       - redis
     networks:
       - app-network
+    volumes:
+      - ~/.m2:/root/.m2  # ✅ Add this line to share your local Maven cache
 
 networks:
   app-network:

@@ -1,7 +1,13 @@
 # Dockerfile for the Spring Boot Application
 FROM maven:3-eclipse-temurin-21-alpine AS build
 WORKDIR /build
-COPY . .
+
+
+COPY ArDoCo /ArDoCo
+RUN mvn -f /ArDoCo/pom.xml install -DskipTests
+
+
+COPY REST  /build
 RUN mvn -DskipTests clean package
 
 

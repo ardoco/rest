@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.github.jsonldjava.shaded.com.google.common.io.Files;
+import com.google.common.io.Files;
 
 import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
 import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSadSamCodeTraceabilityLinkRecovery;
@@ -56,6 +56,8 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel, inputCode);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
+        logger.info("Input files converted: {}", inputFiles);
+        System.out.println("hi from sad-sam-code controller");
 
         String id = generateRequestId(inputFiles, projectName);
         ArDoCoForSadSamCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, modelType, projectName);
