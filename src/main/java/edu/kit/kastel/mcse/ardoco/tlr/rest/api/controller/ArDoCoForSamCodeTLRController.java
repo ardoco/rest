@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,14 +51,16 @@ public class ArDoCoForSamCodeTLRController extends AbstractController {
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
             @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ArchitectureModelType architectureModelType,
-            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
+            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
             throws FileNotFoundException, FileConversionException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputCode, inputArchitectureModel);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
+        SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForSamCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, architectureModelType, projectName);
+        ArDoCoForSamCodeTraceabilityLinkRecovery runner = setUpRunner(additionalConfigs, inputFileMap, architectureModelType, projectName);
 
         return handleRunPipeLineResult(runner, id, inputFiles);
     }
@@ -68,14 +71,17 @@ public class ArDoCoForSamCodeTLRController extends AbstractController {
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
             @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ArchitectureModelType architectureModelType,
-            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
-            throws FileNotFoundException, FileConversionException {
+            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
+
+    throws FileNotFoundException, FileConversionException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputCode, inputArchitectureModel);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
+        SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForSamCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, architectureModelType, projectName);
+        ArDoCoForSamCodeTraceabilityLinkRecovery runner = setUpRunner(additionalConfigs, inputFileMap, architectureModelType, projectName);
 
         return handleRunPipelineAndWaitForResult(runner, id, inputFiles);
     }
@@ -90,9 +96,7 @@ public class ArDoCoForSamCodeTLRController extends AbstractController {
         return inputFiles;
     }
 
-    private ArDoCoForSamCodeTraceabilityLinkRecovery setUpRunner(Map<String, File> inputFileMap, ArchitectureModelType modelType, String projectName) {
-        SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
-
+    private ArDoCoForSamCodeTraceabilityLinkRecovery setUpRunner(SortedMap<String, String> additionalConfigs, Map<String, File> inputFileMap, ArchitectureModelType modelType, String projectName) {
         logger.info("Setting up Runner...");
         ArDoCoForSamCodeTraceabilityLinkRecovery runner = new ArDoCoForSamCodeTraceabilityLinkRecovery(projectName);
         runner.setUp(inputFileMap.get("inputArchitectureModelFile"), modelType, inputFileMap.get("inputCodeFile"), additionalConfigs, Files.createTempDir());

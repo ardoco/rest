@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,14 +59,17 @@ public class ArDoCoForSadCodeTLRController extends AbstractController {
     public ResponseEntity<ArdocoResultResponse> runPipeline(
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
             @Parameter(description = "The documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
-            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
-            throws FileNotFoundException, FileConversionException {
+            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
+
+    throws FileNotFoundException, FileConversionException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputCode);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
+        SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForSadCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, projectName);
+        ArDoCoForSadCodeTraceabilityLinkRecovery runner = setUpRunner(additionalConfigs, inputFileMap, projectName);
 
         return handleRunPipeLineResult(runner, id, inputFiles);
     }
@@ -77,14 +81,17 @@ public class ArDoCoForSadCodeTLRController extends AbstractController {
     public ResponseEntity<ArdocoResultResponse> runPipelineAndWaitForResult(
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
             @Parameter(description = "The documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
-            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
-            throws FileConversionException, ArdocoException, TimeoutException {
+            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
+
+    throws FileConversionException, ArdocoException, TimeoutException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputCode);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
+        SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForSadCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, projectName);
+        ArDoCoForSadCodeTraceabilityLinkRecovery runner = setUpRunner(additionalConfigs, inputFileMap, projectName);
 
         return handleRunPipelineAndWaitForResult(runner, id, inputFiles);
     }
@@ -99,9 +106,7 @@ public class ArDoCoForSadCodeTLRController extends AbstractController {
         return inputFiles;
     }
 
-    private ArDoCoForSadCodeTraceabilityLinkRecovery setUpRunner(Map<String, File> inputFileMap, String projectName) {
-        SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
-
+    private ArDoCoForSadCodeTraceabilityLinkRecovery setUpRunner(SortedMap<String, String> additionalConfigs, Map<String, File> inputFileMap, String projectName) {
         logger.info("Setting up Runner...");
         ArDoCoForSadCodeTraceabilityLinkRecovery runner = new ArDoCoForSadCodeTraceabilityLinkRecovery(projectName);
 

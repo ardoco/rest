@@ -2,6 +2,7 @@
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
@@ -16,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,16 +55,17 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
             @Parameter(description = "The textual documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
             @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ArchitectureModelType modelType,
-            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
-            throws FileNotFoundException, FileConversionException {
+            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
+
+    throws FileNotFoundException, FileConversionException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel, inputCode);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
-        logger.info("Input files converted: {}", inputFiles);
-        System.out.println("hi from sad-sam-code controller");
+        SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForSadSamCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, modelType, projectName);
+        ArDoCoForSadSamCodeTraceabilityLinkRecovery runner = setUpRunner(additionalConfigs, inputFileMap, modelType, projectName);
 
         return handleRunPipeLineResult(runner, id, inputFiles);
     }
@@ -72,14 +77,16 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
             @Parameter(description = "The textual documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
             @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ArchitectureModelType modelType,
-            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode)
-            throws FileNotFoundException, FileConversionException {
+            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
+    throws FileNotFoundException, FileConversionException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel, inputCode);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
+        SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForSadSamCodeTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, modelType, projectName);
+        ArDoCoForSadSamCodeTraceabilityLinkRecovery runner = setUpRunner(additionalConfigs, inputFileMap, modelType, projectName);
 
         return handleRunPipelineAndWaitForResult(runner, id, inputFiles);
     }
@@ -95,9 +102,7 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
         return inputFiles;
     }
 
-    private ArDoCoForSadSamCodeTraceabilityLinkRecovery setUpRunner(Map<String, File> inputFileMap, ArchitectureModelType modelType, String projectName) {
-        SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
-
+    private ArDoCoForSadSamCodeTraceabilityLinkRecovery setUpRunner(SortedMap<String, String> additionalConfigs, Map<String, File> inputFileMap, ArchitectureModelType modelType, String projectName) {
         logger.info("Setting up Runner...");
         ArDoCoForSadSamCodeTraceabilityLinkRecovery runner = new ArDoCoForSadSamCodeTraceabilityLinkRecovery(projectName);
 

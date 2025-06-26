@@ -38,7 +38,9 @@ services:
     networks:
       - app-network
     volumes:
-      - ~/.m2:/root/.m2  # ✅ Add this line to share your local Maven cache
+      - ~/.m2:/root/.m2
+      - ../REST:/build
+      - ../REST/target:/target
 
 networks:
   app-network:

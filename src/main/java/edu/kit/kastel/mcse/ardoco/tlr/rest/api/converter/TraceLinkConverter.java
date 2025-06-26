@@ -42,16 +42,14 @@ public final class TraceLinkConverter {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayNode arrayNode = objectMapper.createArrayNode();
 
-        System.out.println("hi from sadcodeTraceLinkConverter");
-
         for (TraceLink<SentenceEntity, CodeCompilationUnit> traceLink : sadCodeTraceLinks) {
             var sentenceEntity = traceLink.getFirstEndpoint();
             ObjectNode traceLinkNode = objectMapper.createObjectNode();
             traceLinkNode.put("sentenceNumber", sentenceEntity.getId());
-            traceLinkNode.put("codeCompilationUnit", traceLink.getSecondEndpoint().getId());
+            traceLinkNode.put("codeElementId", traceLink.getSecondEndpoint().getId());
+            traceLinkNode.put("codeElementName", traceLink.getSecondEndpoint().getName());
 
             if (traceLink instanceof TransitiveTraceLink<?, ?, ?> transitive) {
-                System.out.println("transitive trace link found");
                 var first = transitive.getFirstTraceLink().getSecondEndpoint();
                 if (first instanceof ArchitectureEntity architectureEntity) {
                     traceLinkNode.put("modelElementId", architectureEntity.getId());
@@ -82,6 +80,7 @@ public final class TraceLinkConverter {
             traceLinkNode.put("modelElementId", traceLink.getSecondEndpoint().getId());
             //traceLinkNode.put("modelElementName", traceLink.getSecondEndpoint().getName());
             traceLinkNode.put("codeElementId", traceLink.getFirstEndpoint().getId()); // Assuming the first endpoint is the code element
+            traceLinkNode.put("codeElementName", traceLink.getFirstEndpoint().getName());
             //traceLinkNode.put("codeElementName", traceLink.getFirstEndpoint().toString());
             arrayNode.add(traceLinkNode);
         }
@@ -104,7 +103,10 @@ public final class TraceLinkConverter {
         for (TraceLink<SentenceEntity, ArchitectureEntity> traceLink : sadSamTraceLinks) {
             ObjectNode traceLinkNode = objectMapper.createObjectNode();
             traceLinkNode.put("sentenceNumber", traceLink.getFirstEndpoint().getId());
-            traceLinkNode.put("modelElementUid", traceLink.getSecondEndpoint().getId());
+            traceLinkNode.put("modelElementName", traceLink.getSecondEndpoint().getName());
+
+            traceLinkNode.put("modelElementId", traceLink.getSecondEndpoint().getId());
+
             //traceLinkNode.put("confidence", traceLink.getConfidence());
             arrayNode.add(traceLinkNode);
         }

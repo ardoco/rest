@@ -2,6 +2,7 @@
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.MediaType;
@@ -16,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,17 +55,22 @@ public class ArDoCoForSadSamController extends AbstractController {
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
             @Parameter(description = "The textual documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
-            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ArchitectureModelType modelType)
+            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ArchitectureModelType modelType,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false)
+            @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
             throws FileNotFoundException, FileConversionException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
+        SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForSadSamTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, modelType, projectName);
+        ArDoCoForSadSamTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, modelType, projectName, additionalConfigs);
 
         return handleRunPipeLineResult(runner, id, inputFiles);
     }
+
+
 
     @Operation(summary = "Starts the ardoco-pipeline to get a SadSamTraceLinks and waits until the result is obtained", description = "performs the SadSamTraceLinks link recovery of ArDoCo with the given project name and files and waits until the SadSamTraceLinks are obtained.")
     @PostMapping(value = "/start-and-wait", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -68,15 +78,17 @@ public class ArDoCoForSadSamController extends AbstractController {
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
             @Parameter(description = "The textual documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
-            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ArchitectureModelType modelType)
-
+            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ArchitectureModelType modelType,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false)
+            @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
             throws FileNotFoundException, FileConversionException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
+        SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForSadSamTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, modelType, projectName);
+        ArDoCoForSadSamTraceabilityLinkRecovery runner = setUpRunner(inputFileMap, modelType, projectName, additionalConfigs);
 
         return handleRunPipelineAndWaitForResult(runner, id, inputFiles);
     }
@@ -91,9 +103,8 @@ public class ArDoCoForSadSamController extends AbstractController {
         return inputFiles;
     }
 
-    private ArDoCoForSadSamTraceabilityLinkRecovery setUpRunner(Map<String, File> inputFileMap, ArchitectureModelType modelType, String projectName) {
-        SortedMap<String, String> additionalConfigs = new TreeMap<>(); // can be later added to api call as param if needed
-
+    private ArDoCoForSadSamTraceabilityLinkRecovery setUpRunner(Map<String, File> inputFileMap, ArchitectureModelType modelType, String projectName, SortedMap<String, String> additionalConfigs)
+            throws FileNotFoundException, FileConversionException {
         logger.info("Setting up Runner...");
         ArDoCoForSadSamTraceabilityLinkRecovery runner = new ArDoCoForSadSamTraceabilityLinkRecovery(projectName);
         runner.setUp(inputFileMap.get("inputText"), inputFileMap.get("inputArchitectureModel"), modelType, additionalConfigs, Files.createTempDir());

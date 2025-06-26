@@ -2,9 +2,15 @@
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,5 +109,19 @@ public abstract class AbstractController {
         logger.info("Generating ID...");
         String hash = HashGenerator.getMD5HashFromFiles(files);
         return traceLinkType.getKeyPrefix() + projectName + hash;
+    }
+
+    protected SortedMap<String, String> parseAdditionalConfigs(String additionalConfigsJson) {
+        SortedMap<String, String> additionalConfigs = new TreeMap<>();
+        if (additionalConfigsJson != null && !additionalConfigsJson.isBlank()) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                Map<String, String> configMap = mapper.readValue(additionalConfigsJson, new TypeReference<>() {});
+                additionalConfigs.putAll(configMap);
+            } catch (IOException e) {
+                throw new FileConversionException("Invalid JSON format in 'additionalConfigs' parameter", e);
+            }
+        }
+        return additionalConfigs;
     }
 }
