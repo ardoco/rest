@@ -67,7 +67,7 @@ public class ResultService extends AbstractService {
     private Optional<String> waitForResultHelper(String id) {
         try {
             logger.info("Waiting for the result of {}", id);
-            return Optional.of(currentlyRunningRequestsRepository.getRequest(id).get(secondsUntilTimeout, TimeUnit.SECONDS));
+            return Optional.of(currentlyRunningRequestsRepository.getRequest(id).get(secondsUntilTimeout, TimeUnit.SECONDS).buildJsonString());
         } catch (TimeoutException e) {
             logger.info("Waiting for {} took too long...", id);
             return Optional.empty();

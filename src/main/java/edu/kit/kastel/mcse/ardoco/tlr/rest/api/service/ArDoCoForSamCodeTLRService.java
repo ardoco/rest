@@ -6,6 +6,7 @@ import edu.kit.kastel.mcse.ardoco.core.api.models.arcotl.code.CodeCompilationUni
 import edu.kit.kastel.mcse.ardoco.core.api.output.ArDoCoResult;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.SamCodeTraceLink;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.TraceLink;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.TraceLinkConverter;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,9 @@ public class ArDoCoForSamCodeTLRService extends AbstractRunnerTLRService {
     }
 
     @Override
-    protected String convertResultToJsonString(ArDoCoResult result) throws JsonProcessingException {
+    protected ArDoCoApiResult convertResultToJsonString(ArDoCoResult result) throws JsonProcessingException {
         List<TraceLink<ArchitectureEntity, CodeCompilationUnit>> traceLinks = result.getSamCodeTraceLinks();
-        return TraceLinkConverter.convertListOfSamCodeTraceLinksToJsonString(traceLinks);
+        String traceLinkJson = TraceLinkConverter.convertListOfSamCodeTraceLinksToJsonString(traceLinks);
+        return new ArDoCoApiResult(traceLinkJson);
     }
 }

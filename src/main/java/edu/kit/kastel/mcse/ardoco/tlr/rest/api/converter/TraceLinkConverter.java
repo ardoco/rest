@@ -7,15 +7,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.kit.kastel.mcse.ardoco.core.api.entity.ArchitectureEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.models.arcotl.code.CodeCompilationUnit;
 
-import edu.kit.kastel.mcse.ardoco.core.api.stage.recommendationgenerator.RecommendedInstance;
 import edu.kit.kastel.mcse.ardoco.core.api.text.SentenceEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.SadCodeTraceLink;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.SadSamTraceLink;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.SamCodeTraceLink;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.TraceLink;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.TransitiveTraceLink;
-
-import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 
 import java.util.List;
 

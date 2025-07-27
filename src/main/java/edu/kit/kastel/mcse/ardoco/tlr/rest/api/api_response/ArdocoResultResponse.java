@@ -11,7 +11,7 @@ public class ArdocoResultResponse {
     private TraceLinkType traceLinkType;
 
     @JsonRawValue
-    private String traceLinks;
+    private String result;
 
     public ArdocoResultResponse() {}
 
@@ -22,10 +22,10 @@ public class ArdocoResultResponse {
         this.traceLinkType = TraceLinkType.fromId(requestId);
     }
 
-    public ArdocoResultResponse(String requestId, HttpStatus status, String traceLinks, String message) {
+    public ArdocoResultResponse(String requestId, HttpStatus status, String result, String message) {
         this.requestId = requestId;
         this.status = status;
-        this.traceLinks = traceLinks;
+        this.result = result;
         this.message = message;
         this.traceLinkType = TraceLinkType.fromId(requestId);
     }
@@ -54,12 +54,12 @@ public class ArdocoResultResponse {
         this.message = message;
     }
 
-    public String getTraceLinks() {
-        return traceLinks;
+    public String getResult() {
+        return result;
     }
 
-    public void setTraceLinks(String traceLinks) {
-        this.traceLinks = traceLinks;
+    public void setResult(String result) {
+        this.result = result;
     }
 
     public TraceLinkType getTraceLinkType() {

@@ -108,7 +108,7 @@ public abstract class AbstractController {
     protected String generateRequestId(List<File> files, String projectName) throws FileNotFoundException, FileConversionException {
         logger.info("Generating ID...");
         String hash = HashGenerator.getMD5HashFromFiles(files);
-        return traceLinkType.getKeyPrefix() + projectName + hash;
+        return traceLinkType.getKeyPrefix() + ":" +  projectName + hash;
     }
 
     protected SortedMap<String, String> parseAdditionalConfigs(String additionalConfigsJson) {

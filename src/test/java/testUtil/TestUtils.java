@@ -57,7 +57,7 @@ public final class TestUtils {
         resultResponse.setTraceLinkType(TraceLinkType.valueOf(traceLinkType));
 
         if (traceLinkNode != null) {
-            resultResponse.setTraceLinks(traceLinks);
+            resultResponse.setResult(traceLinks);
         }
         return resultResponse;
     }
@@ -71,7 +71,7 @@ public final class TestUtils {
         assertEquals(ResultMessages.RESULT_IS_BEING_PROCESSED, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNull(response.getTraceLinks());
+        assertNull(response.getResult());
     }
 
     /*
@@ -83,7 +83,7 @@ public final class TestUtils {
         assertEquals(ResultMessages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNotNull(response.getTraceLinks());
+        assertNotNull(response.getResult());
     }
 
 
@@ -96,7 +96,7 @@ public final class TestUtils {
         assertEquals(ResultMessages.RESULT_NOT_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNull(response.getTraceLinks());
+        assertNull(response.getResult());
     }
 
     /*
@@ -108,7 +108,7 @@ Tests when trying to get the result, but the result is not ready yet
         assertEquals(ResultMessages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNotNull(response.getTraceLinks());
+        assertNotNull(response.getResult());
     }
 
     /*
@@ -120,7 +120,7 @@ Tests when trying to get the result, but the result is not ready yet
         assertEquals(ResultMessages.REQUEST_TIMED_OUT, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNull(response.getTraceLinks());
+        assertNull(response.getResult());
     }
 
     /*
@@ -132,7 +132,7 @@ Tests when trying to get the result, but the result is not ready yet
         assertEquals(ResultMessages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNotNull(response.getTraceLinks());
+        assertNotNull(response.getResult());
     }
 
     public static void testRunPipelineAndWaitForResult_notReady(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
@@ -141,7 +141,7 @@ Tests when trying to get the result, but the result is not ready yet
         assertEquals(ResultMessages.REQUEST_TIMED_OUT_START_AND_WAIT, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNull(response.getTraceLinks());
+        assertNull(response.getResult());
     }
 
     public static void testInvalidRequestId(ResponseEntity<ErrorResponse> responseEntity, String invalidId) {

@@ -61,6 +61,13 @@
       <version>${ardoco.version}</version>
 <!--      <version>1.0.0</version>-->
     </dependency>
+
+    <dependency>
+      <groupId>io.github.ardoco.id</groupId>
+      <artifactId>pipeline-id</artifactId>
+      <version>${ardoco.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
