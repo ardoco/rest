@@ -5,20 +5,20 @@
   <parent>
     <groupId>io.github.ardoco</groupId>
     <artifactId>parent</artifactId>
-    <version>2.0.0-refactoring</version>
-    <relativePath>../ArDoCo</relativePath> <!-- Updated relative path -->
-<!--    <absolutePath>C:\Users\johan\IdeaProjects\ArDoCo\tlr\pom.xml</absolutePath> &lt;!&ndash; Updated absolute path &ndash;&gt;-->
+    <version>2.0.0-SNAPSHOT</version>
+    <relativePath>../ArDoCo</relativePath>
   </parent>
 
   <groupId>io.github.ardoco.tlr</groupId>
   <artifactId>rest</artifactId>
-  <version>2.0.0-refactoring</version>
+  <version>2.0.0-SNAPSHOT</version>
 
   <name>ArDoCo-REST</name>
   <description>The goal of this project is to provide a REST API for the ArDoCo runners</description>
 
   <properties>
     <spring-boot.version>3.3.3</spring-boot.version>
+    <error-prone.version>2.41.0</error-prone.version>
   </properties>
 
   <dependencyManagement>
@@ -51,20 +51,26 @@
 
     <!-- Latest ArDoCo dependencies using snapshot versions -->
     <dependency>
+      <groupId>io.github.ardoco.id</groupId>
+      <artifactId>pipeline-id</artifactId>
+      <version>${ardoco.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>io.github.ardoco.core</groupId>
       <artifactId>common</artifactId>
       <version>${ardoco.version}</version>
     </dependency>
+
     <dependency>
       <groupId>io.github.ardoco.tlr</groupId>
       <artifactId>pipeline-tlr</artifactId>
       <version>${ardoco.version}</version>
-<!--      <version>1.0.0</version>-->
     </dependency>
 
     <dependency>
-      <groupId>io.github.ardoco.id</groupId>
-      <artifactId>pipeline-id</artifactId>
+      <groupId>io.github.ardoco.tlr</groupId>
+      <artifactId>model-provider</artifactId>
       <version>${ardoco.version}</version>
     </dependency>
 
@@ -82,6 +88,12 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-surefire-plugin</artifactId>
+      <version>3.5.3</version>
     </dependency>
 
     <dependency>
@@ -141,18 +153,19 @@
   </dependencies>
 
   <!-- Repositories section for snapshot versions -->
-  <repositories>
-    <repository>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>mavenSnapshot</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-    </repository>
-  </repositories>
+<!--  <repositories>-->
+<!--    <repository>-->
+<!--      <releases>-->
+<!--        <enabled>false</enabled>-->
+<!--      </releases>-->
+<!--      <snapshots>-->
+<!--        <enabled>true</enabled>-->
+<!--      </snapshots>-->
+<!--      <id>mavenSnapshot</id>-->
+<!--&lt;!&ndash;      <url>https://s01.oss.sonatype.org/repository/maven-snapshots/</url>&ndash;&gt;-->
+<!--      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--    </repository>-->
+<!--  </repositories>-->
 
   <build>
     <pluginManagement>
@@ -175,6 +188,7 @@
             <compilerArgs>
               <arg>-XDcompilePolicy=simple</arg>
               <arg>-Xplugin:ErrorProne</arg>
+              <arg>--should-stop=ifError=FLOW</arg>
               <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
               <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
               <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
@@ -255,17 +269,17 @@
             </execution>
           </executions>
         </plugin>
-        <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.7.0</version>
-          <extensions>true</extensions>
-          <configuration>
-            <serverId>ossrh</serverId>
-            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-          </configuration>
-        </plugin>
+<!--        <plugin>-->
+<!--          <groupId>org.sonatype.plugins</groupId>-->
+<!--          <artifactId>nexus-staging-maven-plugin</artifactId>-->
+<!--          <version>1.7.0</version>-->
+<!--          <extensions>true</extensions>-->
+<!--          <configuration>-->
+<!--            <serverId>ossrh</serverId>-->
+<!--            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>-->
+<!--            <autoReleaseAfterClose>true</autoReleaseAfterClose>-->
+<!--          </configuration>-->
+<!--        </plugin>-->
         <!-- Spring Boot Maven Plugin to repackage as an executable JAR -->
         <plugin>
           <groupId>org.springframework.boot</groupId>

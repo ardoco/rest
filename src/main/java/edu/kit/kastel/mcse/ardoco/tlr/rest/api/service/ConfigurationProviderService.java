@@ -19,13 +19,22 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 
-
+/**
+ * Service for providing the default configuration of all configurable classes in the ArDoCo project.
+ */
 @Service("configurationProviderService")
 public class ConfigurationProviderService {
 
     private static final String ARDOCO = "edu.kit.kastel.mcse.ardoco";
 
     private static final Logger logger = LogManager.getLogger(ResultService.class);
+
+    /**
+     * Constructs a new {@code ConfigurationProviderService}.
+     */
+    public ConfigurationProviderService() {
+        // Default constructor
+    }
 
     /**
      * Retrieves the default configuration for all configurable classes in the ArDoCo project.
@@ -59,7 +68,7 @@ public class ConfigurationProviderService {
     }
 
 
-    protected void processConfigurationOfClass(Map<String, String> configs, Class<? extends AbstractConfigurable> clazz) throws InvocationTargetException,
+    private void processConfigurationOfClass(Map<String, String> configs, Class<? extends AbstractConfigurable> clazz) throws InvocationTargetException,
             InstantiationException, IllegalAccessException {
         var object = ConfigurationInstantiatorUtils.createObject(clazz);
         List<Field> fields = new ArrayList<>();

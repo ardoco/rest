@@ -19,6 +19,13 @@ public class CurrentlyRunningRequestsRepository {
     private final ConcurrentHashMap<String, CompletableFuture<ArDoCoApiResult>> asyncRequests = new ConcurrentHashMap<>();
 
     /**
+     * Default constructor for CurrentlyRunningRequestsRepository.
+     */
+    public CurrentlyRunningRequestsRepository() {
+        // No initialization needed, ConcurrentHashMap is already thread-safe
+    }
+
+    /**
      * Adds a new request to the repository.
      *
      * @param id the identifier for the request

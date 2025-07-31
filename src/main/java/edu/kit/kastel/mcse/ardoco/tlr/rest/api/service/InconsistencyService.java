@@ -1,7 +1,7 @@
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import edu.kit.kastel.mcse.ardoco.core.api.entity.ArchitectureEntity;
+import edu.kit.kastel.mcse.ardoco.core.api.entity.ModelEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.stage.inconsistency.Inconsistency;
 import edu.kit.kastel.mcse.ardoco.core.api.text.SentenceEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.TraceLink;
@@ -13,8 +13,6 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.TraceLinkConverter;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service("InconsistencyService")
 public class InconsistencyService extends AbstractRunnerTLRService {
 
@@ -25,8 +23,7 @@ public class InconsistencyService extends AbstractRunnerTLRService {
     @Override
     protected ArDoCoApiResult convertResultToJsonString(ArDoCoResult result) throws JsonProcessingException {
         // traceLinks
-        ImmutableList<TraceLink<SentenceEntity, ArchitectureEntity>> traceLinksImmutable = result.getAllTraceLinks();
-        List<TraceLink<SentenceEntity, ArchitectureEntity>> traceLinks = traceLinksImmutable.toList();
+        ImmutableList<TraceLink<SentenceEntity, ModelEntity>> traceLinks = result.getArchitectureTraceLinks();
         String traceLinksJson = TraceLinkConverter.convertListOfSadSamTraceLinksToJsonString(traceLinks);
 
         // inconsistencies

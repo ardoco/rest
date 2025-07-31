@@ -6,10 +6,10 @@ package edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response;
  * during processing and determine the appropriate handler for each request based on the type.
  */
 public enum TraceLinkType {
-    SAD_CODE("SadCodeResult", "sad-code"),
-    SAM_CODE("SamCodeResult", "sam-code"),
-    SAD_SAM("SadSamResult", "sad-sam"),
-    SAD_SAM_CODE("SadSamCodeResult", "sad-sam-code"),
+    SAD_CODE("SadCodeResult", "ardocode"),
+    SAM_CODE("SamCodeResult", "arcotl"),
+    SAD_SAM("SadSamResult", "swattr"),
+    SAD_SAM_CODE("SadSamCodeResult", "transarc"),
     OTHER("Other", "other");
 
     private final String keyPrefix;

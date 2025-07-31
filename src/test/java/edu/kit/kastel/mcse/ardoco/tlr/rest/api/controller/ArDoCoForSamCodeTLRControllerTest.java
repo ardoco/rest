@@ -4,6 +4,7 @@ package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,13 +14,12 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication;
 
 @Testcontainers
 @SpringBootTest(classes = ArDoCoRestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ArDoCoForSamCodeTLRControllerTest extends AbstractTLRControllerTest {
+public class ArDoCoForSamCodeTLRControllerTest extends AbstractTLRControllerTest {
 
     public ArDoCoForSamCodeTLRControllerTest() {
         super(TraceLinkType.SAM_CODE);
@@ -28,28 +28,28 @@ class ArDoCoForSamCodeTLRControllerTest extends AbstractTLRControllerTest {
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void TestRunPipelineAndGetResult_umlModel() throws IOException {
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB("bigBlueButtonUML", ArchitectureModelType.UML);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB("bigBlueButtonUML", ModelFormat.UML);
         runPipeline_start_and_getResult(requestEntity);
     }
 
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void TestRunPipelineAndGetResult_pcmModel() throws IOException {
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB("bigBlueButtonPCM", ArchitectureModelType.PCM);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB("bigBlueButtonPCM", ModelFormat.PCM);
         runPipeline_start_and_getResult(requestEntity);
     }
 
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void TestRunPipelineAndWaitForResult_pcmModel() throws IOException {
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB("bigBlueButton2", ArchitectureModelType.PCM);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB("bigBlueButton2", ModelFormat.PCM);
         test_runPipelineAndWaitForResult_helper(requestEntity);
     }
 
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void TestRunPipelineAndWaitForResult_umlModel() throws IOException {
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB("bigBlueButton2", ArchitectureModelType.UML);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = setUpRequestParamToStartPipelineBBB("bigBlueButton2", ModelFormat.UML);
         test_runPipelineAndWaitForResult_helper(requestEntity);
     }
 
@@ -62,22 +62,22 @@ class ArDoCoForSamCodeTLRControllerTest extends AbstractTLRControllerTest {
         parameters.add("projectName", projectName);
         parameters.add("inputArchitectureModel", new ClassPathResource("emptyFile.txt"));
         parameters.add("inputCode", new ClassPathResource("bigBlueButton/codeModel.acm"));
-        parameters.add("architectureModelType", ArchitectureModelType.PCM.toString());
+        parameters.add("ModelFormat", ModelFormat.PCM.toString());
 
         return new HttpEntity<>(parameters, headers);
     }
 
     // Utility method to build request entity for multipart files
-    private HttpEntity<MultiValueMap<String, Object>> setUpRequestParamToStartPipelineBBB(String projectName, ArchitectureModelType modelType) {
+    private HttpEntity<MultiValueMap<String, Object>> setUpRequestParamToStartPipelineBBB(String projectName, ModelFormat modelType) {
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
         parameters.add("projectName", projectName);
 
         parameters.add("inputCode", new ClassPathResource("bigBlueButton/codeModel.acm"));
-        parameters.add("architectureModelType", modelType.toString());
+        parameters.add("ModelFormat", modelType.toString());
 
-        if (modelType == ArchitectureModelType.PCM) {
+        if (modelType == ModelFormat.PCM) {
             parameters.add("inputArchitectureModel", new ClassPathResource("bigBlueButton/bbb.repository"));
-        } else if (modelType == ArchitectureModelType.UML) {
+        } else if (modelType == ModelFormat.UML) {
             parameters.add("inputArchitectureModel", new ClassPathResource("bigBlueButton/bbb.uml"));
         }
 

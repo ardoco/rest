@@ -25,7 +25,7 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
 
-class FileConverterTest {
+public class FileConverterTest {
 
     @TempDir
     Path tempDir;

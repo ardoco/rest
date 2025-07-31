@@ -15,7 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class HashGeneratorTest {
+public class HashGeneratorTest {
 
     private HashGenerator hashGenerator;
     private File tempFile1;

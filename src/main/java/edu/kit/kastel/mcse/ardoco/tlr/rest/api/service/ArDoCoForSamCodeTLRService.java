@@ -2,27 +2,31 @@ package edu.kit.kastel.mcse.ardoco.tlr.rest.api.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.kit.kastel.mcse.ardoco.core.api.entity.ArchitectureEntity;
-import edu.kit.kastel.mcse.ardoco.core.api.models.arcotl.code.CodeCompilationUnit;
+import edu.kit.kastel.mcse.ardoco.core.api.entity.ModelEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.output.ArDoCoResult;
-import edu.kit.kastel.mcse.ardoco.core.api.tracelink.SamCodeTraceLink;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.TraceLink;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.TraceLinkConverter;
+import org.eclipse.collections.api.list.ImmutableList;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+/**
+ * Service for handling trace links of type SAM_CODE in the ArDoCo API.
+ * This service extends the AbstractRunnerTLRService to provide functionality
+ * specific to SAM_CODE trace links.
+ */
 @Service("samCodeTLRService")
 public class ArDoCoForSamCodeTLRService extends AbstractRunnerTLRService {
 
+    /** Constructor for the ArDoCoForSamCodeTLRService. */
     public ArDoCoForSamCodeTLRService() {
         super(TraceLinkType.SAM_CODE);
     }
 
     @Override
     protected ArDoCoApiResult convertResultToJsonString(ArDoCoResult result) throws JsonProcessingException {
-        List<TraceLink<ArchitectureEntity, CodeCompilationUnit>> traceLinks = result.getSamCodeTraceLinks();
+        ImmutableList<TraceLink<? extends ArchitectureEntity, ? extends ModelEntity>> traceLinks = result.getSamCodeTraceLinks();
         String traceLinkJson = TraceLinkConverter.convertListOfSamCodeTraceLinksToJsonString(traceLinks);
         return new ArDoCoApiResult(traceLinkJson);
     }

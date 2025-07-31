@@ -1,6 +1,6 @@
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter;
 
-import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
+import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class ArchitectureModelTypeConverter implements Converter<String, ArchitectureModelType> {
+public class ModelFormatTypeConverter implements Converter<String, ModelFormat> {
 
     @Override
-    public ArchitectureModelType convert(String source) {
+    public ModelFormat convert(String source) {
         try {
-            return ArchitectureModelType.valueOf(source.toUpperCase());
+            return ModelFormat.valueOf(source.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid architecture model type: " + source, e);
         }

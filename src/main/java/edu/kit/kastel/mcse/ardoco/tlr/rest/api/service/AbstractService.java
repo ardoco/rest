@@ -10,6 +10,14 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.ArdocoException;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository.CurrentlyRunningRequestsRepository;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository.DatabaseAccessor;
 
+/**
+ * The {@code AbstractService} class provides foundational methods for handling results in the
+ * traceability link recovery (TLR) process. It is designed to be extended by specific service
+ * implementations.
+ * <p>
+ * This abstract class provides methods to retrieve results from the database and check the status
+ * of results, ensuring that results are handled consistently across different TLR services.
+ */
 @Service
 public abstract class AbstractService {
 
@@ -24,6 +32,9 @@ public abstract class AbstractService {
     private DatabaseAccessor databaseAccessor;
 
     private static final Logger logger = LogManager.getLogger(AbstractService.class);
+
+    /** Default constructor for AbstractService. */
+    public AbstractService() { }
 
     /**
      * Retrieves the result from the database if it is available.
@@ -46,10 +57,21 @@ public abstract class AbstractService {
         return result;
     }
 
+    /**
+     * Checks if the result is currently being processed
+     * @param id the unique identifier of the result
+     * @return true if the result is currently being processed, false otherwise
+     */
     protected boolean resultIsOnItsWay(String id) {
         return currentlyRunningRequestsRepository.containsRequest(id);
     }
 
+    /**
+     * Checks if the result is already stored in the database.
+     *
+     * @param id the unique identifier of the result
+     * @return true if the result is in the database, false otherwise
+     */
     protected boolean resultIsInDatabase(String id) {
         return databaseAccessor.keyExistsInDatabase(id);
     }

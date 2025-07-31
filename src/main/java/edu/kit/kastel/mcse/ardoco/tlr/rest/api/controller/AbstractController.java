@@ -38,8 +38,10 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.util.HashGenerator;
  */
 public abstract class AbstractController {
 
+    /** The type of trace link this controller manages, used for identifying the specific TLR process. */
     protected final TraceLinkType traceLinkType;
 
+    /** The service responsible for trace link recovery operations. It is used to run pipelines and manage results. */
     protected final AbstractRunnerTLRService service;
 
     @Autowired
@@ -105,12 +107,28 @@ public abstract class AbstractController {
         return new ResponseEntity<>(response, response.getStatus());
     }
 
+    /**
+     * Generates a unique request ID based on the provided files and project name.
+     *
+     * @param files        the list of files to be processed
+     * @param projectName  the name of the project associated with the request
+     * @return a unique request ID as a string
+     * @throws FileNotFoundException   if any of the input files cannot be found
+     * @throws FileConversionException if there's an error converting any file during the process
+     */
     protected String generateRequestId(List<File> files, String projectName) throws FileNotFoundException, FileConversionException {
         logger.info("Generating ID...");
         String hash = HashGenerator.getMD5HashFromFiles(files);
         return traceLinkType.getKeyPrefix() + ":" +  projectName + hash;
     }
 
+    /**
+     * Parses additional configuration parameters from a JSON string into a sorted map.
+     *
+     * @param additionalConfigsJson the JSON string containing additional configurations
+     * @return a sorted map containing the parsed configurations
+     * @throws FileConversionException if the JSON format is invalid
+     */
     protected SortedMap<String, String> parseAdditionalConfigs(String additionalConfigsJson) {
         SortedMap<String, String> additionalConfigs = new TreeMap<>();
         if (additionalConfigsJson != null && !additionalConfigsJson.isBlank()) {

@@ -7,10 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
+import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
+import edu.kit.kastel.mcse.ardoco.tlr.execution.Arcotl;
+import edu.kit.kastel.mcse.ardoco.tlr.models.agents.ArchitectureConfiguration;
+import edu.kit.kastel.mcse.ardoco.tlr.models.agents.CodeConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
+import org.eclipse.collections.impl.factory.SortedMaps;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.io.Files;
 
-import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
-import edu.kit.kastel.mcse.ardoco.tlr.execution.ArDoCoForSamCodeTraceabilityLinkRecovery;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
@@ -34,23 +37,44 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-@Tag(name = "Sam-Code TraceLinkRecovery")
-@RequestMapping("/api/sam-code")
+// Sam-Code TraceLink Recovery Controller
+/**
+ * This controller handles the REST API endpoints for the ArCoTL (sam-code) trace link recovery process.
+ */
+@Tag(name = "ArCoTL (sam-code) TraceLinkRecovery")
+@RequestMapping("/api/arcotl")
 @RestController
 public class ArDoCoForSamCodeTLRController extends AbstractController {
 
     private static final Logger logger = LogManager.getLogger(ArDoCoForSamCodeTLRController.class);
 
+    /**
+     * Constructs a new {@code ArDoCoForSamCodeTLRController} with the specified service.
+     *
+     * @param service the service responsible for trace link recovery operations
+     */
     public ArDoCoForSamCodeTLRController(ArDoCoForSamCodeTLRService service) {
         super(service, TraceLinkType.SAM_CODE);
     }
 
-    @Operation(summary = "Starts the sam-code processing pipeline", description = "Starts the sam-code processing pipeline with the given project name, the type of the architecture model and files.")
+    /**
+     * Starts the Arcotl (sam-code) processing pipeline with the given project name, architecture model, and code files.
+     *
+     * @param projectName              the name of the project
+     * @param inputArchitectureModel   the architecture model file
+     * @param architectureModelType    the type of architecture model
+     * @param inputCode                the code file
+     * @param additionalConfigsJson    JSON string containing additional ArDoCo configuration
+     * @return ResponseEntity containing the result of the processing pipeline
+     * @throws FileNotFoundException if a required file is not found
+     * @throws FileConversionException if there is an error converting files
+     */
+    @Operation(summary = "Starts the ArCoTL (sam-code) processing pipeline", description = "Starts the ArCoTL (sam-code) processing pipeline with the given project name, the type of the architecture model and files.")
     @PostMapping(value = "/start", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArdocoResultResponse> runPipeline(
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
-            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ArchitectureModelType architectureModelType,
+            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ModelFormat architectureModelType,
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
             @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
             throws FileNotFoundException, FileConversionException {
@@ -60,17 +84,29 @@ public class ArDoCoForSamCodeTLRController extends AbstractController {
         SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForSamCodeTraceabilityLinkRecovery runner = setUpRunner(additionalConfigs, inputFileMap, architectureModelType, projectName);
+        Arcotl runner = setUpRunner(additionalConfigs, inputFileMap, architectureModelType, projectName);
 
         return handleRunPipeLineResult(runner, id, inputFiles);
     }
 
-    @Operation(summary = "Starts the ardoco-pipeline to get a SamCodeTraceLinks and waits until the result is obtained", description = "performs the SamCodeTraceLinks link recovery of ArDoCo with the given project name and files and waits until the SamCodeTraceLinks are obtained.")
+    /**
+     * Starts the Arcotl pipeline to get a SamCodeTraceLinks and waits until the result is obtained.
+     *
+     * @param projectName              the name of the project
+     * @param inputArchitectureModel   the architecture model file
+     * @param architectureModelType    the type of architecture model
+     * @param inputCode                the code file
+     * @param additionalConfigsJson    JSON string containing additional ArDoCo configuration
+     * @return ResponseEntity containing the result of the processing pipeline
+     * @throws FileNotFoundException if a required file is not found
+     * @throws FileConversionException if there is an error converting files
+     */
+    @Operation(summary = "Starts the ArCoTL (sam-code) processing pipeline and waits until the result is obtained", description = "Starts the ArCoTL (sam-code) processing pipeline with the given project name, the type of the architecture model and files. and waits until the SamCodeTraceLinks are obtained.")
     @PostMapping(value = "/start-and-wait", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArdocoResultResponse> runPipelineAndWaitForResult(
             @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
-            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ArchitectureModelType architectureModelType,
+            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ModelFormat architectureModelType,
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
             @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
 
@@ -81,7 +117,7 @@ public class ArDoCoForSamCodeTLRController extends AbstractController {
         SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForSamCodeTraceabilityLinkRecovery runner = setUpRunner(additionalConfigs, inputFileMap, architectureModelType, projectName);
+        Arcotl runner = setUpRunner(additionalConfigs, inputFileMap, architectureModelType, projectName);
 
         return handleRunPipelineAndWaitForResult(runner, id, inputFiles);
     }
@@ -96,10 +132,15 @@ public class ArDoCoForSamCodeTLRController extends AbstractController {
         return inputFiles;
     }
 
-    private ArDoCoForSamCodeTraceabilityLinkRecovery setUpRunner(SortedMap<String, String> additionalConfigs, Map<String, File> inputFileMap, ArchitectureModelType modelType, String projectName) {
+    private Arcotl setUpRunner(SortedMap<String, String> additionalConfigs, Map<String, File> inputFileMap, ModelFormat modelType, String projectName) {
         logger.info("Setting up Runner...");
-        ArDoCoForSamCodeTraceabilityLinkRecovery runner = new ArDoCoForSamCodeTraceabilityLinkRecovery(projectName);
-        runner.setUp(inputFileMap.get("inputArchitectureModelFile"), modelType, inputFileMap.get("inputCodeFile"), additionalConfigs, Files.createTempDir());
+        Arcotl runner = new Arcotl(projectName);
+
+        ArchitectureConfiguration architectureConfiguration = new ArchitectureConfiguration(inputFileMap.get("inputArchitectureModel"), modelType);
+        CodeConfiguration codeConfiguration = new CodeConfiguration(inputFileMap.get("inputCode"), CodeConfiguration.CodeConfigurationType.ACM_FILE);
+        ImmutableSortedMap<String, String> additionalConfigsImmutable = SortedMaps.immutable.withSortedMap(additionalConfigs);
+
+        runner.setUp(architectureConfiguration, codeConfiguration, additionalConfigsImmutable, Files.createTempDir());
         return runner;
     }
 }

@@ -8,6 +8,9 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 
+/**
+ * Main application class for the ArDoCo Trace Link Recovery REST API.
+ */
 @OpenAPIDefinition(
         info =
                 @Info(
@@ -19,6 +22,16 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
 public class ArDoCoRestApplication {
 
+    /** Default constructor for the ArDoCoRestApplication. */
+    public ArDoCoRestApplication() {
+        // Default constructor
+    }
+
+    /**
+     * Main method to run the ArDoCo Trace Link Recovery REST API application.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         SpringApplication.run(ArDoCoRestApplication.class, args);
 
