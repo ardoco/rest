@@ -1,7 +1,9 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
 import org.springframework.http.HttpStatus;
+
+import com.fasterxml.jackson.annotation.JsonRawValue;
 
 /**
  * Represents the response structure for the ArDoCo API results.
@@ -19,14 +21,15 @@ public class ArdocoResultResponse {
      * Default constructor for ArdocoResultResponse.
      * This is required for deserialization purposes.
      */
-    public ArdocoResultResponse() {}
+    public ArdocoResultResponse() {
+    }
 
     /**
      * Constructor for ArdocoResultResponse with requestId, status, and message.
      *
      * @param requestId the unique identifier for the request
-     * @param status the HTTP status of the response
-     * @param message a message providing additional information about the response
+     * @param status    the HTTP status of the response
+     * @param message   a message providing additional information about the response
      */
     public ArdocoResultResponse(String requestId, HttpStatus status, String message) {
         this.requestId = requestId;
@@ -39,9 +42,9 @@ public class ArdocoResultResponse {
      * Constructor for ArdocoResultResponse with requestId, status, result, and message.
      *
      * @param requestId the unique identifier for the request
-     * @param status the HTTP status of the response
-     * @param result the result of the ArDoCo processing, in JSON format
-     * @param message a message providing additional information about the response
+     * @param status    the HTTP status of the response
+     * @param result    the result of the ArDoCo processing, in JSON format
+     * @param message   a message providing additional information about the response
      */
     public ArdocoResultResponse(String requestId, HttpStatus status, String result, String message) {
         this.requestId = requestId;

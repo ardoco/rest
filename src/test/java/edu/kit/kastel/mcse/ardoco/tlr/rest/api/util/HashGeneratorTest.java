@@ -1,9 +1,7 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.util;
 
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,7 +11,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
 
 public class HashGeneratorTest {
 

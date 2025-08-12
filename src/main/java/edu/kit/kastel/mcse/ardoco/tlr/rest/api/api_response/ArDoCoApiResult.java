@@ -1,3 +1,4 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
@@ -12,7 +13,6 @@ public class ArDoCoApiResult {
 
     @JsonRawValue
     private String inconsistencies;
-
 
     /**
      * Constructs an ArDoCoApiResult with the specified trace links and inconsistencies.

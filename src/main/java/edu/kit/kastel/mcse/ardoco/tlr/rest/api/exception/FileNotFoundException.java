@@ -1,3 +1,4 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception;
 
 /**
@@ -19,7 +20,7 @@ public class FileNotFoundException extends RuntimeException {
      * This constructor allows for the creation of an exception with a detailed message and an underlying cause.
      *
      * @param message the detail message explaining the reason for the exception
-     * @param cause the underlying cause of the exception, which can be another throwable
+     * @param cause   the underlying cause of the exception, which can be another throwable
      */
     public FileNotFoundException(String message, Throwable cause) {
         super(message, cause);

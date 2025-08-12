@@ -1,4 +1,4 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.service;
 
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +34,8 @@ public abstract class AbstractService {
     private static final Logger logger = LogManager.getLogger(AbstractService.class);
 
     /** Default constructor for AbstractService. */
-    public AbstractService() { }
+    public AbstractService() {
+    }
 
     /**
      * Retrieves the result from the database if it is available.
@@ -59,6 +60,7 @@ public abstract class AbstractService {
 
     /**
      * Checks if the result is currently being processed
+     * 
      * @param id the unique identifier of the result
      * @return true if the result is currently being processed, false otherwise
      */

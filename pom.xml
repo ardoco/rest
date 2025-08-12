@@ -14,6 +14,11 @@
   <name>ArDoCo-REST</name>
   <description>The goal of this project is to provide a REST API for the ArDoCo runners</description>
 
+  <properties>
+    <!-- Spring Boot needs an older version of JUnit to work -->
+    <junit.version>5.10.3</junit.version>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -57,17 +62,26 @@
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
 

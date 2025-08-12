@@ -1,3 +1,4 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception;
 
 /**
@@ -18,7 +19,7 @@ public class FileConversionException extends RuntimeException {
      * Constructs a new FileConversionException with the specified detail message and cause.
      *
      * @param message the detail message
-     * @param cause the cause of the exception
+     * @param cause   the cause of the exception
      */
     public FileConversionException(String message, Throwable cause) {
         super(message, cause);

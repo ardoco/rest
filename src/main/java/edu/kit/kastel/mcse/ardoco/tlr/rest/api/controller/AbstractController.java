@@ -1,4 +1,4 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
 import java.io.File;
@@ -9,13 +9,14 @@ import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
@@ -110,8 +111,8 @@ public abstract class AbstractController {
     /**
      * Generates a unique request ID based on the provided files and project name.
      *
-     * @param files        the list of files to be processed
-     * @param projectName  the name of the project associated with the request
+     * @param files       the list of files to be processed
+     * @param projectName the name of the project associated with the request
      * @return a unique request ID as a string
      * @throws FileNotFoundException   if any of the input files cannot be found
      * @throws FileConversionException if there's an error converting any file during the process
@@ -119,7 +120,7 @@ public abstract class AbstractController {
     protected String generateRequestId(List<File> files, String projectName) throws FileNotFoundException, FileConversionException {
         logger.info("Generating ID...");
         String hash = HashGenerator.getMD5HashFromFiles(files);
-        return traceLinkType.getKeyPrefix() + ":" +  projectName + hash;
+        return traceLinkType.getKeyPrefix() + ":" + projectName + hash;
     }
 
     /**
@@ -134,7 +135,8 @@ public abstract class AbstractController {
         if (additionalConfigsJson != null && !additionalConfigsJson.isBlank()) {
             ObjectMapper mapper = new ObjectMapper();
             try {
-                Map<String, String> configMap = mapper.readValue(additionalConfigsJson, new TypeReference<>() {});
+                Map<String, String> configMap = mapper.readValue(additionalConfigsJson, new TypeReference<>() {
+                });
                 additionalConfigs.putAll(configMap);
             } catch (IOException e) {
                 throw new FileConversionException("Invalid JSON format in 'additionalConfigs' parameter", e);

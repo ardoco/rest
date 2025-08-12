@@ -1,22 +1,26 @@
+/* Licensed under MIT 2025. */
 package testUtil;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ErrorResponse;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.messages.ResultMessages;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ErrorResponse;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.messages.ResultMessages;
 
 public final class TestUtils {
 
-    private TestUtils() {} // prevent instantiation
+    private TestUtils() {
+    } // prevent instantiation
 
     public static HttpEntity<MultiValueMap<String, Object>> setUpRequestParamToStartPipelineBBB() {
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -86,7 +90,6 @@ public final class TestUtils {
         assertNotNull(response.getResult());
     }
 
-
     /*
     Tests when trying to get the result, but the result is not ready yet
      */
@@ -100,8 +103,8 @@ public final class TestUtils {
     }
 
     /*
-Tests when trying to get the result, but the result is not ready yet
- */
+    Tests when trying to get the result, but the result is not ready yet
+    */
     public static void testGetResult_ready(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
@@ -135,7 +138,8 @@ Tests when trying to get the result, but the result is not ready yet
         assertNotNull(response.getResult());
     }
 
-    public static void testRunPipelineAndWaitForResult_notReady(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
+    public static void testRunPipelineAndWaitForResult_notReady(ArdocoResultResponse response, ResponseEntity<String> responseEntity,
+            TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
         assertEquals(ResultMessages.REQUEST_TIMED_OUT_START_AND_WAIT, response.getMessage(), "message: " + response.getMessage());

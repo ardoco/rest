@@ -1,17 +1,18 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
-import com.google.common.io.Files;
-import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
 import org.eclipse.collections.impl.factory.SortedMaps;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +23,16 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
+import edu.kit.kastel.mcse.ardoco.tlr.execution.Transarc;
+import edu.kit.kastel.mcse.ardoco.tlr.models.agents.ArchitectureConfiguration;
+import edu.kit.kastel.mcse.ardoco.tlr.models.agents.CodeConfiguration;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.ArDoCoForSadSamCodeTLRService;
-import edu.kit.kastel.mcse.ardoco.tlr.models.agents.ArchitectureConfiguration;
-import edu.kit.kastel.mcse.ardoco.tlr.execution.Transarc;
-import edu.kit.kastel.mcse.ardoco.tlr.models.agents.CodeConfiguration;
-import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,14 +59,14 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
     /**
      * Starts the TransArC (sad-sam-code) processing pipeline with the provided project name, architecture model type, and files.
      *
-     * @param projectName               the name of the project
-     * @param inputText                 the textual documentation of the project
-     * @param inputArchitectureModel    the architecture model of the project
-     * @param modelType                 the type of architecture model that is uploaded
-     * @param inputCode                 the code of the project
-     * @param additionalConfigsJson     JSON string containing additional ArDoCo configuration (optional)
+     * @param projectName            the name of the project
+     * @param inputText              the textual documentation of the project
+     * @param inputArchitectureModel the architecture model of the project
+     * @param modelType              the type of architecture model that is uploaded
+     * @param inputCode              the code of the project
+     * @param additionalConfigsJson  JSON string containing additional ArDoCo configuration (optional)
      * @return a ResponseEntity containing the result of the processing pipeline
-     * @throws FileNotFoundException if any of the input files are not found
+     * @throws FileNotFoundException   if any of the input files are not found
      * @throws FileConversionException if there is an error converting multipart files to files
      */
     @Operation(summary = "Starts the TransArC (sad-sam-code) processing pipeline", description = "Starts the TransArc (sad-sam-code) processing pipeline with the given project name, the type of the architecture model and files.")
@@ -79,7 +79,7 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
             @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
 
-    throws FileNotFoundException, FileConversionException {
+            throws FileNotFoundException, FileConversionException, IOException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel, inputCode);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
@@ -94,14 +94,14 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
     /**
      * Starts the TransArc (sad-sam-code) processing pipeline and waits for the result.
      *
-     * @param projectName               the name of the project
-     * @param inputText                 the textual documentation of the project
-     * @param inputArchitectureModel    the architecture model of the project
-     * @param modelType                 the type of architecture model that is uploaded
-     * @param inputCode                 the code of the project
-     * @param additionalConfigsJson     JSON string containing additional ArDoCo configuration (optional)
+     * @param projectName            the name of the project
+     * @param inputText              the textual documentation of the project
+     * @param inputArchitectureModel the architecture model of the project
+     * @param modelType              the type of architecture model that is uploaded
+     * @param inputCode              the code of the project
+     * @param additionalConfigsJson  JSON string containing additional ArDoCo configuration (optional)
      * @return a ResponseEntity containing the result of the processing pipeline
-     * @throws FileNotFoundException if any of the input files are not found
+     * @throws FileNotFoundException   if any of the input files are not found
      * @throws FileConversionException if there is an error converting multipart files to files
      */
     @Operation(summary = "Starts the ardoco-pipeline to get a SadSamCodeTraceLinks and waits until the result is obtained", description = "performs the sadSamCode trace link recovery of ArDoCo with the given project name and files and waits until the SadSamCodeTraceLinks are obtained.")
@@ -113,7 +113,7 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
             @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ModelFormat modelType,
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
             @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
-    throws FileNotFoundException, FileConversionException {
+            throws FileNotFoundException, FileConversionException, IOException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel, inputCode);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
@@ -136,7 +136,8 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
         return inputFiles;
     }
 
-    private Transarc setUpRunner(SortedMap<String, String> additionalConfigs, Map<String, File> inputFileMap, ModelFormat modelType, String projectName) {
+    private Transarc setUpRunner(SortedMap<String, String> additionalConfigs, Map<String, File> inputFileMap, ModelFormat modelType, String projectName)
+            throws IOException {
         logger.info("Setting up Runner...");
         Transarc runner = new Transarc(projectName);
 
@@ -144,8 +145,8 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
         CodeConfiguration codeConfiguration = new CodeConfiguration(inputFileMap.get("inputCode"), CodeConfiguration.CodeConfigurationType.ACM_FILE);
         ImmutableSortedMap<String, String> additionalConfigsImmutable = SortedMaps.immutable.withSortedMap(additionalConfigs);
 
-        runner.setUp(inputFileMap.get("inputText"), architectureConfiguration, codeConfiguration, additionalConfigsImmutable,
-                Files.createTempDir());
+        runner.setUp(inputFileMap.get("inputText"), architectureConfiguration, codeConfiguration, additionalConfigsImmutable, Files.createTempDirectory(
+                "ardoco-sad-sam-code").toFile());
         return runner;
     }
 }

@@ -1,12 +1,5 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.service;
-
-import edu.kit.kastel.mcse.ardoco.core.configuration.AbstractConfigurable;
-import edu.kit.kastel.mcse.ardoco.core.configuration.Configurable;
-import edu.kit.kastel.mcse.ardoco.core.configuration.ConfigurationInstantiatorUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.reflections.Reflections;
-import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +11,14 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.reflections.Reflections;
+import org.springframework.stereotype.Service;
+
+import edu.kit.kastel.mcse.ardoco.core.configuration.AbstractConfigurable;
+import edu.kit.kastel.mcse.ardoco.core.configuration.Configurable;
+import edu.kit.kastel.mcse.ardoco.core.configuration.ConfigurationInstantiatorUtils;
 
 /**
  * Service for providing the default configuration of all configurable classes in the ArDoCo project.
@@ -41,8 +42,8 @@ public class ConfigurationProviderService {
      *
      * @return a map containing the configuration keys and their default values
      * @throws InvocationTargetException if an error occurs during instantiation
-     * @throws InstantiationException if an error occurs during instantiation
-     * @throws IllegalAccessException if an error occurs during access to fields
+     * @throws InstantiationException    if an error occurs during instantiation
+     * @throws IllegalAccessException    if an error occurs during access to fields
      */
     public Map<String, String> getDefaultConfiguration() throws InvocationTargetException, InstantiationException, IllegalAccessException {
         Map<String, String> configs = new TreeMap<>();
@@ -66,7 +67,6 @@ public class ConfigurationProviderService {
         System.out.println("-".repeat(50));
         return configs;
     }
-
 
     private void processConfigurationOfClass(Map<String, String> configs, Class<? extends AbstractConfigurable> clazz) throws InvocationTargetException,
             InstantiationException, IllegalAccessException {
@@ -122,7 +122,4 @@ public class ConfigurationProviderService {
         findImportantFields(clazz.getSuperclass(), fields);
     }
 
-
 }
-
-

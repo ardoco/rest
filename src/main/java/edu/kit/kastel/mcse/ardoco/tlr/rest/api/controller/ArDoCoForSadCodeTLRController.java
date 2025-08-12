@@ -1,16 +1,15 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
-import com.google.common.io.Files;
-import edu.kit.kastel.mcse.ardoco.tlr.execution.Ardocode;
-import edu.kit.kastel.mcse.ardoco.tlr.models.agents.CodeConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import edu.kit.kastel.mcse.ardoco.tlr.execution.Ardocode;
+import edu.kit.kastel.mcse.ardoco.tlr.models.agents.CodeConfiguration;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
@@ -61,12 +62,12 @@ public class ArDoCoForSadCodeTLRController extends AbstractController {
     /**
      * Starts the processing pipeline for ArDoCode (sad-code) trace link recovery.
      *
-     * @param projectName          the name of the project
-     * @param inputText            the documentation of the project as a MultipartFile
-     * @param inputCode            the code of the project as a MultipartFile
+     * @param projectName           the name of the project
+     * @param inputText             the documentation of the project as a MultipartFile
+     * @param inputCode             the code of the project as a MultipartFile
      * @param additionalConfigsJson JSON string containing additional ArDoCo configuration
      * @return ResponseEntity containing the result response with the request ID
-     * @throws FileNotFoundException if a required file is not found
+     * @throws FileNotFoundException   if a required file is not found
      * @throws FileConversionException if there is an error converting files
      */
     @Operation(summary = "Starts ArDoCode (sad-code) the processing pipeline", description = "Starts the ArDoCode (sad-code) processing pipeline with the given project name and files.")
@@ -81,7 +82,7 @@ public class ArDoCoForSadCodeTLRController extends AbstractController {
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
             @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
 
-    throws FileNotFoundException, FileConversionException {
+            throws FileNotFoundException, FileConversionException, IOException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputCode);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
@@ -96,9 +97,9 @@ public class ArDoCoForSadCodeTLRController extends AbstractController {
     /**
      * Starts the ArDoCode (sad-code) processing pipeline and waits until the result is obtained.
      *
-     * @param projectName          the name of the project
-     * @param inputText            the documentation of the project as a MultipartFile
-     * @param inputCode            the code of the project as a MultipartFile
+     * @param projectName           the name of the project
+     * @param inputText             the documentation of the project as a MultipartFile
+     * @param inputCode             the code of the project as a MultipartFile
      * @param additionalConfigsJson JSON string containing additional ArDoCo configuration
      * @return ResponseEntity containing the result response with the sadCodeTraceLinks
      * @throws FileConversionException if there is an error converting files
@@ -115,7 +116,7 @@ public class ArDoCoForSadCodeTLRController extends AbstractController {
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
             @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
 
-    throws FileConversionException, ArdocoException, TimeoutException {
+            throws FileConversionException, ArdocoException, TimeoutException, IOException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputCode);
         List<File> inputFiles = new ArrayList<>(inputFileMap.values());
@@ -137,13 +138,13 @@ public class ArDoCoForSadCodeTLRController extends AbstractController {
         return inputFiles;
     }
 
-    private Ardocode setUpRunner(SortedMap<String, String> additionalConfigs, Map<String, File> inputFileMap, String projectName) {
+    private Ardocode setUpRunner(SortedMap<String, String> additionalConfigs, Map<String, File> inputFileMap, String projectName) throws IOException {
         logger.info("Setting up Runner...");
         Ardocode runner = new Ardocode(projectName);
         CodeConfiguration codeConfiguration = new CodeConfiguration(inputFileMap.get("inputCode"), CodeConfiguration.CodeConfigurationType.ACM_FILE);
         ImmutableSortedMap<String, String> additionalConfigsImmutable = SortedMaps.immutable.withSortedMap(additionalConfigs);
 
-        runner.setUp(inputFileMap.get("inputText"), codeConfiguration, additionalConfigsImmutable, Files.createTempDir());
+        runner.setUp(inputFileMap.get("inputText"), codeConfiguration, additionalConfigsImmutable, Files.createTempDirectory("ardoco-sad-code").toFile());
         return runner;
     }
 }
