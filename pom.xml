@@ -14,6 +14,10 @@
   <name>ArDoCo-REST</name>
   <description>The goal of this project is to provide a REST API for the ArDoCo runners</description>
 
+  <properties>
+    <junit.version>5.12.2</junit.version>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -59,12 +63,6 @@
       <groupId>io.github.ardoco.tlr</groupId>
       <artifactId>text-preprocessing</artifactId>
       <version>${ardoco.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.httpcomponents.client5</groupId>
-          <artifactId>httpclient5</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>

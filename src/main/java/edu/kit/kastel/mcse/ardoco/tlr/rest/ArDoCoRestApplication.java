@@ -29,6 +29,5 @@ public class ArDoCoRestApplication {
      */
     public static void main(String[] args) {
         SpringApplication.run(ArDoCoRestApplication.class, args);
-
     }
 }
