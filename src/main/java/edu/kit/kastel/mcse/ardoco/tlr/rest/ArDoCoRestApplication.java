@@ -3,7 +3,9 @@ package edu.kit.kastel.mcse.ardoco.tlr.rest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.http.client.HttpClientAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.client.RestClientAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -14,7 +16,7 @@ import io.swagger.v3.oas.annotations.info.Info;
  */
 @OpenAPIDefinition(info = @Info(title = "ArDoCo: Trace Link Recovery", description = "provides functionality to run ArDoCoTLR and provide results"))
 @EnableAsync
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, HttpClientAutoConfiguration.class, RestClientAutoConfiguration.class })
 public class ArDoCoRestApplication {
 
     /** Default constructor for the ArDoCoRestApplication. */
@@ -29,6 +31,5 @@ public class ArDoCoRestApplication {
      */
     public static void main(String[] args) {
         SpringApplication.run(ArDoCoRestApplication.class, args);
-
     }
 }
