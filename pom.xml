@@ -14,17 +14,12 @@
   <name>ArDoCo-REST</name>
   <description>The goal of this project is to provide a REST API for the ArDoCo runners</description>
 
-  <properties>
-    <!-- Spring Boot needs an older version of JUnit to work -->
-    <junit.version>5.10.3</junit.version>
-  </properties>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>3.3.3</version>
+        <version>3.5.4</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
