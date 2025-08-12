@@ -56,6 +56,17 @@
       <version>${ardoco.version}</version>
     </dependency>
     <dependency>
+      <groupId>io.github.ardoco.tlr</groupId>
+      <artifactId>text-preprocessing</artifactId>
+      <version>${ardoco.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.httpcomponents.client5</groupId>
+          <artifactId>httpclient5</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>${junit.version}</version>
