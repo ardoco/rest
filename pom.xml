@@ -3,29 +3,23 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.github.ardoco.core</groupId>
+    <groupId>io.github.ardoco</groupId>
     <artifactId>parent</artifactId>
     <version>2.0.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>io.github.ardoco.tlr</groupId>
   <artifactId>rest</artifactId>
   <version>2.0.0-SNAPSHOT</version>
 
   <name>ArDoCo-REST</name>
   <description>The goal of this project is to provide a REST API for the ArDoCo runners</description>
 
-  <properties>
-    <spring-boot.version>3.3.3</spring-boot.version>
-    <error-prone.version>2.41.0</error-prone.version>
-  </properties>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>${spring-boot.version}</version>
+        <version>3.3.3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -34,13 +28,10 @@
 
   <dependencies>
 
-    <!-- Check code formatter/ obvious errors -->
     <dependency>
-      <groupId>com.google.errorprone</groupId>
-      <artifactId>error_prone_core</artifactId>
-      <version>${error-prone.version}</version>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
     </dependency>
-
     <dependency>
       <groupId>com.redis.testcontainers</groupId>
       <artifactId>testcontainers-redis-junit-jupiter</artifactId>
@@ -50,23 +41,20 @@
 
     <!-- Latest ArDoCo dependencies using snapshot versions -->
     <dependency>
-      <groupId>io.github.ardoco.tlr</groupId>
-      <artifactId>pipeline-tlr</artifactId>
-      <version>${ardoco.version}</version>
-    </dependency>
-
-    <dependency>
       <groupId>io.github.ardoco.core</groupId>
       <artifactId>common</artifactId>
       <version>${ardoco.version}</version>
     </dependency>
-
     <dependency>
-      <groupId>io.github.ardoco.tlr</groupId>
-      <artifactId>model-provider</artifactId>
+      <groupId>io.github.ardoco.id</groupId>
+      <artifactId>pipeline-id</artifactId>
       <version>${ardoco.version}</version>
     </dependency>
-
+    <dependency>
+      <groupId>io.github.ardoco.tlr</groupId>
+      <artifactId>pipeline-tlr</artifactId>
+      <version>${ardoco.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -81,12 +69,6 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
       <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-surefire-plugin</artifactId>
-      <version>3.5.3</version>
     </dependency>
 
     <dependency>
@@ -137,16 +119,14 @@
       <version>5.1.5</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
-
-
   </dependencies>
 
   <!-- Repositories section for snapshot versions -->
   <repositories>
+    <repository>
+      <id>mavenCentral</id>
+      <url>https://repo1.maven.org/maven2/</url>
+    </repository>
     <repository>
       <releases>
         <enabled>false</enabled>
@@ -155,7 +135,7 @@
         <enabled>true</enabled>
       </snapshots>
       <id>mavenSnapshot</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+      <url>https://central.sonatype.com/repository/maven-snapshots/</url>
     </repository>
   </repositories>
 
@@ -164,49 +144,7 @@
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.7.1</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.13.0</version>
-          <configuration>
-            <release>${java.version}</release>
-            <source>${java.version}</source>
-            <target>${java.version}</target>
-            <encoding>UTF-8</encoding>
-            <fork>true</fork>
-            <compilerArgs>
-              <arg>-XDcompilePolicy=simple</arg>
-              <arg>-Xplugin:ErrorProne</arg>
-              <arg>--should-stop=ifError=FLOW</arg>
-              <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
-              <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
-              <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
-              <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
-              <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
-              <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
-              <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
-              <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
-              <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
-              <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
-            </compilerArgs>
-            <meminitial>128m</meminitial>
-            <maxmem>512m</maxmem>
-            <annotationProcessorPaths>
-              <path>
-                <groupId>com.google.errorprone</groupId>
-                <artifactId>error_prone_core</artifactId>
-                <version>${error-prone.version}</version>
-              </path>
-            </annotationProcessorPaths>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>3.2.5</version>
           <executions>
             <execution>
               <goals>
@@ -217,66 +155,10 @@
             </execution>
           </executions>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-gpg-plugin</artifactId>
-          <version>3.2.4</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>3.1.2</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>3.5.2</version>
-        </plugin>
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>flatten-maven-plugin</artifactId>
-          <version>1.6.0</version>
-          <configuration>
-            <updatePomFile>true</updatePomFile>
-            <flattenMode>resolveCiFriendliesOnly</flattenMode>
-            <pomElements>
-              <dependencyManagement>expand</dependencyManagement>
-              <dependencies>expand</dependencies>
-            </pomElements>
-          </configuration>
-          <executions>
-            <execution>
-              <id>flatten.clean</id>
-              <goals>
-                <goal>clean</goal>
-              </goals>
-              <phase>clean</phase>
-            </execution>
-            <execution>
-              <id>flatten</id>
-              <goals>
-                <goal>flatten</goal>
-              </goals>
-              <phase>process-resources</phase>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>1.7.0</version>
-          <extensions>true</extensions>
-          <configuration>
-            <serverId>ossrh</serverId>
-            <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-          </configuration>
-        </plugin>
         <!-- Spring Boot Maven Plugin to repackage as an executable JAR -->
         <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
-          <version>${spring-boot.version}</version>
           <configuration>
             <mainClass>edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication</mainClass>
           </configuration>
@@ -296,64 +178,18 @@
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
-        <version>${spotless.version}</version>
-        <configuration>
-          <ratchetFrom>origin/main</ratchetFrom>
-          <formats>
-            <format>
-              <includes>
-                <include>*.md</include>
-                <include>.gitignore</include>
-              </includes>
-              <trimTrailingWhitespace />
-              <endWithNewline />
-              <indent>
-                <tabs>true</tabs>
-                <spacesPerTab>4</spacesPerTab>
-              </indent>
-            </format>
-          </formats>
-          <!-- define a language-specific format -->
-          <java>
-            <eclipse>
-              <!--suppress UnresolvedMavenProperty -->
-              <file>formatter.xml</file>
-            </eclipse>
-            <removeUnusedImports />
-            <licenseHeader>
-              <!--suppress UnresolvedMavenProperty -->
-              <file>license-header</file>
-            </licenseHeader>
-            <importOrder>
-              <!--suppress UnresolvedMavenProperty -->
-              <file>spotless.importorder</file>
-            </importOrder>
-          </java>
-          <pom>
-            <sortPom>
-              <encoding>UTF-8</encoding>
-              <keepBlankLines>true</keepBlankLines>
-              <indentBlankLines>false</indentBlankLines>
-              <nrOfIndentSpace>2</nrOfIndentSpace>
-              <expandEmptyElements>false</expandEmptyElements>
-              <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
-              <sortDependencies>groupId,artifactId</sortDependencies>
-              <sortDependencyExclusions>groupId,artifactId</sortDependencyExclusions>
-              <sortDependencyManagement>groupId,artifactId</sortDependencyManagement>
-              <sortPlugins>groupId,artifactId</sortPlugins>
-              <sortProperties>false</sortProperties>
-              <sortModules>true</sortModules>
-              <sortExecutions>true</sortExecutions>
-              <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
-            </sortPom>
-          </pom>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration combine.self="append">
+          <!-- To retain parameter names for compiled classes. See https://github.com/spring-projects/spring-framework/wiki/Upgrading-to-Spring-Framework-6.x#parameter-name-retention -->
+          <parameters>true</parameters>
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
       </plugin>
     </plugins>
   </build>
