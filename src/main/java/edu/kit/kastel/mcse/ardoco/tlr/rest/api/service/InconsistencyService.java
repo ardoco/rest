@@ -19,8 +19,6 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.InconsistencyConverter;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.TraceLinkConverter;
 
-import java.util.List;
-
 @Service("InconsistencyService")
 public class InconsistencyService extends AbstractRunnerTLRService {
 
@@ -31,12 +29,8 @@ public class InconsistencyService extends AbstractRunnerTLRService {
     @Override
     protected ArDoCoApiResult convertResultToJsonString(ArDoCoResult result) throws JsonProcessingException {
         // traceLinks
-//        ImmutableList<TraceLink<SentenceEntity, ModelEntity>> traceLinks = result.getArchitectureTraceLinks();
-        ImmutableSet<TraceLink<SentenceEntity, ModelEntity>> traceLinks = result.getTraceLinksForModel(Metamodel.ARCHITECTURE_WITH_COMPONENTS_AND_INTERFACES);
-        String traceLinksJson = "";
-        if (!traceLinks.isEmpty()) {
-            traceLinksJson = TraceLinkConverter.convertListOfSadSamTraceLinksToJsonString(traceLinks.toImmutableList());
-        }
+        ImmutableList<TraceLink<SentenceEntity, ModelEntity>> traceLinks = result.getArchitectureTraceLinks();
+        String traceLinksJson = TraceLinkConverter.convertListOfSadSamTraceLinksToJsonString(traceLinks);
 
         // inconsistencies
         ImmutableList<Inconsistency> inconsistencies = result.getAllInconsistencies();

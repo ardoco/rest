@@ -26,8 +26,8 @@ services:
 
   app:
     build:
-      context: ..
-      dockerfile: REST/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     image: ghcr.io/ardoco/rest
     container_name: ardoco-rest-api
     restart: always
@@ -39,8 +39,8 @@ services:
       - app-network
     volumes:
       - ~/.m2:/root/.m2
-      - ../REST:/build
-      - ../REST/target:/target
+#      - ../REST:/build
+#      - ../REST/target:/target
 
 networks:
   app-network:

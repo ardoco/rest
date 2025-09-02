@@ -7,7 +7,7 @@ WORKDIR /build
 #RUN mvn -f /ArDoCo/pom.xml install -DskipTests
 
 
-COPY REST  /build
+COPY . /build
 RUN mvn -DskipTests clean package
 
 

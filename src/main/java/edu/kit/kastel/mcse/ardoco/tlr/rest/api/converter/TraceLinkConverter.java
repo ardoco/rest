@@ -47,6 +47,13 @@ public final class TraceLinkConverter {
                 var first = transitive.getFirstTraceLink().getSecondEndpoint();
                 if (first instanceof ArchitectureEntity architectureEntity) {
                     traceLinkNode.put("modelElementId", architectureEntity.getId());
+                    if (architectureEntity.getType().isPresent()) {
+                        traceLinkNode.put("modelElementName",architectureEntity.getName() + " (" + architectureEntity.getType().get() + ")");
+                    }
+                    else {
+                        traceLinkNode.put("modelElementName", architectureEntity.getName());
+                    }
+
                 }
             }
             arrayNode.add(traceLinkNode);
@@ -71,11 +78,15 @@ public final class TraceLinkConverter {
         for (TraceLink<? extends ArchitectureEntity, ? extends ModelEntity> traceLink : samCodeTraceLinks) {
             ObjectNode traceLinkNode = objectMapper.createObjectNode();
 
-            traceLinkNode.put("modelElementId", traceLink.getFirstEndpoint().getId()); //TODO maybe change this
-            //traceLinkNode.put("modelElementName", traceLink.getSecondEndpoint().getName());
-            traceLinkNode.put("codeElementId", traceLink.getSecondEndpoint().getId()); // Assume the first endpoint is the code element
+            traceLinkNode.put("modelElementId", traceLink.getFirstEndpoint().getId());
+            if (traceLink.getFirstEndpoint().getType().isPresent()) {
+                traceLinkNode.put("modelElementName",traceLink.getFirstEndpoint().getName() + " (" + traceLink.getFirstEndpoint().getType().get() + ")");
+            }
+            else {
+                traceLinkNode.put("modelElementName", traceLink.getFirstEndpoint().getName());
+            }
+            traceLinkNode.put("codeElementId", traceLink.getSecondEndpoint().getId());
             traceLinkNode.put("codeElementName", traceLink.getSecondEndpoint().getName());
-            //traceLinkNode.put("codeElementName", traceLink.getFirstEndpoint().toString());
             arrayNode.add(traceLinkNode);
         }
         return objectMapper.writeValueAsString(arrayNode);
@@ -98,11 +109,13 @@ public final class TraceLinkConverter {
         for (TraceLink<SentenceEntity, ModelEntity> traceLink : sadSamTraceLinks) {
             ObjectNode traceLinkNode = objectMapper.createObjectNode();
             traceLinkNode.put("sentenceNumber", traceLink.getFirstEndpoint().getId());
-            traceLinkNode.put("modelElementName", traceLink.getSecondEndpoint().getName());
-
+            if (traceLink.getSecondEndpoint().getType().isPresent()) {
+                traceLinkNode.put("modelElementName",traceLink.getSecondEndpoint().getName() + " (" + traceLink.getSecondEndpoint().getType().get() + ")");
+            }
+            else {
+                traceLinkNode.put("modelElementName", traceLink.getSecondEndpoint().getName());
+            }
             traceLinkNode.put("modelElementId", traceLink.getSecondEndpoint().getId());
-
-            //traceLinkNode.put("confidence", traceLink.getConfidence());
             arrayNode.add(traceLinkNode);
         }
         return objectMapper.writeValueAsString(arrayNode);

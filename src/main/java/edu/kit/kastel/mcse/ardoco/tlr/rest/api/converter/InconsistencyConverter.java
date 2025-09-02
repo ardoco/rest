@@ -27,11 +27,9 @@ public final class InconsistencyConverter {
             traceLinkNode.put("type", inconsistency.getType());
             traceLinkNode.put("reason", inconsistency.getReason());
             if (inconsistency.getType().equals("MissingModelInstance")) {
-                // cast inconsistency to MissingModelInstanceInconsistency#
                 MissingModelInstanceInconsistency mmiInconsistency = (MissingModelInstanceInconsistency) inconsistency;
                 traceLinkNode.put("sentenceNumber", mmiInconsistency.getSentenceNumber());
             } else if (inconsistency.getType().equals("MissingTextForModelElement")) {
-                // cast inconsistency to MissingTextForModelElementInconsistency
                 MissingTextForModelElementInconsistency umeInconsistency = (MissingTextForModelElementInconsistency) inconsistency;
                 traceLinkNode.put("modelElementId", umeInconsistency.getModelInstanceUid());
             }
