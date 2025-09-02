@@ -57,14 +57,6 @@ public class ConfigurationProviderService {
         for (var clazz : classesThatMayBeConfigured) {
             processConfigurationOfClass(configs, clazz);
         }
-
-        System.out.println("-".repeat(50));
-        System.out.println("Current Default Configuration");
-        System.out.println(configs.entrySet()
-                .stream()
-                .map(e -> e.getKey() + AbstractConfigurable.KEY_VALUE_CONNECTOR + e.getValue())
-                .collect(Collectors.joining("\n")));
-        System.out.println("-".repeat(50));
         return configs;
     }
 
