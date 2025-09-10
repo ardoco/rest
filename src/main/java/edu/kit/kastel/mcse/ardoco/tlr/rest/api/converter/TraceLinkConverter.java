@@ -48,9 +48,8 @@ public final class TraceLinkConverter {
                 if (first instanceof ArchitectureEntity architectureEntity) {
                     traceLinkNode.put("modelElementId", architectureEntity.getId());
                     if (architectureEntity.getType().isPresent()) {
-                        traceLinkNode.put("modelElementName",architectureEntity.getName() + " (" + architectureEntity.getType().get() + ")");
-                    }
-                    else {
+                        traceLinkNode.put("modelElementName", architectureEntity.getName() + " (" + architectureEntity.getType().get() + ")");
+                    } else {
                         traceLinkNode.put("modelElementName", architectureEntity.getName());
                     }
 
@@ -80,9 +79,8 @@ public final class TraceLinkConverter {
 
             traceLinkNode.put("modelElementId", traceLink.getFirstEndpoint().getId());
             if (traceLink.getFirstEndpoint().getType().isPresent()) {
-                traceLinkNode.put("modelElementName",traceLink.getFirstEndpoint().getName() + " (" + traceLink.getFirstEndpoint().getType().get() + ")");
-            }
-            else {
+                traceLinkNode.put("modelElementName", traceLink.getFirstEndpoint().getName() + " (" + traceLink.getFirstEndpoint().getType().get() + ")");
+            } else {
                 traceLinkNode.put("modelElementName", traceLink.getFirstEndpoint().getName());
             }
             traceLinkNode.put("codeElementId", traceLink.getSecondEndpoint().getId());
@@ -110,9 +108,8 @@ public final class TraceLinkConverter {
             ObjectNode traceLinkNode = objectMapper.createObjectNode();
             traceLinkNode.put("sentenceNumber", traceLink.getFirstEndpoint().getId());
             if (traceLink.getSecondEndpoint().getType().isPresent()) {
-                traceLinkNode.put("modelElementName",traceLink.getSecondEndpoint().getName() + " (" + traceLink.getSecondEndpoint().getType().get() + ")");
-            }
-            else {
+                traceLinkNode.put("modelElementName", traceLink.getSecondEndpoint().getName() + " (" + traceLink.getSecondEndpoint().getType().get() + ")");
+            } else {
                 traceLinkNode.put("modelElementName", traceLink.getSecondEndpoint().getName());
             }
             traceLinkNode.put("modelElementId", traceLink.getSecondEndpoint().getId());
