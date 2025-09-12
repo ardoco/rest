@@ -1,12 +1,13 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.util;
-
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
 
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
+
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
 
 /**
  * This class provides hashing capabilities. It is used as part of generating a unique ID for a request.

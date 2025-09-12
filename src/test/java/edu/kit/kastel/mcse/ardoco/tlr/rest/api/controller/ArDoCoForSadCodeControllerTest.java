@@ -1,7 +1,9 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.core.io.ClassPathResource;
@@ -11,8 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 
 public class ArDoCoForSadCodeControllerTest extends AbstractTLRControllerTest {
 

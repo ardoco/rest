@@ -1,23 +1,23 @@
 /* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.util;
 
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
 
 public class HashGeneratorTest {
 
@@ -45,7 +45,7 @@ public class HashGeneratorTest {
     }
 
     @Test
-    void testHashesAreEqualForSameFileContent() throws FileNotFoundException, FileConversionException{
+    void testHashesAreEqualForSameFileContent() throws FileNotFoundException, FileConversionException {
         // Single file hash test
         List<File> file1 = Collections.singletonList(tempFile1);
         String hash1 = HashGenerator.getMD5HashFromFiles(file1);
@@ -91,7 +91,7 @@ public class HashGeneratorTest {
     }
 
     @Test
-    void testDifferentFileContentHash() throws FileNotFoundException, FileConversionException{
+    void testDifferentFileContentHash() throws FileNotFoundException, FileConversionException {
         // Different file content should generate different hashes
         List<File> files1 = Collections.singletonList(tempFile1);
         List<File> files2 = Collections.singletonList(tempFile3);

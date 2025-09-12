@@ -1,6 +1,16 @@
 /* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.ArdocoException;
@@ -14,15 +24,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @Tag(name = "Result Retrieval")
 @RestController
@@ -35,7 +36,7 @@ public class ResultController {
     @Operation(summary = "Queries the TraceLinks for a given resultID, and returns it if it is ready", description = "Queries whether the TraceLinks are ready using the id, which was returned by tue runPipeline method. " + "In case the result is not yet ready, the user gets informed about it via an appropriate message and the user retrieves the unique id to query the result later")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "the sadCodeTraceLinks found by ardoco", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArdocoResultResponse.class))),
-            @ApiResponse(responseCode = "202", description = "the sadCodeTraceLinks are not ready yet", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArdocoResultResponse.class))),})
+            @ApiResponse(responseCode = "202", description = "the sadCodeTraceLinks are not ready yet", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArdocoResultResponse.class))), })
     @GetMapping("/get-result/{id}")
     public ResponseEntity<ArdocoResultResponse> getResult(
             @Parameter(description = "The ID of the result to query", required = true) @PathVariable("id") String id) throws ArdocoException,

@@ -1,6 +1,6 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.redis.testcontainers.RedisContainer;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -8,7 +8,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.redis.testcontainers.RedisContainer;
 
 @Testcontainers
 public class RedisTestContainerTest {

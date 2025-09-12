@@ -1,8 +1,23 @@
 /* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
@@ -14,19 +29,6 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.messages.ResultMessages;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.AbstractRunnerTLRService;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.ResultService;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.util.HashGenerator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 /**
  * The {@code AbstractController} class provides foundational methods for handling various REST responses
@@ -51,7 +53,7 @@ public abstract class AbstractController {
     @Autowired
     private ResultService resultService;
 
-    private static final Logger logger = LogManager.getLogger(AbstractController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
 
     /**
      * Constructs a new {@code AbstractController} with the specified service and trace link type.

@@ -114,142 +114,142 @@ The API has 2 response schemas:
 Sample response for waiting for the result or retrieving the result using getResult:
 ```json
 {
-  "requestId": "SadCodeResult:bigbluebutton67c34469-a21a-36dc-94fd-39531c9c1e6c",
-  "status": "OK",
-  "message": "The result is ready.",
-  "traceLinkType": "SAD_CODE",
-  "result": {
-    "traceLinks": [
-      {
-        "sentenceNumber": "84",
-        "codeElementId": "acm004938jsd",
-        "codeElementName": "TextFileCreator"
-      },
-      {
-        "sentenceNumber": "69",
-        "codeElementId": "acm006115jsd",
-        "codeElementName": "RecordingExportHandler"
-      }
-    ],
-    "inconsistencies": []
-  }
+"requestId": "SadCodeResult:bigbluebutton67c34469-a21a-36dc-94fd-39531c9c1e6c",
+"status": "OK",
+"message": "The result is ready.",
+"traceLinkType": "SAD_CODE",
+"result": {
+	"traceLinks": [
+	{
+		"sentenceNumber": "84",
+		"codeElementId": "acm004938jsd",
+		"codeElementName": "TextFileCreator"
+	},
+	{
+		"sentenceNumber": "69",
+		"codeElementId": "acm006115jsd",
+		"codeElementName": "RecordingExportHandler"
+	}
+	],
+	"inconsistencies": []
+}
 }
 ```
 ### ArCoTL (Sam-Code)
 Sample response for waiting for the result or retrieving the result using getResult:
 ```json
 	{
-  "requestId": "SamCodeResult:bigbluebutton98a189ec-45ab-3ed3-bc10-fc5729457ee1",
-  "status": "OK",
-  "message": "The result is ready.",
-  "traceLinkType": "SAM_CODE",
-  "result": {
-    "traceLinks": [
-      {
-        "modelElementId": "_7b12cFkIEeyewPSmlgszyA",
-        "modelElementName": "Presentation Conversion",
-        "codeElementId": "acm005058jsd",
-        "codeElementName": "BigPdfException"
-      },
-      {
-        "modelElementId": "_nwrCMFwPEeyiuNx_RO7j-Q",
-        "modelElementName": "FreeSWITCH (uml:Component)",
-        "codeElementId": "acm001998jsd",
-        "codeElementName": "DeafUserCommand"
-      }
-    ],
-    "inconsistencies": []
-  }
+"requestId": "SamCodeResult:bigbluebutton98a189ec-45ab-3ed3-bc10-fc5729457ee1",
+"status": "OK",
+"message": "The result is ready.",
+"traceLinkType": "SAM_CODE",
+"result": {
+	"traceLinks": [
+	{
+		"modelElementId": "_7b12cFkIEeyewPSmlgszyA",
+		"modelElementName": "Presentation Conversion",
+		"codeElementId": "acm005058jsd",
+		"codeElementName": "BigPdfException"
+	},
+	{
+		"modelElementId": "_nwrCMFwPEeyiuNx_RO7j-Q",
+		"modelElementName": "FreeSWITCH (uml:Component)",
+		"codeElementId": "acm001998jsd",
+		"codeElementName": "DeafUserCommand"
+	}
+	],
+	"inconsistencies": []
+}
 }
 ```
 ### SWATTR (Sad-Sam)
 Sample response for waiting for the result or retrieving the result using getResult:
 ```json
 {
-  "requestId": "SadSamResult:bigbluebutton7b258c6c-56b2-30a5-8cca-a1fb80b5547b",
-  "status": "OK",
-  "message": "The result is ready.",
-  "traceLinkType": "SAD_SAM",
-  "result": {
-    "traceLinks": [
-      {
-        "sentenceNumber": "17",
-        "modelElementName": "HTML5 Server (uml:Component)",
-        "modelElementId": "_yGgUMFkHEeyewPSmlgszyA"
-      },
-      {
-        "sentenceNumber": "12",
-        "modelElementName": "HTML5 Server (uml:Component)",
-        "modelElementId": "_yGgUMFkHEeyewPSmlgszyA"
-      }
-    ],
-    "inconsistencies": []
-  }
+"requestId": "SadSamResult:bigbluebutton7b258c6c-56b2-30a5-8cca-a1fb80b5547b",
+"status": "OK",
+"message": "The result is ready.",
+"traceLinkType": "SAD_SAM",
+"result": {
+	"traceLinks": [
+	{
+		"sentenceNumber": "17",
+		"modelElementName": "HTML5 Server (uml:Component)",
+		"modelElementId": "_yGgUMFkHEeyewPSmlgszyA"
+	},
+	{
+		"sentenceNumber": "12",
+		"modelElementName": "HTML5 Server (uml:Component)",
+		"modelElementId": "_yGgUMFkHEeyewPSmlgszyA"
+	}
+	],
+	"inconsistencies": []
+}
 }
 ```
 ### TransArC (Sad-Sam-Code)
 Sample response for waiting for the result or retrieving the result using getResult:
 ```json
 {
-  "requestId": "SadSamCodeResult:bigbluebutton3185cf11-3288-3be9-9bba-f8558b9c5d2e",
-  "status": "OK",
-  "message": "The result is ready.",
-  "traceLinkType": "SAD_SAM_CODE",
-  "result": {
-    "traceLinks": [
-      {
-        "sentenceNumber": "4",
-        "codeElementId": "acm006307jsd",
-        "codeElementName": "build",
-        "modelElementId": "_0e5u8FkHEeyewPSmlgszyA",
-        "modelElementName": "HTML5 Client (uml:Component)"
-      },
-      {
-        "sentenceNumber": "63",
-        "codeElementId": "acm001826jsd",
-        "codeElementName": "VoiceUserTalkingEvent",
-        "modelElementId": "_nwrCMFwPEeyiuNx_RO7j-Q",
-        "modelElementName": "FreeSWITCH (uml:Component)"
-      }
-    ],
-    "inconsistencies": []
-  }
+"requestId": "SadSamCodeResult:bigbluebutton3185cf11-3288-3be9-9bba-f8558b9c5d2e",
+"status": "OK",
+"message": "The result is ready.",
+"traceLinkType": "SAD_SAM_CODE",
+"result": {
+	"traceLinks": [
+	{
+		"sentenceNumber": "4",
+		"codeElementId": "acm006307jsd",
+		"codeElementName": "build",
+		"modelElementId": "_0e5u8FkHEeyewPSmlgszyA",
+		"modelElementName": "HTML5 Client (uml:Component)"
+	},
+	{
+		"sentenceNumber": "63",
+		"codeElementId": "acm001826jsd",
+		"codeElementName": "VoiceUserTalkingEvent",
+		"modelElementId": "_nwrCMFwPEeyiuNx_RO7j-Q",
+		"modelElementName": "FreeSWITCH (uml:Component)"
+	}
+	],
+	"inconsistencies": []
+}
 }
 ```
 ### Find Inconsistencies (Inconsistency detection with SWATTR TraceLinkRecovery)
 Sample response for waiting for the result or retrieving the result using getResult:
 ```json
 {
-  "requestId": "SadSamResultInconsistency:bigbluebutton7b258c6c-56b2-30a5-8cca-a1fb80b5547b",
-  "status": "OK",
-  "message": "The result is ready.",
-  "traceLinkType": "SAD_SAM",
-  "result": {
-    "traceLinks": [
-      {
-        "sentenceNumber": "76",
-        "modelElementName": "Redis PubSub",
-        "modelElementId": "_IixQcFkJEeyewPSmlgszyA"
-      },
-      {
-        "sentenceNumber": "59",
-        "modelElementName": "FreeSWITCH",
-        "modelElementId": "_qa5z0FwPEeyiuNx_RO7j-Q"
-      }
-    ],
-    "inconsistencies": [
-      {
-        "type": "MissingModelInstance",
-        "reason": "Text indicates that \"integrations\" should be contained in the model(s) but could not be found. (confidence: 0.65)",
-        "sentenceNumber": 39
-      },
-      {
-        "type": "MissingTextForModelElement",
-        "reason": "Model contains an Instance \"Recording Service\" (type: \"uml:Component\")  that seems to be undocumented.",
-        "modelElementId": "_kvWs4FkHEeyewPSmlgszyA"
-      }
-    ]
-  }
+"requestId": "SadSamResultInconsistency:bigbluebutton7b258c6c-56b2-30a5-8cca-a1fb80b5547b",
+"status": "OK",
+"message": "The result is ready.",
+"traceLinkType": "SAD_SAM",
+"result": {
+	"traceLinks": [
+	{
+		"sentenceNumber": "76",
+		"modelElementName": "Redis PubSub",
+		"modelElementId": "_IixQcFkJEeyewPSmlgszyA"
+	},
+	{
+		"sentenceNumber": "59",
+		"modelElementName": "FreeSWITCH",
+		"modelElementId": "_qa5z0FwPEeyiuNx_RO7j-Q"
+	}
+	],
+	"inconsistencies": [
+	{
+		"type": "MissingModelInstance",
+		"reason": "Text indicates that \"integrations\" should be contained in the model(s) but could not be found. (confidence: 0.65)",
+		"sentenceNumber": 39
+	},
+	{
+		"type": "MissingTextForModelElement",
+		"reason": "Model contains an Instance \"Recording Service\" (type: \"uml:Component\")  that seems to be undocumented.",
+		"modelElementId": "_kvWs4FkHEeyewPSmlgszyA"
+	}
+	]
+}
 }
 
 ```

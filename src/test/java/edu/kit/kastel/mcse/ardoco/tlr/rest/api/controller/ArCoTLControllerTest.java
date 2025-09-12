@@ -1,9 +1,9 @@
 /* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
-import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,8 +15,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 
 @Testcontainers
 @SpringBootTest(classes = ArDoCoRestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

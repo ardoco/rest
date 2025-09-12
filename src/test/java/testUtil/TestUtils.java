@@ -1,14 +1,10 @@
 /* Licensed under MIT 2025. */
 package testUtil;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ErrorResponse;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.messages.ResultMessages;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,9 +14,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ErrorResponse;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.messages.ResultMessages;
 
 public final class TestUtils {
 
@@ -46,7 +48,6 @@ public final class TestUtils {
         JsonNode result = rootNode.get("result");
         JsonNode traceLinkNode = (result != null && result.has("traceLinks")) ? result.get("traceLinks") : null;
         JsonNode inconsistenciesNode = (result != null && result.has("inconsistencies")) ? result.get("inconsistencies") : null;
-
 
         String projectId = rootNode.has("requestId") ? rootNode.get("requestId").asText() : null;
         String message = rootNode.has("message") ? rootNode.get("message").asText() : null;
@@ -147,7 +148,7 @@ public final class TestUtils {
     }
 
     public static void testRunPipelineAndWaitForResult_notReady(ArdocoResultResponse response, ResponseEntity<String> responseEntity,
-                                                                TraceLinkType traceLinkType) {
+            TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
         assertEquals(ResultMessages.REQUEST_TIMED_OUT_START_AND_WAIT, response.getMessage(), "message: " + response.getMessage());

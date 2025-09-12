@@ -1,16 +1,18 @@
 /* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.ArdocoException;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository.CurrentlyRunningRequestsRepository;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository.DatabaseAccessor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * The {@code AbstractService} class provides foundational methods for handling results in the
@@ -37,7 +39,7 @@ public abstract class AbstractService {
     @Autowired
     private DatabaseAccessor databaseAccessor;
 
-    private static final Logger logger = LogManager.getLogger(AbstractService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractService.class);
 
     /**
      * Default constructor for AbstractService.
@@ -71,7 +73,7 @@ public abstract class AbstractService {
             String inconsistencies = root.path("inconsistencies").toString();
             return new ArDoCoApiResult(traceLinks, inconsistencies);
             // Deserialize the JSON string to the DTO
-//            return objectMapper.readValue(result, ArDoCoApiResult.class);
+            //            return objectMapper.readValue(result, ArDoCoApiResult.class);
         } catch (Exception e) {
             throw new ArdocoException("Failed to deserialize JSON result for ID " + id + e.getMessage());
         }

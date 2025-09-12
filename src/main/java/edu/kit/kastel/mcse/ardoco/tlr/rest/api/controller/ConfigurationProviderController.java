@@ -1,17 +1,18 @@
 /* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.ConfigurationProviderService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.ConfigurationProviderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 /**
  * This controller exposes an endpoint to retrieve the default configuration.

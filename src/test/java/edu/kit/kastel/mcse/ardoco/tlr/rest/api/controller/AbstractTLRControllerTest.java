@@ -1,11 +1,14 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
-import edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ErrorResponse;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository.RedisAccessor;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -20,15 +23,13 @@ import org.springframework.util.MultiValueMap;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+
+import edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ErrorResponse;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository.RedisAccessor;
 import testUtil.TestUtils;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @Testcontainers
 @SpringBootTest(classes = ArDoCoRestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)

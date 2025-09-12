@@ -1,13 +1,14 @@
 /* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.http.HttpStatus;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+
+import org.springframework.http.HttpStatus;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * Represents an error response structure for the ArDoCo API.

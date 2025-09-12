@@ -1,8 +1,5 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter;
-
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -16,6 +13,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
+
 /**
  * This is a utility class for converting files and handling file-related operations.
  * It provides methods to convert files to byte arrays, convert multipart files to regular files,
@@ -27,7 +29,6 @@ public final class FileConverter {
 
     private FileConverter() {
     }
-
 
     /**
      * Converts a list of {@link File} objects to a single byte array.
@@ -87,7 +88,6 @@ public final class FileConverter {
             throw new FileConversionException("Error occurred while transferring the MultipartFile to File: " + e.getMessage(), e);
         }
     }
-
 
     /**
      * Detects the encoding from the XML prolog in the MultipartFile.
