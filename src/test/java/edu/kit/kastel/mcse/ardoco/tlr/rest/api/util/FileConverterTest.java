@@ -1,8 +1,14 @@
 /* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.util;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -15,15 +21,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
-
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class FileConverterTest {
 
@@ -111,7 +117,7 @@ public class FileConverterTest {
     @Test
     void testConvertMultipartFileToFile_withMockMultipartFile_png() throws IOException, FileNotFoundException, FileConversionException {
         // Create a MockMultipartFile
-        byte[] fileContent = { (byte) 137, (byte) 80, (byte) 78, (byte) 71 };
+        byte[] fileContent = {(byte) 137, (byte) 80, (byte) 78, (byte) 71};
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "image.png", "image/png", fileContent);
 
         // Use FileConverter to convert the MockMultipartFile to a File

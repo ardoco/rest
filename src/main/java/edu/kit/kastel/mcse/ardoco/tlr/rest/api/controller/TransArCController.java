@@ -1,28 +1,6 @@
 /* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
-import org.eclipse.collections.impl.factory.SortedMaps;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
 import edu.kit.kastel.mcse.ardoco.tlr.execution.Transarc;
 import edu.kit.kastel.mcse.ardoco.tlr.models.agents.ArchitectureConfiguration;
@@ -32,10 +10,30 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.ArDoCoForSadSamCodeTLRService;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.TransArCService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
+import org.eclipse.collections.impl.factory.SortedMaps;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 
 /**
  * Controller for handling the TransArC (sad-sam-code) processing pipeline.
@@ -43,16 +41,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "TransArC (sad-sam-code) TraceLinkRecovery")
 @RequestMapping("/api/transarc")
 @RestController
-public class ArDoCoForSadSamCodeTLRController extends AbstractController {
+public class TransArCController extends AbstractController {
 
-    private static final Logger logger = LogManager.getLogger(ArDoCoForSadSamCodeTLRController.class);
+    private static final Logger logger = LogManager.getLogger(TransArCController.class);
 
     /**
-     * Constructs a new ArDoCoForSadSamCodeTLRController with the specified service.
+     * Constructs a new TransArCController with the specified service.
      *
      * @param service the service responsible for trace link recovery operations
      */
-    public ArDoCoForSadSamCodeTLRController(ArDoCoForSadSamCodeTLRService service) {
+    public TransArCController(TransArCService service) {
         super(service, TraceLinkType.SAD_SAM_CODE);
     }
 
@@ -77,7 +75,7 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
             @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ModelFormat modelType,
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
-            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
 
             throws FileNotFoundException, FileConversionException, IOException {
 
@@ -112,7 +110,7 @@ public class ArDoCoForSadSamCodeTLRController extends AbstractController {
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
             @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ModelFormat modelType,
             @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
-            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
             throws FileNotFoundException, FileConversionException, IOException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel, inputCode);

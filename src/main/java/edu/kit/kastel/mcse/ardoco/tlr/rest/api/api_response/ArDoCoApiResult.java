@@ -9,10 +9,10 @@ import com.fasterxml.jackson.annotation.JsonRawValue;
 public class ArDoCoApiResult {
 
     @JsonRawValue
-    private String traceLinks;
+    private final String traceLinks;
 
     @JsonRawValue
-    private String inconsistencies;
+    private final String inconsistencies;
 
     /**
      * Constructs an ArDoCoApiResult with the specified trace links and inconsistencies.
@@ -38,6 +38,7 @@ public class ArDoCoApiResult {
     /**
      * Getter for traceLinks.
      */
+
     public String getTraceLinks() {
         return traceLinks;
     }
@@ -45,6 +46,7 @@ public class ArDoCoApiResult {
     /**
      * Getter for inconsistencies.
      */
+
     public String getInconsistencies() {
         return inconsistencies;
     }

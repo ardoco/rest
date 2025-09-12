@@ -3,8 +3,6 @@ package edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response;
 
 import org.springframework.http.HttpStatus;
 
-import com.fasterxml.jackson.annotation.JsonRawValue;
-
 /**
  * Represents the response structure for the ArDoCo API results.
  */
@@ -14,8 +12,7 @@ public class ArdocoResultResponse {
     private String message;
     private TraceLinkType traceLinkType;
 
-    @JsonRawValue
-    private String result;
+    private ArDoCoApiResult result;
 
     /**
      * Default constructor for ArdocoResultResponse.
@@ -46,7 +43,7 @@ public class ArdocoResultResponse {
      * @param result    the result of the ArDoCo processing, in JSON format
      * @param message   a message providing additional information about the response
      */
-    public ArdocoResultResponse(String requestId, HttpStatus status, String result, String message) {
+    public ArdocoResultResponse(String requestId, HttpStatus status, ArDoCoApiResult result, String message) {
         this.requestId = requestId;
         this.status = status;
         this.result = result;
@@ -113,7 +110,7 @@ public class ArdocoResultResponse {
      *
      * @return the result of the ArDoCo processing, in JSON format
      */
-    public String getResult() {
+    public ArDoCoApiResult getResult() {
         return result;
     }
 
@@ -122,7 +119,7 @@ public class ArdocoResultResponse {
      *
      * @param result the result of the ArDoCo processing, in JSON format
      */
-    public void setResult(String result) {
+    public void setResult(ArDoCoApiResult result) {
         this.result = result;
     }
 

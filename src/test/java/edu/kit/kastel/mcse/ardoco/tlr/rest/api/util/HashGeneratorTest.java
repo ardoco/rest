@@ -1,7 +1,10 @@
 /* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.util;
 
-import static org.junit.jupiter.api.Assertions.*;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,15 +14,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HashGeneratorTest {
 
-    private HashGenerator hashGenerator;
     private File tempFile1;
     private File tempFile2;
     private File tempFile3;
@@ -44,7 +45,7 @@ public class HashGeneratorTest {
     }
 
     @Test
-    void testHashesAreEqualForSameFileContent() throws NoSuchAlgorithmException, IOException {
+    void testHashesAreEqualForSameFileContent() throws FileNotFoundException, FileConversionException{
         // Single file hash test
         List<File> file1 = Collections.singletonList(tempFile1);
         String hash1 = HashGenerator.getMD5HashFromFiles(file1);
@@ -59,7 +60,7 @@ public class HashGeneratorTest {
     }
 
     @Test
-    void testMultipleFilesHash() throws NoSuchAlgorithmException, IOException {
+    void testMultipleFilesHash() throws FileNotFoundException, FileConversionException {
         // Multiple files hash test
         List<File> files = Arrays.asList(tempFile1, tempFile2);
         String hash = HashGenerator.getMD5HashFromFiles(files);
@@ -90,7 +91,7 @@ public class HashGeneratorTest {
     }
 
     @Test
-    void testDifferentFileContentHash() throws NoSuchAlgorithmException, IOException {
+    void testDifferentFileContentHash() throws FileNotFoundException, FileConversionException{
         // Different file content should generate different hashes
         List<File> files1 = Collections.singletonList(tempFile1);
         List<File> files2 = Collections.singletonList(tempFile3);

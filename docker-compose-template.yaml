@@ -27,20 +27,15 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
     image: ghcr.io/ardoco/rest
     container_name: ardoco-rest-api
     restart: always
     ports:
-      - "127.0.0.1:8081:8080"
+      - "127.0.0.1:8080:8080"
     depends_on:
       - redis
     networks:
       - app-network
-    volumes:
-      - ~/.m2:/root/.m2
-#      - ../REST:/build
-#      - ../REST/target:/target
 
 networks:
   app-network:

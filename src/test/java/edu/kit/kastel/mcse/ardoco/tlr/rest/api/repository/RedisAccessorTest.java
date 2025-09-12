@@ -1,8 +1,6 @@
 /* Licensed under MIT 2024. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,6 +10,12 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class RedisAccessorTest {
@@ -51,9 +55,9 @@ public class RedisAccessorTest {
         String value = "testValue";
         String id = redisAccessor.saveResult(key, value);
 
-        assertEquals(id, key);
+        assertEquals(key, id);
         assertTrue(redisAccessor.keyExistsInDatabase(key));
-        assertEquals(redisAccessor.getResult(key), value);
+        assertEquals(value, redisAccessor.getResult(key));
     }
 
     @Test
@@ -69,14 +73,14 @@ public class RedisAccessorTest {
         String key = "testKey";
         String value = "testValue";
         String id = redisAccessor.saveResult(key, value);
-        assertEquals(redisAccessor.getResult(key), value);
+        assertEquals(value, redisAccessor.getResult(key));
 
         String updatedValue = "updatedValue";
         String id2 = redisAccessor.saveResult(key, updatedValue);
 
-        assertEquals(id2, key);
+        assertEquals(key, id2);
         assertTrue(redisAccessor.keyExistsInDatabase(key));
-        assertEquals(redisAccessor.getResult(key), updatedValue);
+        assertEquals(updatedValue, redisAccessor.getResult(key));
     }
 
     @Test

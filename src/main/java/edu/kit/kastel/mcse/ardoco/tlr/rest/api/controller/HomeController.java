@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    /** Constructor for HomeController. */
+    /**
+     * Constructor for HomeController.
+     */
     public HomeController() {
         // Default constructor
     }

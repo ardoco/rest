@@ -1,27 +1,28 @@
 /* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
+import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @Testcontainers
 @SpringBootTest(classes = ArDoCoRestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ArDoCoForSamCodeTLRControllerTest extends AbstractTLRControllerTest {
+public class ArCoTLControllerTest extends AbstractTLRControllerTest {
 
-    public ArDoCoForSamCodeTLRControllerTest() {
+    public ArCoTLControllerTest() {
         super(TraceLinkType.SAM_CODE);
     }
 

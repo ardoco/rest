@@ -36,7 +36,7 @@ public final class FileConverter {
      * @param files the list of {@link File} objects to convert to a byte array
      * @return a byte array representing the concatenated contents of all files
      * @throws FileConversionException if an error occurs during file reading or conversion
-     * @throws FileNotFoundException if the provided file list is empty
+     * @throws FileNotFoundException   if the provided file list is empty
      */
     public static byte[] convertFilesToByte(List<File> files) throws FileConversionException, FileNotFoundException {
         if (files.isEmpty()) {
@@ -62,7 +62,7 @@ public final class FileConverter {
      *
      * @param multipartFile the {@link MultipartFile} to convert
      * @return a {@link File} object containing the contents of the {@link MultipartFile}
-     * @throws FileNotFoundException if the file is empty or null
+     * @throws FileNotFoundException   if the file is empty or null
      * @throws FileConversionException if an error occurs during file conversion
      */
     public static File convertMultipartFileToFile(MultipartFile multipartFile) throws FileNotFoundException, FileConversionException {

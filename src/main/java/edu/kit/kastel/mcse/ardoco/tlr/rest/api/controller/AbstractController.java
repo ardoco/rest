@@ -1,24 +1,10 @@
 /* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.ArdocoException;
@@ -28,6 +14,19 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.messages.ResultMessages;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.AbstractRunnerTLRService;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.ResultService;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.util.HashGenerator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * The {@code AbstractController} class provides foundational methods for handling various REST responses
@@ -39,10 +38,14 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.util.HashGenerator;
  */
 public abstract class AbstractController {
 
-    /** The type of trace link this controller manages, used for identifying the specific TLR process. */
+    /**
+     * The type of trace link this controller manages, used for identifying the specific TLR process.
+     */
     protected final TraceLinkType traceLinkType;
 
-    /** The service responsible for trace link recovery operations. It is used to run pipelines and manage results. */
+    /**
+     * The service responsible for trace link recovery operations. It is used to run pipelines and manage results.
+     */
     protected final AbstractRunnerTLRService service;
 
     @Autowired
@@ -73,7 +76,7 @@ public abstract class AbstractController {
      */
     protected ResponseEntity<ArdocoResultResponse> handleRunPipeLineResult(ArDoCoRunner runner, String requestId, List<File> inputFiles)
             throws FileNotFoundException, FileConversionException {
-        Optional<String> result = service.runPipeline(runner, requestId, inputFiles);
+        Optional<ArDoCoApiResult> result = service.runPipeline(runner, requestId, inputFiles);
         ArdocoResultResponse response;
         if (result.isEmpty()) {
             response = new ArdocoResultResponse(requestId, HttpStatus.OK, ResultMessages.RESULT_IS_BEING_PROCESSED);
@@ -94,7 +97,7 @@ public abstract class AbstractController {
      */
     protected ResponseEntity<ArdocoResultResponse> handleRunPipelineAndWaitForResult(ArDoCoRunner runner, String requestId, List<File> inputFiles)
             throws ArdocoException {
-        Optional<String> result = service.runPipeline(runner, requestId, inputFiles);
+        Optional<ArDoCoApiResult> result = service.runPipeline(runner, requestId, inputFiles);
         if (result.isEmpty()) {
             result = resultService.waitForResult(requestId);
         }

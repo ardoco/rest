@@ -1,15 +1,18 @@
 /* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-
+import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
+import edu.kit.kastel.mcse.ardoco.tlr.execution.Swattr;
+import edu.kit.kastel.mcse.ardoco.tlr.models.agents.ArchitectureConfiguration;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.SwattrService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
@@ -19,22 +22,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
-import edu.kit.kastel.mcse.ardoco.tlr.execution.Swattr;
-import edu.kit.kastel.mcse.ardoco.tlr.models.agents.ArchitectureConfiguration;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.ArDoCoForSadSamTLRService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 
 /**
  * This controller handles the REST API endpoints for the SWATTR (sad-sam) trace link recovery process.
@@ -42,16 +40,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "SWATTR (sad-sam) TraceLinkRecovery")
 @RequestMapping("/api/swattr")
 @RestController
-public class ArDoCoForSadSamController extends AbstractController {
+public class SwattrController extends AbstractController {
 
-    private static final Logger logger = LogManager.getLogger(ArDoCoForSadSamController.class);
+    private static final Logger logger = LogManager.getLogger(SwattrController.class);
 
     /**
-     * Constructs a new {@code ArDoCoForSadSamController} with the specified service.
+     * Constructs a new {@code SwattrController} with the specified service.
      *
      * @param service the service responsible for trace link recovery operations
      */
-    public ArDoCoForSadSamController(ArDoCoForSadSamTLRService service) {
+    public SwattrController(SwattrService service) {
         super(service, TraceLinkType.SAD_SAM);
     }
 
@@ -74,7 +72,7 @@ public class ArDoCoForSadSamController extends AbstractController {
             @Parameter(description = "The textual documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
             @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ModelFormat modelType,
-            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
             throws FileNotFoundException, FileConversionException, IOException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel);
@@ -106,7 +104,7 @@ public class ArDoCoForSadSamController extends AbstractController {
             @Parameter(description = "The textual documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
             @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
             @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ModelFormat modelType,
-            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestPart(value = "additionalConfigs", required = false) String additionalConfigsJson)
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
             throws FileNotFoundException, FileConversionException, IOException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel);

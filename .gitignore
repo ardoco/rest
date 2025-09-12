@@ -8,6 +8,7 @@ data/*
 redisinsight/*
 
 .flattened-pom.xml
+docker-compose-template.yaml
 
 ### STS ###
 .apt_generated

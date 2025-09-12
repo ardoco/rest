@@ -14,7 +14,8 @@ import java.util.UUID;
 
 public final class HashGenerator {
 
-    private HashGenerator() {}
+    private HashGenerator() {
+    }
 
     /**
      * Method to generate an MD5 hash for a given string.
