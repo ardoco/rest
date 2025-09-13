@@ -1,4 +1,4 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api;
 
 //import org.junit.jupiter.api.Test;
@@ -36,13 +36,13 @@ package edu.kit.kastel.mcse.ardoco.tlr.rest.api;
 //        redisTemplate.delete(key);
 //    }*/
 //
-////    @Test
-////    public void testRedisConnectionFailure() {
-////        // Use invalid configuration or catch connection failures to test the error handling
-////        // For example, check if wrong credentials throw a RedisConnectionFailureException
-////
-////        assertThatThrownBy(() -> {
-////            redisTemplate.opsForValue().get("invalid_key");
-////        }).hasRootCauseInstanceOf(org.springframework.data.redis.RedisConnectionFailureException.class);
-////    }
+/// /    @Test
+/// /    public void testRedisConnectionFailure() {
+/// /        // Use invalid configuration or catch connection failures to test the error handling
+/// /        // For example, check if wrong credentials throw a RedisConnectionFailureException
+/// /
+/// /        assertThatThrownBy(() -> {
+/// /            redisTemplate.opsForValue().get("invalid_key");
+/// /        }).hasRootCauseInstanceOf(org.springframework.data.redis.RedisConnectionFailureException.class);
+/// /    }
 //}

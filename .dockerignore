@@ -3,4 +3,4 @@
 target
 data
 *.md
-docker-compose.yaml
+docker-compose-template.yaml

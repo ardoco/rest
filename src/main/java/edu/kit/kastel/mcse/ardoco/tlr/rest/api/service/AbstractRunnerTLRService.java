@@ -1,4 +1,4 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.service;
 
 import java.io.File;
@@ -6,18 +6,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.kit.kastel.mcse.ardoco.core.api.output.ArDoCoResult;
 import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.ArdocoException;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository.CurrentlyRunningRequestsRepository;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository.DatabaseAccessor;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.ArdocoException;
 
 /**
  * The {@code AbstractRunnerTLRService} provides a template for services that
@@ -32,19 +33,25 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.ArdocoException;
  */
 public abstract class AbstractRunnerTLRService extends AbstractService {
 
-    /** Prefix for error messages stored in the database. */
+    /**
+     * Prefix for error messages stored in the database.
+     */
     protected static final String ERROR_PREFIX = "Error: ";
 
-    private static final Logger logger = LogManager.getLogger(AbstractRunnerTLRService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractRunnerTLRService.class);
 
     @Autowired
     private CurrentlyRunningRequestsRepository currentlyRunningRequestsRepository;
 
-    /** Database accessor to save and retrieve results from the database. */
+    /**
+     * Database accessor to save and retrieve results from the database.
+     */
     @Autowired
     protected DatabaseAccessor databaseAccessor;
 
-    /** The type of trace link handled by this service. */
+    /**
+     * The type of trace link handled by this service.
+     */
     protected final TraceLinkType traceLinkType;
 
     /**
@@ -63,7 +70,7 @@ public abstract class AbstractRunnerTLRService extends AbstractService {
      * @return JSON representation of trace links
      * @throws JsonProcessingException if there is an error during conversion
      */
-    abstract protected String convertResultToJsonString(ArDoCoResult result) throws JsonProcessingException;
+    abstract protected ArDoCoApiResult convertResultToJsonString(ArDoCoResult result) throws JsonProcessingException;
 
     /**
      * Starts a new pipeline asynchronously, if the result is not already available or in progress.
@@ -73,10 +80,10 @@ public abstract class AbstractRunnerTLRService extends AbstractService {
      * @param inputFiles the input files for the pipeline
      * @return an optional containing the result if available, otherwise empty
      */
-    public Optional<String> runPipeline(ArDoCoRunner runner, String id, List<File> inputFiles) throws ArdocoException {
+    public Optional<ArDoCoApiResult> runPipeline(ArDoCoRunner runner, String id, List<File> inputFiles) throws ArdocoException {
         if (!resultIsInDatabase(id) && !resultIsOnItsWay(id)) {
             logger.info("Start new TLR of type {} for {}", this.traceLinkType, id);
-            CompletableFuture<String> future = CompletableFuture.supplyAsync(() -> runPipelineAsync(runner, id, inputFiles));
+            CompletableFuture<ArDoCoApiResult> future = CompletableFuture.supplyAsync(() -> runPipelineAsync(runner, id, inputFiles));
             currentlyRunningRequestsRepository.addRequest(id, future);
         } else if (resultIsInDatabase(id)) {
             return Optional.of(getResultFromDatabase(id));
@@ -92,8 +99,8 @@ public abstract class AbstractRunnerTLRService extends AbstractService {
      * @param inputFiles the input files for the pipeline
      * @return the result in JSON format, or null if an error occurred
      */
-    private String runPipelineAsync(ArDoCoRunner runner, String id, List<File> inputFiles) throws ArdocoException {
-        String traceLinkJson;
+    private ArDoCoApiResult runPipelineAsync(ArDoCoRunner runner, String id, List<File> inputFiles) throws ArdocoException {
+        ArDoCoApiResult traceLinkJson;
         try {
             logger.info("Starting Pipeline...");
             ArDoCoResult result = runner.run();
@@ -102,7 +109,7 @@ public abstract class AbstractRunnerTLRService extends AbstractService {
             traceLinkJson = convertResultToJsonString(result);
 
             logger.info("Saving found TraceLinks...");
-            databaseAccessor.saveResult(id, traceLinkJson);
+            databaseAccessor.saveResult(id, traceLinkJson.buildJsonString());
 
         } catch (Exception e) {
             String message = String.format("Error occurred while running the pipeline asynchronously for ID %s : %s", id, e.getMessage());

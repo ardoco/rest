@@ -1,3 +1,4 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response;
 
 /**
@@ -6,11 +7,8 @@ package edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response;
  * during processing and determine the appropriate handler for each request based on the type.
  */
 public enum TraceLinkType {
-    SAD_CODE("SadCodeResult:", "sad-code"),
-    SAM_CODE("SamCodeResult:", "sam-code"),
-    SAD_SAM("SadSamResult:", "sad-sam"),
-    SAD_SAM_CODE("SadSamCodeResult:", "sad-sam-code"),
-    OTHER("Other:", "other");
+    SAD_CODE("ardocodeResult", "ardocode"), SAM_CODE("arcotlResult", "arcotl"), SAD_SAM("swattrResult", "swattr"), SAD_SAM_CODE("transarcResult",
+            "transarc"), OTHER("Other", "other");
 
     private final String keyPrefix;
     private final String endpointName;
@@ -23,6 +21,7 @@ public enum TraceLinkType {
     public String getKeyPrefix() {
         return this.keyPrefix;
     }
+
     public String getEndpointName() {
         return this.endpointName;
     }

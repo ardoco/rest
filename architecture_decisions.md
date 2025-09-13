@@ -36,12 +36,6 @@ Moreover are the endpoints to retrieve the results the same for each controller 
 getResult-endpoint from sad-sam to query the result from a sam-code pipeline). The ResultController allows to retrieve or
 wait for the result given an id
 
-### Remarks
-- So far, the API doesn't allow users to define additional Configs (in the Controller classes)
-This is because at the time of implementation, these configs (which can be used to define the pipeline in the
-ArDoCoForSadCodeTraceabilityLinkRecovery) are not used by ArDoCo.
-They can be added later as param in the methods of the controller.
-
 ### Accepted file types:
 - So far no file checks have been implemented. This is left to ArDoCo itself. It is only checked whether the
 file is empty or not.
@@ -116,91 +110,152 @@ the way how the system deals with errors.
 ## API Response schemas
 The API has 2 response schemas:
 1. **Schema for expected behaviour** \
-	- #### Sad-Code
-	Example:
+### ArDoCode (Sad-Code)
+Sample response for waiting for the result or retrieving the result using getResult:
 ```json
 {
-		"requestId": "SadCodeResult:bigBlueButtonF2BD94533508F2F2DE4130AB43403B63",
-		"status": "OK",
-		"message": "The result is ready.",
-		"traceLinkType": "SAD_CODE",
-		"traceLinks": [
-		{
-		"sentenceNumber": 56,
-		"codeCompilationUnit": "bbb-fsesl-client/src/main/java/org/freeswitch/esl/client/internal/debug/ExecutionHandler.java"
-		},
-		{
-		"sentenceNumber": 57,
-		"codeCompilationUnit": "bbb-fsesl-client/src/main/java/org/freeswitch/esl/client/internal/debug/ExecutionHandler.java"
-		}]
+"requestId": "SadCodeResult:bigbluebutton67c34469-a21a-36dc-94fd-39531c9c1e6c",
+"status": "OK",
+"message": "The result is ready.",
+"traceLinkType": "SAD_CODE",
+"result": {
+	"traceLinks": [
+	{
+		"sentenceNumber": "84",
+		"codeElementId": "acm004938jsd",
+		"codeElementName": "TextFileCreator"
+	},
+	{
+		"sentenceNumber": "69",
+		"codeElementId": "acm006115jsd",
+		"codeElementName": "RecordingExportHandler"
+	}
+	],
+	"inconsistencies": []
+}
 }
 ```
-	- #### Sam-Code
-	Example:
-	```json
-	{
-		"requestId": "SamCodeResult:bigBlueButton2B867FE03AF1FE8DE3C1DEE7F1D9CB4E",
-		"status": "OK",
-		"message": "The result is ready.",
-		"traceLinkType": "SAM_CODE",
-		"traceLinks": [
-		{
-		"modelElementId": "_9wZIcFkHEeyewPSmlgszyA",
-		"modelElementName": "FSESL",
-		"codeElementId": "acm005843jsd",
-		"codeElementName": "bbb-fsesl-client/src/main/java/org/freeswitch/esl/client/manager/DefaultManagerConnection.java"
-		},
-		{
-		"modelElementId": "_nwrCMFwPEeyiuNx_RO7j-Q",
-		"modelElementName": "FreeSWITCH",
-		"codeElementId": "acm005938jsd",
-		"codeElementName": "bbb-fsesl-client/src/main/java/org/freeswitch/esl/client/outbound/example/SimpleHangupPipelineFactory.java"
-		}]
-	}
-```
-	- #### Sad-Sam
-	Example:
+### ArCoTL (Sam-Code)
+Sample response for waiting for the result or retrieving the result using getResult:
 ```json
 	{
-		"requestId": "SadSamResult:bigBlueButton6AA76050BA630F6D8A6E099A30D1053C",
-		"status": "OK",
-		"message": "The result is ready.",
-		"traceLinkType": "SAD_SAM",
-		"traceLinks": [
-		{
-		"sentenceNumber": 3,
-		"modelElementUid": "_0e5u8FkHEeyewPSmlgszyA",
-		"confidence": 1
-		},
-		{
-		"sentenceNumber": 4,
-		"modelElementUid": "_s0aIcFkHEeyewPSmlgszyA",
-		"confidence": 0.8
-		}]
+"requestId": "SamCodeResult:bigbluebutton98a189ec-45ab-3ed3-bc10-fc5729457ee1",
+"status": "OK",
+"message": "The result is ready.",
+"traceLinkType": "SAM_CODE",
+"result": {
+	"traceLinks": [
+	{
+		"modelElementId": "_7b12cFkIEeyewPSmlgszyA",
+		"modelElementName": "Presentation Conversion",
+		"codeElementId": "acm005058jsd",
+		"codeElementName": "BigPdfException"
+	},
+	{
+		"modelElementId": "_nwrCMFwPEeyiuNx_RO7j-Q",
+		"modelElementName": "FreeSWITCH (uml:Component)",
+		"codeElementId": "acm001998jsd",
+		"codeElementName": "DeafUserCommand"
 	}
-	```
-	- #### Sad-Sam-Code
-	Example:
+	],
+	"inconsistencies": []
+}
+}
+```
+### SWATTR (Sad-Sam)
+Sample response for waiting for the result or retrieving the result using getResult:
 ```json
 {
-"requestId": "SadSamCodeResult:bigBlueButton8E0E764E3B368781CF0DDDC67F19ABC0",
+"requestId": "SadSamResult:bigbluebutton7b258c6c-56b2-30a5-8cca-a1fb80b5547b",
+"status": "OK",
+"message": "The result is ready.",
+"traceLinkType": "SAD_SAM",
+"result": {
+	"traceLinks": [
+	{
+		"sentenceNumber": "17",
+		"modelElementName": "HTML5 Server (uml:Component)",
+		"modelElementId": "_yGgUMFkHEeyewPSmlgszyA"
+	},
+	{
+		"sentenceNumber": "12",
+		"modelElementName": "HTML5 Server (uml:Component)",
+		"modelElementId": "_yGgUMFkHEeyewPSmlgszyA"
+	}
+	],
+	"inconsistencies": []
+}
+}
+```
+### TransArC (Sad-Sam-Code)
+Sample response for waiting for the result or retrieving the result using getResult:
+```json
+{
+"requestId": "SadSamCodeResult:bigbluebutton3185cf11-3288-3be9-9bba-f8558b9c5d2e",
 "status": "OK",
 "message": "The result is ready.",
 "traceLinkType": "SAD_SAM_CODE",
-"traceLinks": [
+"result": {
+	"traceLinks": [
 	{
-	"sentenceNumber": 25,
-	"codeCompilationUnit": "akka-bbb-apps/src/main/scala/org/bigbluebutton/core/util/jhotdraw/PathData.java"
+		"sentenceNumber": "4",
+		"codeElementId": "acm006307jsd",
+		"codeElementName": "build",
+		"modelElementId": "_0e5u8FkHEeyewPSmlgszyA",
+		"modelElementName": "HTML5 Client (uml:Component)"
 	},
 	{
-	"sentenceNumber": 49,
-	"codeCompilationUnit": "akka-bbb-apps/src/main/scala/org/bigbluebutton/core/util/jhotdraw/PathData.java"
-	}]
+		"sentenceNumber": "63",
+		"codeElementId": "acm001826jsd",
+		"codeElementName": "VoiceUserTalkingEvent",
+		"modelElementId": "_nwrCMFwPEeyiuNx_RO7j-Q",
+		"modelElementName": "FreeSWITCH (uml:Component)"
+	}
+	],
+	"inconsistencies": []
 }
+}
+```
+### Find Inconsistencies (Inconsistency detection with SWATTR TraceLinkRecovery)
+Sample response for waiting for the result or retrieving the result using getResult:
+```json
+{
+"requestId": "SadSamResultInconsistency:bigbluebutton7b258c6c-56b2-30a5-8cca-a1fb80b5547b",
+"status": "OK",
+"message": "The result is ready.",
+"traceLinkType": "SAD_SAM",
+"result": {
+	"traceLinks": [
+	{
+		"sentenceNumber": "76",
+		"modelElementName": "Redis PubSub",
+		"modelElementId": "_IixQcFkJEeyewPSmlgszyA"
+	},
+	{
+		"sentenceNumber": "59",
+		"modelElementName": "FreeSWITCH",
+		"modelElementId": "_qa5z0FwPEeyiuNx_RO7j-Q"
+	}
+	],
+	"inconsistencies": [
+	{
+		"type": "MissingModelInstance",
+		"reason": "Text indicates that \"integrations\" should be contained in the model(s) but could not be found. (confidence: 0.65)",
+		"sentenceNumber": 39
+	},
+	{
+		"type": "MissingTextForModelElement",
+		"reason": "Model contains an Instance \"Recording Service\" (type: \"uml:Component\")  that seems to be undocumented.",
+		"modelElementId": "_kvWs4FkHEeyewPSmlgszyA"
+	}
+	]
+}
+}
+
 ```
 Note: Depending on the invoked endpoint and on the concrete result, some parameters (esp traceLinks) might be null
 
-2. **Schema for when an error occurred**
+2. ## Schema for when an error occurred
 Example:
 ```json
 {

@@ -1,23 +1,24 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter;
 
-import edu.kit.kastel.mcse.ardoco.core.api.models.ArchitectureModelType;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
 
 /**
  * This class is needed to be able to convert the input from the API Endpoint straight into type Architecture model.
  */
 
 @Component
-public class ArchitectureModelTypeConverter implements Converter<String, ArchitectureModelType> {
+public class ModelFormatTypeConverter implements Converter<String, ModelFormat> {
 
     @Override
-    public ArchitectureModelType convert(String source) {
+    public ModelFormat convert(String source) {
         try {
-            return ArchitectureModelType.valueOf(source.toUpperCase());
+            return ModelFormat.valueOf(source);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid architecture model type: " + source, e);
         }
     }
 }
-
