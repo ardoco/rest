@@ -2,7 +2,7 @@
 FROM maven:3-eclipse-temurin-21-alpine AS build
 WORKDIR /build
 COPY . .
-RUN  mvn -DskipTests clean package
+RUN mvn -DskipTests clean package
 
 
 FROM eclipse-temurin:21-jre-alpine
