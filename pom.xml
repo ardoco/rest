@@ -16,7 +16,7 @@
   <description>The goal of this project is to provide a REST API for the ArDoCo runners</description>
 
   <properties>
-    <spring-boot.version>3.3.3</spring-boot.version>
+    <spring-boot.version>3.5.4</spring-boot.version>
   </properties>
 
   <dependencyManagement>
