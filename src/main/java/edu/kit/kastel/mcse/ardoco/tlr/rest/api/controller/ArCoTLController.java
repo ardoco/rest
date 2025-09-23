@@ -137,8 +137,8 @@ public class ArCoTLController extends AbstractController {
         logger.info("Setting up Runner...");
         Arcotl runner = new Arcotl(projectName);
 
-        ArchitectureConfiguration architectureConfiguration = new ArchitectureConfiguration(inputFileMap.get("inputArchitectureModel"), modelType);
-        CodeConfiguration codeConfiguration = new CodeConfiguration(inputFileMap.get("inputCode"), CodeConfiguration.CodeConfigurationType.ACM_FILE);
+        ArchitectureConfiguration architectureConfiguration = new ArchitectureConfiguration(inputFileMap.get(ARCHITECTURE_MODEL_PARAMETER), modelType);
+        CodeConfiguration codeConfiguration = new CodeConfiguration(inputFileMap.get(CODE_PARAMETER), CodeConfiguration.CodeConfigurationType.ACM_FILE);
         ImmutableSortedMap<String, String> additionalConfigsImmutable = SortedMaps.immutable.withSortedMap(additionalConfigs);
 
         runner.setUp(architectureConfiguration, codeConfiguration, additionalConfigsImmutable, Files.createTempDirectory("ardoco-sam-code").toFile());
