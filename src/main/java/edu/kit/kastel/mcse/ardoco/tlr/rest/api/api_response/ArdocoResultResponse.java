@@ -33,6 +33,7 @@ public class ArdocoResultResponse {
         this.status = status;
         this.message = message;
         this.traceLinkType = TraceLinkType.fromId(requestId);
+        this.result = null;
     }
 
     /**

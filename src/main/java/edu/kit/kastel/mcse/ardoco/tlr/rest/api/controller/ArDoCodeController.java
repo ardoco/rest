@@ -77,10 +77,10 @@ public class ArDoCodeController extends AbstractController {
     })
     @PostMapping(value = "/start", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArdocoResultResponse> runPipeline(
-            @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
-            @Parameter(description = "The documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
-            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
-            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
+            @Parameter(description = "The name of the project", required = true) @RequestParam(PROJECT_NAME_PARAMETER) String projectName,
+            @Parameter(description = "The documentation of the project", required = true) @RequestParam(TEXTUAL_DOCUMENTATION_PARAMETER) MultipartFile inputText,
+            @Parameter(description = "The code of the project", required = true) @RequestParam(CODE_PARAMETER) MultipartFile inputCode,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = ADDITIONAL_CONFIGURATION_PARAMETER, required = false) String additionalConfigsJson)
 
             throws FileNotFoundException, FileConversionException, IOException {
 
@@ -111,10 +111,10 @@ public class ArDoCodeController extends AbstractController {
             @ApiResponse(responseCode = "200", description = "the sadCodeTraceLinks found by ardoco", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ArdocoResultResponse.class))), })
     @PostMapping(value = "/start-and-wait", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArdocoResultResponse> runPipelineAndWaitForResult(
-            @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
-            @Parameter(description = "The documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
-            @Parameter(description = "The code of the project", required = true) @RequestParam("inputCode") MultipartFile inputCode,
-            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
+            @Parameter(description = "The name of the project", required = true) @RequestParam(PROJECT_NAME_PARAMETER) String projectName,
+            @Parameter(description = "The documentation of the project", required = true) @RequestParam(TEXTUAL_DOCUMENTATION_PARAMETER) MultipartFile inputText,
+            @Parameter(description = "The code of the project", required = true) @RequestParam(CODE_PARAMETER) MultipartFile inputCode,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = ADDITIONAL_CONFIGURATION_PARAMETER, required = false) String additionalConfigsJson)
 
             throws FileConversionException, ArdocoException, TimeoutException, IOException {
 
@@ -132,8 +132,8 @@ public class ArDoCodeController extends AbstractController {
         logger.info("Convert multipartFiles to files");
         Map<String, File> inputFiles = new HashMap<>();
 
-        inputFiles.put("inputText", FileConverter.convertMultipartFileToFile(inputText));
-        inputFiles.put("inputCode", FileConverter.convertMultipartFileToFile(inputCode));
+        inputFiles.put(TEXTUAL_DOCUMENTATION_PARAMETER, FileConverter.convertMultipartFileToFile(inputText));
+        inputFiles.put(CODE_PARAMETER, FileConverter.convertMultipartFileToFile(inputCode));
 
         return inputFiles;
     }
@@ -141,10 +141,11 @@ public class ArDoCodeController extends AbstractController {
     private Ardocode setUpRunner(SortedMap<String, String> additionalConfigs, Map<String, File> inputFileMap, String projectName) throws IOException {
         logger.info("Setting up Runner...");
         Ardocode runner = new Ardocode(projectName);
-        CodeConfiguration codeConfiguration = new CodeConfiguration(inputFileMap.get("inputCode"), CodeConfiguration.CodeConfigurationType.ACM_FILE);
+        CodeConfiguration codeConfiguration = new CodeConfiguration(inputFileMap.get(CODE_PARAMETER), CodeConfiguration.CodeConfigurationType.ACM_FILE);
         ImmutableSortedMap<String, String> additionalConfigsImmutable = SortedMaps.immutable.withSortedMap(additionalConfigs);
 
-        runner.setUp(inputFileMap.get("inputText"), codeConfiguration, additionalConfigsImmutable, Files.createTempDirectory("ardoco-sad-code").toFile());
+        runner.setUp(inputFileMap.get(TEXTUAL_DOCUMENTATION_PARAMETER), codeConfiguration, additionalConfigsImmutable, Files.createTempDirectory(
+                "ardoco-sad-code").toFile());
         return runner;
     }
 }

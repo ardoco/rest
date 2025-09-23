@@ -70,8 +70,9 @@ public final class TestUtils {
         resultResponse.setStatus(HttpStatus.valueOf(status));
         resultResponse.setTraceLinkType(TraceLinkType.valueOf(traceLinkType));
 
-        //resultResponse.setResult("{\"traceLinks\":" + traceLinks + ", \"inconsistencies\":" + inconsistencies + "}");
-        resultResponse.setResult(new ArDoCoApiResult(traceLinks, inconsistencies));
+        if (result != null && !result.isNull()) {
+            resultResponse.setResult(new ArDoCoApiResult(traceLinks, inconsistencies));
+        }
         return resultResponse;
     }
 

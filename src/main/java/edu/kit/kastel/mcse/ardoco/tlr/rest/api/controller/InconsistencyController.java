@@ -68,11 +68,11 @@ public class InconsistencyController extends AbstractController {
     @Operation(summary = "Starts the SWATTR (sad-sam) processing pipeline with Inconsistency Detection", description = "Starts the inconsistency processing pipeline with the given project name, the type of the architecture model and files.")
     @PostMapping(value = "/start", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArdocoResultResponse> runPipeline(
-            @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
-            @Parameter(description = "The textual documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
-            @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
-            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ModelFormat modelType,
-            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
+            @Parameter(description = "The name of the project", required = true) @RequestParam(PROJECT_NAME_PARAMETER) String projectName,
+            @Parameter(description = "The textual documentation of the project", required = true) @RequestParam(TEXTUAL_DOCUMENTATION_PARAMETER) MultipartFile inputText,
+            @Parameter(description = "The architectureModel of the project", required = true) @RequestParam(ARCHITECTURE_MODEL_PARAMETER) MultipartFile inputArchitectureModel,
+            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam(ARCHITECTURE_MODEL_FORMAT_PARAMETER) ModelFormat modelType,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = ADDITIONAL_CONFIGURATION_PARAMETER, required = false) String additionalConfigsJson)
             throws FileNotFoundException, FileConversionException, IOException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel);
@@ -100,11 +100,11 @@ public class InconsistencyController extends AbstractController {
     @Operation(summary = "Starts the SWATTR (sad-sam) processing pipeline with Inconsistency Detection and waits until the result is obtained", description = "Starts the inconsistency processing pipeline with the given project name, the type of the architecture model and files and waits until the SadSamTraceLinks and Inconsistencies are obtained.")
     @PostMapping(value = "/start-and-wait", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArdocoResultResponse> runPipelineAndWaitForResult(
-            @Parameter(description = "The name of the project", required = true) @RequestParam("projectName") String projectName,
-            @Parameter(description = "The textual documentation of the project", required = true) @RequestParam("inputText") MultipartFile inputText,
-            @Parameter(description = "The architectureModel of the project", required = true) @RequestParam("inputArchitectureModel") MultipartFile inputArchitectureModel,
-            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam("architectureModelType") ModelFormat modelType,
-            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = "additionalConfigs", required = false) String additionalConfigsJson)
+            @Parameter(description = "The name of the project", required = true) @RequestParam(PROJECT_NAME_PARAMETER) String projectName,
+            @Parameter(description = "The textual documentation of the project", required = true) @RequestParam(TEXTUAL_DOCUMENTATION_PARAMETER) MultipartFile inputText,
+            @Parameter(description = "The architectureModel of the project", required = true) @RequestParam(ARCHITECTURE_MODEL_PARAMETER) MultipartFile inputArchitectureModel,
+            @Parameter(description = "The type of architectureModel that is uploaded.", required = true) @RequestParam(ARCHITECTURE_MODEL_FORMAT_PARAMETER) ModelFormat modelType,
+            @Parameter(description = "JSON string containing additional ArDoCo configuration. If not provided, the default configuration of ArDoCo is used.", required = false) @RequestParam(value = ADDITIONAL_CONFIGURATION_PARAMETER, required = false) String additionalConfigsJson)
             throws FileNotFoundException, FileConversionException, IOException {
 
         Map<String, File> inputFileMap = convertInputFiles(inputText, inputArchitectureModel);
@@ -121,8 +121,8 @@ public class InconsistencyController extends AbstractController {
         logger.info("Convert multipartFiles to files");
         Map<String, File> inputFiles = new HashMap<>();
 
-        inputFiles.put("inputText", FileConverter.convertMultipartFileToFile(inputText));
-        inputFiles.put("inputArchitectureModel", FileConverter.convertMultipartFileToFile(inputArchitectureModel));
+        inputFiles.put(TEXTUAL_DOCUMENTATION_PARAMETER, FileConverter.convertMultipartFileToFile(inputText));
+        inputFiles.put(ARCHITECTURE_MODEL_PARAMETER, FileConverter.convertMultipartFileToFile(inputArchitectureModel));
 
         return inputFiles;
     }
@@ -133,9 +133,8 @@ public class InconsistencyController extends AbstractController {
         ArDoCoForInconsistencyDetection runner = new ArDoCoForInconsistencyDetection(projectName);
         ImmutableSortedMap<String, String> additionalConfigsImmutable = SortedMaps.immutable.withSortedMap(additionalConfigs);
 
-        runner.setUp(inputFileMap.get("inputText"), inputFileMap.get("inputArchitectureModel"), modelType, additionalConfigsImmutable, Files
-                .createTempDirectory("ardoco-id")
-                .toFile());
+        runner.setUp(inputFileMap.get(TEXTUAL_DOCUMENTATION_PARAMETER), inputFileMap.get(ARCHITECTURE_MODEL_PARAMETER), modelType, additionalConfigsImmutable,
+                Files.createTempDirectory("ardoco-id").toFile());
         return runner;
     }
 

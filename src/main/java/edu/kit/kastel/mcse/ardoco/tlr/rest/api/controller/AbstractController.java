@@ -40,6 +40,12 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.util.HashGenerator;
  */
 public abstract class AbstractController {
 
+    public static final String PROJECT_NAME_PARAMETER = "projectName";
+    public static final String TEXTUAL_DOCUMENTATION_PARAMETER = "inputText";
+    public static final String ARCHITECTURE_MODEL_PARAMETER = "inputArchitectureModel";
+    public static final String ARCHITECTURE_MODEL_FORMAT_PARAMETER = "architectureModelType";
+    public static final String CODE_PARAMETER = "inputCode";
+    public static final String ADDITIONAL_CONFIGURATION_PARAMETER = "additionalConfigs";
     /**
      * The type of trace link this controller manages, used for identifying the specific TLR process.
      */

@@ -1,6 +1,8 @@
 /* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
+import static edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller.AbstractController.*;
+
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -61,10 +63,10 @@ public class ArCoTLControllerTest extends AbstractTLRControllerTest {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("projectName", projectName);
-        parameters.add("inputArchitectureModel", new ClassPathResource("emptyFile.txt"));
-        parameters.add("inputCode", new ClassPathResource("bigBlueButton/codeModel.acm"));
-        parameters.add("ModelFormat", ModelFormat.PCM.toString());
+        parameters.add(PROJECT_NAME_PARAMETER, projectName);
+        parameters.add(ARCHITECTURE_MODEL_PARAMETER, new ClassPathResource("emptyFile.txt"));
+        parameters.add(CODE_PARAMETER, new ClassPathResource("bigBlueButton/codeModel.acm"));
+        parameters.add(ARCHITECTURE_MODEL_FORMAT_PARAMETER, ModelFormat.PCM.toString());
 
         return new HttpEntity<>(parameters, headers);
     }
@@ -72,15 +74,15 @@ public class ArCoTLControllerTest extends AbstractTLRControllerTest {
     // Utility method to build request entity for multipart files
     private HttpEntity<MultiValueMap<String, Object>> setUpRequestParamToStartPipelineBBB(String projectName, ModelFormat modelType) {
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("projectName", projectName);
+        parameters.add(PROJECT_NAME_PARAMETER, projectName);
 
-        parameters.add("inputCode", new ClassPathResource("bigBlueButton/codeModel.acm"));
-        parameters.add("ModelFormat", modelType.toString());
+        parameters.add(CODE_PARAMETER, new ClassPathResource("bigBlueButton/codeModel.acm"));
+        parameters.add(ARCHITECTURE_MODEL_FORMAT_PARAMETER, modelType.toString());
 
         if (modelType == ModelFormat.PCM) {
-            parameters.add("inputArchitectureModel", new ClassPathResource("bigBlueButton/bbb.repository"));
+            parameters.add(ARCHITECTURE_MODEL_PARAMETER, new ClassPathResource("bigBlueButton/bbb.repository"));
         } else if (modelType == ModelFormat.UML) {
-            parameters.add("inputArchitectureModel", new ClassPathResource("bigBlueButton/bbb.uml"));
+            parameters.add(ARCHITECTURE_MODEL_PARAMETER, new ClassPathResource("bigBlueButton/bbb.uml"));
         }
 
         HttpHeaders headers = new HttpHeaders();
