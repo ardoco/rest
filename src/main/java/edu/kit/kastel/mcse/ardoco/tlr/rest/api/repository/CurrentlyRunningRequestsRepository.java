@@ -1,11 +1,14 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository;
-
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Repository;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Repository;
+
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 
 /**
  * Repository for managing asynchronous requests that are currently being processed by ardoco.
@@ -15,15 +18,22 @@ import java.util.concurrent.ConcurrentHashMap;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CurrentlyRunningRequestsRepository {
 
-    private final ConcurrentHashMap<String, CompletableFuture<String>> asyncRequests = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, CompletableFuture<ArDoCoApiResult>> asyncRequests = new ConcurrentHashMap<>();
+
+    /**
+     * Default constructor for CurrentlyRunningRequestsRepository.
+     */
+    public CurrentlyRunningRequestsRepository() {
+        // No initialization needed, ConcurrentHashMap is already thread-safe
+    }
 
     /**
      * Adds a new request to the repository.
      *
-     * @param id the identifier for the request
+     * @param id      the identifier for the request
      * @param request the request to add
      */
-    public void addRequest(String id, CompletableFuture<String> request) {
+    public void addRequest(String id, CompletableFuture<ArDoCoApiResult> request) {
         asyncRequests.put(id, request);
     }
 
@@ -33,7 +43,7 @@ public class CurrentlyRunningRequestsRepository {
      * @param id the identifier of the request
      * @return the request, or null if not found
      */
-    public CompletableFuture<String> getRequest(String id) {
+    public CompletableFuture<ArDoCoApiResult> getRequest(String id) {
         return asyncRequests.get(id);
     }
 

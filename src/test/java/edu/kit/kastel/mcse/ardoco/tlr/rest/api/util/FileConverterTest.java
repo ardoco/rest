@@ -1,8 +1,15 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.util;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -25,7 +32,7 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
 
-class FileConverterTest {
+public class FileConverterTest {
 
     @TempDir
     Path tempDir;

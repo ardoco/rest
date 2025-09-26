@@ -1,111 +1,118 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter;
+
+import org.eclipse.collections.api.list.ImmutableList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import edu.kit.kastel.mcse.ardoco.core.api.models.arcotl.code.CodeCompilationUnit;
-import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.EndpointTuple;
-import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.SadCodeTraceLink;
-import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.SadSamTraceLink;
-import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.SamCodeTraceLink;
-import edu.kit.kastel.mcse.ardoco.core.api.models.tracelinks.TransitiveTraceLink;
-import edu.kit.kastel.mcse.ardoco.core.api.recommendationgenerator.RecommendedInstance;
-import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 
-import java.util.List;
+import edu.kit.kastel.mcse.ardoco.core.api.entity.ArchitectureEntity;
+import edu.kit.kastel.mcse.ardoco.core.api.entity.ModelEntity;
+import edu.kit.kastel.mcse.ardoco.core.api.text.SentenceEntity;
+import edu.kit.kastel.mcse.ardoco.core.api.tracelink.TraceLink;
+import edu.kit.kastel.mcse.ardoco.core.api.tracelink.TransitiveTraceLink;
 
 /**
  * Utility class for converting ArDoCo trace links into JSON string representations.
- * This class includes methods for handling various types of trace links such as
- * {@link SadCodeTraceLink}, {@link SamCodeTraceLink}, and {@link SadSamTraceLink}.
+ * This class includes methods for handling various types of trace links {@link TraceLink}.
  */
-
 public final class TraceLinkConverter {
 
-    private TraceLinkConverter() {}
-
-    /**
-     * Converts a list of {@link SadCodeTraceLink} objects to a JSON string representation.
-     * Each {@link SadCodeTraceLink} in the JSON array contains a sentence number and the
-     * string representation of a {@link CodeCompilationUnit}.
-     *
-     * @param sadCodeTraceLinks the list of {@link SadCodeTraceLink} objects to convert
-     * @return a JSON string representation of the list of {@link SadCodeTraceLink} objects
-     * @throws JsonProcessingException if the conversion to JSON fails
-     */
-    public static String convertListOfSadCodeTraceLinksToJsonString(List<SadCodeTraceLink> sadCodeTraceLinks) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ArrayNode arrayNode = objectMapper.createArrayNode();
-
-        for (SadCodeTraceLink traceLink : sadCodeTraceLinks) {
-            var codeElement = (CodeCompilationUnit) traceLink.getEndpointTuple().secondEndpoint();
-
-            if (traceLink instanceof TransitiveTraceLink transitiveTraceLink) {
-                ObjectNode traceLinkNode = objectMapper.createObjectNode();
-                traceLinkNode.put("sentenceNumber", ((SadSamTraceLink) transitiveTraceLink.getFirstTraceLink()).getSentenceNumber() + 1);
-                traceLinkNode.put("codeCompilationUnit", codeElement.toString());
-                arrayNode.add(traceLinkNode);
-
-            } else if (traceLink.getEndpointTuple().firstEndpoint() instanceof RecommendedInstance recommendedInstance) {
-                ImmutableSortedSet<Integer> sentenceNumbers = recommendedInstance.getSentenceNumbers();
-                for (var sentence : sentenceNumbers) {
-                    ObjectNode traceLinkNode = objectMapper.createObjectNode();
-                    traceLinkNode.put("sentenceNumber", (sentence + 1));
-                    traceLinkNode.put("codeCompilationUnit", codeElement.toString());
-                    arrayNode.add(traceLinkNode);
-                }
-            }
-        }
-        return objectMapper.writeValueAsString(arrayNode);
+    private TraceLinkConverter() {
     }
 
     /**
-     * Converts a list of {@link SamCodeTraceLink} objects to a JSON string representation.
-     * Each {@link SamCodeTraceLink} in the JSON array contains information about the model
-     * element and code element including their IDs and names.
+     * Converts a list of {@link TraceLink} objects to a JSON string representation.
+     * Each {@link TraceLink} in the JSON array contains a sentence number and a Model Entity.
      *
-     * @param samCodeTraceLinks the list of {@link SamCodeTraceLink} objects to convert
-     * @return a JSON string representation of the list of {@link SamCodeTraceLink} objects
+     * @param sadCodeTraceLinks the list of {@link TraceLink} objects to convert
+     * @return a JSON string representation of the list of {@link TraceLink} objects
      * @throws JsonProcessingException if the conversion to JSON fails
      */
-    public static String convertListOfSamCodeTraceLinksToJsonString(List<SamCodeTraceLink> samCodeTraceLinks) throws JsonProcessingException {
+    public static String convertListOfSadCodeTraceLinksToJsonString(ImmutableList<TraceLink<SentenceEntity, ? extends ModelEntity>> sadCodeTraceLinks)
+            throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayNode arrayNode = objectMapper.createArrayNode();
 
-        for (SamCodeTraceLink traceLink : samCodeTraceLinks) {
+        for (TraceLink<SentenceEntity, ? extends ModelEntity> traceLink : sadCodeTraceLinks) {
+            var sentenceEntity = traceLink.getFirstEndpoint();
             ObjectNode traceLinkNode = objectMapper.createObjectNode();
-            EndpointTuple endpointTuple = traceLink.getEndpointTuple();
-            var modelElement = endpointTuple.firstEndpoint();
-            var codeElement = (CodeCompilationUnit) endpointTuple.secondEndpoint();
+            traceLinkNode.put("sentenceNumber", sentenceEntity.getId());
+            traceLinkNode.put("codeElementId", traceLink.getSecondEndpoint().getId());
+            traceLinkNode.put("codeElementName", traceLink.getSecondEndpoint().getName());
 
-            traceLinkNode.put("modelElementId", modelElement.getId());
-            traceLinkNode.put("modelElementName", modelElement.getName());
-            traceLinkNode.put("codeElementId", codeElement.getId());
-            traceLinkNode.put("codeElementName", codeElement.toString());
+            if (traceLink instanceof TransitiveTraceLink<?, ?> transitive) {
+                var first = transitive.getFirstTraceLink().getSecondEndpoint();
+                if (first instanceof ArchitectureEntity architectureEntity) {
+                    traceLinkNode.put("modelElementId", architectureEntity.getId());
+                    if (architectureEntity.getType().isPresent()) {
+                        traceLinkNode.put("modelElementName", architectureEntity.getName() + " (" + architectureEntity.getType().get() + ")");
+                    } else {
+                        traceLinkNode.put("modelElementName", architectureEntity.getName());
+                    }
+
+                }
+            }
             arrayNode.add(traceLinkNode);
         }
         return objectMapper.writeValueAsString(arrayNode);
     }
 
     /**
-     * Converts a list of {@link SadSamTraceLink} objects to a JSON string representation.
-     * Each {@link SadSamTraceLink} in the JSON array includes the sentence number, model
-     * element unique identifier, and confidence score.
+     * Converts a list of {@link TraceLink} objects to a JSON string representation.
+     * Each {@link TraceLink} in the JSON array contains information about the model
+     * element and code element including their IDs and names.
      *
-     * @param sadSamTraceLinks the list of {@link SadSamTraceLink} objects to convert
-     * @return a JSON string representation of the list of {@link SadSamTraceLink} objects
+     * @param samCodeTraceLinks the list of {@link TraceLink} objects to convert
+     * @return a JSON string representation of the list of {@link TraceLink} objects
      * @throws JsonProcessingException if the conversion to JSON fails
      */
-    public static String convertListOfSadSamTraceLinksToJsonString(List<SadSamTraceLink> sadSamTraceLinks) throws JsonProcessingException {
+    public static String convertListOfSamCodeTraceLinksToJsonString(
+            ImmutableList<TraceLink<? extends ArchitectureEntity, ? extends ModelEntity>> samCodeTraceLinks) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayNode arrayNode = objectMapper.createArrayNode();
 
-        for (SadSamTraceLink traceLink : sadSamTraceLinks) {
+        for (TraceLink<? extends ArchitectureEntity, ? extends ModelEntity> traceLink : samCodeTraceLinks) {
             ObjectNode traceLinkNode = objectMapper.createObjectNode();
-            traceLinkNode.put("sentenceNumber", traceLink.getSentenceNumber());
-            traceLinkNode.put("modelElementUid", traceLink.getModelElementUid());
-            traceLinkNode.put("confidence", traceLink.getConfidence());
+
+            traceLinkNode.put("modelElementId", traceLink.getFirstEndpoint().getId());
+            if (traceLink.getFirstEndpoint().getType().isPresent()) {
+                traceLinkNode.put("modelElementName", traceLink.getFirstEndpoint().getName() + " (" + traceLink.getFirstEndpoint().getType().get() + ")");
+            } else {
+                traceLinkNode.put("modelElementName", traceLink.getFirstEndpoint().getName());
+            }
+            traceLinkNode.put("codeElementId", traceLink.getSecondEndpoint().getId());
+            traceLinkNode.put("codeElementName", traceLink.getSecondEndpoint().getName());
+            arrayNode.add(traceLinkNode);
+        }
+        return objectMapper.writeValueAsString(arrayNode);
+    }
+
+    /**
+     * Converts a list of {@link TraceLink} objects to a JSON string representation.
+     * Each {@link TraceLink} in the JSON array includes the sentence number, model
+     * element unique identifier, and confidence score.
+     *
+     * @param sadSamTraceLinks the list of {@link TraceLink} objects to convert
+     * @return a JSON string representation of the list of {@link TraceLink} objects
+     * @throws JsonProcessingException if the conversion to JSON fails
+     */
+    public static String convertListOfSadSamTraceLinksToJsonString(ImmutableList<TraceLink<SentenceEntity, ModelEntity>> sadSamTraceLinks)
+            throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayNode arrayNode = objectMapper.createArrayNode();
+
+        for (TraceLink<SentenceEntity, ModelEntity> traceLink : sadSamTraceLinks) {
+            ObjectNode traceLinkNode = objectMapper.createObjectNode();
+            traceLinkNode.put("sentenceNumber", traceLink.getFirstEndpoint().getId());
+            if (traceLink.getSecondEndpoint().getType().isPresent()) {
+                traceLinkNode.put("modelElementName", traceLink.getSecondEndpoint().getName() + " (" + traceLink.getSecondEndpoint().getType().get() + ")");
+            } else {
+                traceLinkNode.put("modelElementName", traceLink.getSecondEndpoint().getName());
+            }
+            traceLinkNode.put("modelElementId", traceLink.getSecondEndpoint().getId());
             arrayNode.add(traceLinkNode);
         }
         return objectMapper.writeValueAsString(arrayNode);

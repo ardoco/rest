@@ -1,4 +1,4 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
 import java.util.Optional;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.ArdocoException;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.TimeoutException;
@@ -22,7 +23,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Result Retrieval")
 @RestController
 @RequestMapping("/api")
 public class ResultController {
@@ -63,7 +66,7 @@ public class ResultController {
      * @throws IllegalArgumentException if the provided requestId is invalid
      */
     protected ResponseEntity<ArdocoResultResponse> handleGetResult(String requestId) throws ArdocoException, IllegalArgumentException {
-        Optional<String> result = service.getResult(requestId);
+        Optional<ArDoCoApiResult> result = service.getResult(requestId);
         ArdocoResultResponse response;
         if (result.isEmpty()) {
             response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, ResultMessages.RESULT_NOT_READY);
@@ -83,7 +86,7 @@ public class ResultController {
      * @throws TimeoutException         if waiting for the result times out
      */
     protected ResponseEntity<ArdocoResultResponse> handleWaitForResult(String requestId) throws ArdocoException, IllegalArgumentException, TimeoutException {
-        Optional<String> result = service.waitForResult(requestId);
+        Optional<ArDoCoApiResult> result = service.waitForResult(requestId);
         ArdocoResultResponse response;
         if (result.isEmpty()) {
             response = new ArdocoResultResponse(requestId, HttpStatus.ACCEPTED, ResultMessages.REQUEST_TIMED_OUT);

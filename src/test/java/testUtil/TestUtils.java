@@ -1,22 +1,33 @@
+/* Licensed under MIT 2025. */
 package testUtil;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ErrorResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.messages.ResultMessages;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.*;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public final class TestUtils {
 
-    private TestUtils() {} // prevent instantiation
+    private TestUtils() {
+    } // prevent instantiation
 
     public static HttpEntity<MultiValueMap<String, Object>> setUpRequestParamToStartPipelineBBB() {
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -34,7 +45,9 @@ public final class TestUtils {
         // Parse the response body into a JsonNode
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode rootNode = objectMapper.readTree(responseEntity.getBody());
-        JsonNode traceLinkNode = rootNode.get("traceLinks");
+        JsonNode result = rootNode.get("result");
+        JsonNode traceLinkNode = (result != null && result.has("traceLinks")) ? result.get("traceLinks") : null;
+        JsonNode inconsistenciesNode = (result != null && result.has("inconsistencies")) ? result.get("inconsistencies") : null;
 
         String projectId = rootNode.has("requestId") ? rootNode.get("requestId").asText() : null;
         String message = rootNode.has("message") ? rootNode.get("message").asText() : null;
@@ -47,7 +60,8 @@ public final class TestUtils {
         assert traceLinkType != null;
 
         // Treat traceLinks as raw JSON and store it as a string
-        String traceLinks = (traceLinkNode == null || traceLinkNode.isNull()) ? null : traceLinkNode.toString();
+        String traceLinks = (traceLinkNode == null || traceLinkNode.isNull()) ? "[]" : traceLinkNode.toString();
+        String inconsistencies = (inconsistenciesNode == null || inconsistenciesNode.isNull()) ? "[]" : inconsistenciesNode.toString();
 
         // Create the ArdocoResultResponse object and return it
         ArdocoResultResponse resultResponse = new ArdocoResultResponse();
@@ -56,8 +70,8 @@ public final class TestUtils {
         resultResponse.setStatus(HttpStatus.valueOf(status));
         resultResponse.setTraceLinkType(TraceLinkType.valueOf(traceLinkType));
 
-        if (traceLinkNode != null) {
-            resultResponse.setTraceLinks(traceLinks);
+        if (result != null && !result.isNull()) {
+            resultResponse.setResult(new ArDoCoApiResult(traceLinks, inconsistencies));
         }
         return resultResponse;
     }
@@ -71,7 +85,7 @@ public final class TestUtils {
         assertEquals(ResultMessages.RESULT_IS_BEING_PROCESSED, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNull(response.getTraceLinks());
+        assertNull(response.getResult());
     }
 
     /*
@@ -83,9 +97,8 @@ public final class TestUtils {
         assertEquals(ResultMessages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNotNull(response.getTraceLinks());
+        assertNotNull(response.getResult());
     }
-
 
     /*
     Tests when trying to get the result, but the result is not ready yet
@@ -96,19 +109,19 @@ public final class TestUtils {
         assertEquals(ResultMessages.RESULT_NOT_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNull(response.getTraceLinks());
+        assertNull(response.getResult());
     }
 
     /*
-Tests when trying to get the result, but the result is not ready yet
- */
+    Tests when trying to get the result, but the result is not ready yet
+    */
     public static void testGetResult_ready(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
         assertEquals(ResultMessages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNotNull(response.getTraceLinks());
+        assertNotNull(response.getResult());
     }
 
     /*
@@ -120,7 +133,7 @@ Tests when trying to get the result, but the result is not ready yet
         assertEquals(ResultMessages.REQUEST_TIMED_OUT, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNull(response.getTraceLinks());
+        assertNull(response.getResult());
     }
 
     /*
@@ -132,16 +145,17 @@ Tests when trying to get the result, but the result is not ready yet
         assertEquals(ResultMessages.RESULT_IS_READY, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNotNull(response.getTraceLinks());
+        assertNotNull(response.getResult());
     }
 
-    public static void testRunPipelineAndWaitForResult_notReady(ArdocoResultResponse response, ResponseEntity<String> responseEntity, TraceLinkType traceLinkType) {
+    public static void testRunPipelineAndWaitForResult_notReady(ArdocoResultResponse response, ResponseEntity<String> responseEntity,
+            TraceLinkType traceLinkType) {
         assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode(), "message: " + response.getMessage());
         assertEquals(response.getStatus(), responseEntity.getStatusCode());
         assertEquals(ResultMessages.REQUEST_TIMED_OUT_START_AND_WAIT, response.getMessage(), "message: " + response.getMessage());
         assertEquals(traceLinkType, response.getTraceLinkType());
         assertNotNull(response.getRequestId());
-        assertNull(response.getTraceLinks());
+        assertNull(response.getResult());
     }
 
     public static void testInvalidRequestId(ResponseEntity<ErrorResponse> responseEntity, String invalidId) {

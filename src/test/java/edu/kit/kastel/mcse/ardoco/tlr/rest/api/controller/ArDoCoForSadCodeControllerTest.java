@@ -1,5 +1,7 @@
-/* Licensed under MIT 2024. */
+/* Licensed under MIT 2024-2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
+
+import static edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller.AbstractController.*;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -41,9 +43,9 @@ public class ArDoCoForSadCodeControllerTest extends AbstractTLRControllerTest {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
-        parameters.add("projectName", projectName);
-        parameters.add("inputText", new ClassPathResource("emptyFile.txt"));
-        parameters.add("inputCode", new ClassPathResource("bigBlueButton/codeModel.acm"));
+        parameters.add(PROJECT_NAME_PARAMETER, projectName);
+        parameters.add(TEXTUAL_DOCUMENTATION_PARAMETER, new ClassPathResource("emptyFile.txt"));
+        parameters.add(CODE_PARAMETER, new ClassPathResource("bigBlueButton/codeModel.acm"));
 
         return new HttpEntity<>(parameters, headers);
     }
@@ -52,9 +54,9 @@ public class ArDoCoForSadCodeControllerTest extends AbstractTLRControllerTest {
     private HttpEntity<MultiValueMap<String, Object>> setUpRequestParamToStartPipelineBBB(String projectName) {
         LinkedMultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
 
-        parameters.add("projectName", projectName);
-        parameters.add("inputText", new ClassPathResource("bigBlueButton/bigbluebutton.txt"));
-        parameters.add("inputCode", new ClassPathResource("bigBlueButton/codeModel.acm"));
+        parameters.add(PROJECT_NAME_PARAMETER, projectName);
+        parameters.add(TEXTUAL_DOCUMENTATION_PARAMETER, new ClassPathResource("bigBlueButton/bigbluebutton.txt"));
+        parameters.add(CODE_PARAMETER, new ClassPathResource("bigBlueButton/codeModel.acm"));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);

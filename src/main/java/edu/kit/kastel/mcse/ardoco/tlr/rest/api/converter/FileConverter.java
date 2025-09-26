@@ -1,8 +1,5 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter;
-
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
-import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -16,6 +13,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
+
 /**
  * This is a utility class for converting files and handling file-related operations.
  * It provides methods to convert files to byte arrays, convert multipart files to regular files,
@@ -28,7 +30,6 @@ public final class FileConverter {
     private FileConverter() {
     }
 
-
     /**
      * Converts a list of {@link File} objects to a single byte array.
      * It reads the contents of each file in the list and concatenates them into a single byte array.
@@ -36,7 +37,7 @@ public final class FileConverter {
      * @param files the list of {@link File} objects to convert to a byte array
      * @return a byte array representing the concatenated contents of all files
      * @throws FileConversionException if an error occurs during file reading or conversion
-     * @throws FileNotFoundException if the provided file list is empty
+     * @throws FileNotFoundException   if the provided file list is empty
      */
     public static byte[] convertFilesToByte(List<File> files) throws FileConversionException, FileNotFoundException {
         if (files.isEmpty()) {
@@ -62,7 +63,7 @@ public final class FileConverter {
      *
      * @param multipartFile the {@link MultipartFile} to convert
      * @return a {@link File} object containing the contents of the {@link MultipartFile}
-     * @throws FileNotFoundException if the file is empty or null
+     * @throws FileNotFoundException   if the file is empty or null
      * @throws FileConversionException if an error occurs during file conversion
      */
     public static File convertMultipartFileToFile(MultipartFile multipartFile) throws FileNotFoundException, FileConversionException {
@@ -87,7 +88,6 @@ public final class FileConverter {
             throw new FileConversionException("Error occurred while transferring the MultipartFile to File: " + e.getMessage(), e);
         }
     }
-
 
     /**
      * Detects the encoding from the XML prolog in the MultipartFile.

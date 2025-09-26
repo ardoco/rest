@@ -1,8 +1,10 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.messages;
 
 public final class ResultMessages {
 
-    private ResultMessages() {} // prevent instantiation
+    private ResultMessages() {
+    } // prevent instantiation
 
     public static final String RESULT_IS_READY = "The result is ready.";
     public static final String RESULT_IS_BEING_PROCESSED = "The result is being processed and can be queried using the id.";

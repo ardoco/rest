@@ -1,3 +1,4 @@
+/* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository;
 
 /**
@@ -9,7 +10,7 @@ public interface DatabaseAccessor {
     /**
      * Stores a result in the database for a defined period (typically 24 hours).
      *
-     * @param id the unique key that will be used to retrieve the result from the database
+     * @param id         the unique key that will be used to retrieve the result from the database
      * @param jsonResult the JSON-formatted result to save in the database
      * @return the id used to store and retrieve the result, for confirmation
      */
