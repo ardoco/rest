@@ -15,7 +15,7 @@
   <description>The goal of this project is to provide a REST API for the ArDoCo runners</description>
 
   <properties>
-    <junit.version>5.12.2</junit.version>
+    <junit.version>6.0.1</junit.version>
   </properties>
 
   <dependencyManagement>
