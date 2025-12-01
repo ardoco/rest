@@ -1,17 +1,11 @@
 /* Licensed under MIT 2025. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,8 +18,6 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileNotFoundException;
  * and detect character encoding in files.
  */
 public final class FileConverter {
-
-    private static final Pattern ENCODING_PATTERN = Pattern.compile("encoding=\"([^\"]+)\"");
 
     private FileConverter() {
     }
@@ -68,7 +60,7 @@ public final class FileConverter {
      */
     public static File convertMultipartFileToFile(MultipartFile multipartFile) throws FileNotFoundException, FileConversionException {
         if (multipartFile == null) {
-            throw new FileConversionException("Multipart file with name" + multipartFile.getOriginalFilename() + "is null.");
+            throw new FileConversionException("Multipart file is null.");
         }
 
         if (multipartFile.isEmpty()) {
@@ -87,31 +79,5 @@ public final class FileConverter {
         } catch (IOException e) {
             throw new FileConversionException("Error occurred while transferring the MultipartFile to File: " + e.getMessage(), e);
         }
-    }
-
-    /**
-     * Detects the encoding from the XML prolog in the MultipartFile.
-     * If no encoding is specified, UTF-8 is used by default.
-     * This method reads the first line of the file and attempts to parse the encoding from an XML declaration.
-     *
-     * @param multipartFile the multipart file to check for encoding
-     * @return the detected Charset, or UTF-8 as the default if no encoding is specified
-     * @throws IOException if an I/O error occurs
-     */
-    private static Charset detectEncodingOfFile(MultipartFile multipartFile) throws IOException {
-        // Read the first few lines of the file to detect the encoding, since XML files declare the encoding usually there
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(multipartFile.getInputStream(), StandardCharsets.UTF_8))) {
-            String firstLine = reader.readLine();
-
-            if (firstLine != null && firstLine.startsWith("<?xml")) {
-                Matcher matcher = ENCODING_PATTERN.matcher(firstLine);
-                if (matcher.find()) {
-                    String encoding = matcher.group(1);
-                    return Charset.forName(encoding);
-                }
-            }
-        }
-
-        return StandardCharsets.UTF_8;
     }
 }

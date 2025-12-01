@@ -72,7 +72,7 @@ public class RedisAccessorTest {
     void testSaveResultMultipleValues() {
         String key = "testKey";
         String value = "testValue";
-        String id = redisAccessor.saveResult(key, value);
+        redisAccessor.saveResult(key, value);
         assertEquals(value, redisAccessor.getResult(key));
 
         String updatedValue = "updatedValue";

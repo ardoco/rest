@@ -13,8 +13,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -42,8 +43,10 @@ public abstract class AbstractTLRControllerTest {
     private final String runPipelineAndWaitEndpoint;
     private final TraceLinkType traceLinkType;
 
-    @Autowired
-    protected TestRestTemplate restTemplate;
+    @LocalServerPort
+    private int port;
+
+    protected TestRestTemplate restTemplate = new TestRestTemplate();
 
     @Autowired
     protected RedisAccessor redisAccessor;
@@ -79,6 +82,10 @@ public abstract class AbstractTLRControllerTest {
         this.runPipelineAndWaitEndpoint = String.format("/api/%s/start-and-wait", endpointName);
     }
 
+    private String getBaseUrl() {
+        return "http://localhost:" + port;
+    }
+
     // Common test method for starting pipeline and getting results
     @Timeout(value = 6, unit = TimeUnit.MINUTES)
     protected void runPipeline_start_and_getResult(HttpEntity<MultiValueMap<String, Object>> requestEntity) throws IOException {
@@ -103,11 +110,13 @@ public abstract class AbstractTLRControllerTest {
         String invalidId = "invalid-project-id";
 
         // testGetResult
-        ResponseEntity<ErrorResponse> responseEntity = restTemplate.getForEntity(GET_RESULT_ENDPOINT, ErrorResponse.class, invalidId);
+        String getUrl = getBaseUrl() + GET_RESULT_ENDPOINT;
+        ResponseEntity<ErrorResponse> responseEntity = restTemplate.getForEntity(getUrl, ErrorResponse.class, invalidId);
         TestUtils.testInvalidRequestId(responseEntity, invalidId);
 
         // testWaitForResult
-        responseEntity = restTemplate.getForEntity(WAIT_FOR_RESULT_ENDPOINT, ErrorResponse.class, invalidId);
+        String waitUrl = getBaseUrl() + WAIT_FOR_RESULT_ENDPOINT;
+        responseEntity = restTemplate.getForEntity(waitUrl, ErrorResponse.class, invalidId);
         TestUtils.testInvalidRequestId(responseEntity, invalidId);
     }
 
@@ -115,10 +124,11 @@ public abstract class AbstractTLRControllerTest {
     void testHandleEmptyFile() {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = prepareRequestEntityForEmptyFileTest("emptyFileProject");
 
-        ResponseEntity<ErrorResponse> responseEntity = restTemplate.exchange(runPipelineEndpoint, HttpMethod.POST, requestEntity, ErrorResponse.class);
+        ResponseEntity<ErrorResponse> responseEntity = restTemplate.exchange(getBaseUrl() + runPipelineEndpoint, HttpMethod.POST, requestEntity,
+                ErrorResponse.class);
         TestUtils.testsForHandelingEmptyFiles(responseEntity);
 
-        responseEntity = restTemplate.exchange(runPipelineAndWaitEndpoint, HttpMethod.POST, requestEntity, ErrorResponse.class);
+        responseEntity = restTemplate.exchange(getBaseUrl() + runPipelineAndWaitEndpoint, HttpMethod.POST, requestEntity, ErrorResponse.class);
         TestUtils.testsForHandelingEmptyFiles(responseEntity);
     }
 
@@ -126,7 +136,7 @@ public abstract class AbstractTLRControllerTest {
 
     protected void test_runPipelineAndWaitForResult_helper(HttpEntity<MultiValueMap<String, Object>> requestEntity) throws IOException {
         // test whether runPipeLineAndWait() directly has the result
-        ResponseEntity<String> responseEntity = restTemplate.exchange(runPipelineAndWaitEndpoint, HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(getBaseUrl() + runPipelineAndWaitEndpoint, HttpMethod.POST, requestEntity, String.class);
         assertNotNull(responseEntity.getBody());
         ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
 
@@ -155,22 +165,24 @@ public abstract class AbstractTLRControllerTest {
 
     // Helper methods for common test logic
     protected ArdocoResultResponse startNewPipeline_test(HttpEntity<MultiValueMap<String, Object>> requestEntity) throws IOException {
-        ResponseEntity<String> responseEntity = restTemplate.exchange(runPipelineEndpoint, HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(getBaseUrl() + runPipelineEndpoint, HttpMethod.POST, requestEntity, String.class);
         assertNotNull(responseEntity.getBody());
         return TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
     }
 
     protected void tryGetResultWhenNotReady_test(String projectId) throws IOException {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(GET_RESULT_ENDPOINT, String.class, projectId);
+        String url = getBaseUrl() + GET_RESULT_ENDPOINT;
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class, projectId);
         ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
         TestUtils.testGetResult_notReady(response, responseEntity, traceLinkType);
         resultIsNotInDatabase(response.getRequestId());
     }
 
     protected void waitForResultUntilReady_test(String projectId) throws IOException {
+        String url = getBaseUrl() + WAIT_FOR_RESULT_ENDPOINT;
         ResponseEntity<String> waitingEntity;
         do {
-            waitingEntity = restTemplate.getForEntity(WAIT_FOR_RESULT_ENDPOINT, String.class, projectId);
+            waitingEntity = restTemplate.getForEntity(url, String.class, projectId);
             ArdocoResultResponse waitingResponse = TestUtils.parseResponseEntityToArdocoResponse(waitingEntity);
 
             if (waitingEntity.getStatusCode() == HttpStatus.ACCEPTED) {
@@ -187,14 +199,15 @@ public abstract class AbstractTLRControllerTest {
     }
 
     protected void getResult_hasResult_test(String projectId) throws IOException {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(GET_RESULT_ENDPOINT, String.class, projectId);
+        String url = getBaseUrl() + GET_RESULT_ENDPOINT;
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class, projectId);
         ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
         TestUtils.testGetResult_ready(response, responseEntity, traceLinkType);
         resultIsInDatabase(response.getRequestId());
     }
 
     protected void runPipeLineDirectlyHasResult_test(HttpEntity<MultiValueMap<String, Object>> requestEntity) throws IOException {
-        ResponseEntity<String> responseEntity = restTemplate.exchange(runPipelineEndpoint, HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(getBaseUrl() + runPipelineEndpoint, HttpMethod.POST, requestEntity, String.class);
         assertNotNull(responseEntity.getBody());
         ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
         TestUtils.testStartPipeline_resultIsInDatabase(response, responseEntity, traceLinkType);
@@ -202,7 +215,7 @@ public abstract class AbstractTLRControllerTest {
     }
 
     protected void runPipeLineAndWaitDirectlyHasResult_test(HttpEntity<MultiValueMap<String, Object>> requestEntity) throws IOException {
-        ResponseEntity<String> responseEntity = restTemplate.exchange(runPipelineAndWaitEndpoint, HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(getBaseUrl() + runPipelineAndWaitEndpoint, HttpMethod.POST, requestEntity, String.class);
         assertNotNull(responseEntity.getBody());
         ArdocoResultResponse response = TestUtils.parseResponseEntityToArdocoResponse(responseEntity);
         TestUtils.testStartPipeline_resultIsInDatabase(response, responseEntity, traceLinkType);

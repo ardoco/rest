@@ -3,6 +3,9 @@ package edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response;
 
 import org.springframework.http.HttpStatus;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Represents the response structure for the ArDoCo API results.
  */
@@ -75,6 +78,17 @@ public class ArdocoResultResponse {
      *
      * @return the HTTP status of the response
      */
+    @JsonProperty("status")
+    public String getStatusName() {
+        return status != null ? status.name() : null;
+    }
+
+    /**
+     * Getter for status (returns HttpStatus object).
+     *
+     * @return the HTTP status of the response
+     */
+    @JsonIgnore
     public HttpStatus getStatus() {
         return status;
     }

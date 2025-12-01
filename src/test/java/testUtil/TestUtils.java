@@ -159,14 +159,14 @@ public final class TestUtils {
     }
 
     public static void testInvalidRequestId(ResponseEntity<ErrorResponse> responseEntity, String invalidId) {
-        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.UNPROCESSABLE_CONTENT, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
         ErrorResponse errorResponse = responseEntity.getBody();
         assertEquals(errorResponse.getStatus(), responseEntity.getStatusCode());
     }
 
     public static void testsForHandelingEmptyFiles(ResponseEntity<ErrorResponse> responseEntity) {
-        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.UNPROCESSABLE_CONTENT, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
         ErrorResponse response = responseEntity.getBody();
         assertEquals(responseEntity.getStatusCode(), response.getStatus());

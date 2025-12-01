@@ -44,7 +44,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ApiResponse(responseCode = "422", description = "When the provided file is empty or doesn't exist", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     public ResponseEntity<ErrorResponse> handleFileNotFoundException(FileNotFoundException ex) {
         logger.error(ex.getMessage(), ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ApiResponse(responseCode = "422", description = "When the provided file cannot be converted", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     public ResponseEntity<ErrorResponse> handleFileConversionException(FileConversionException ex) {
         logger.error(ex.getMessage(), ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
         return new ResponseEntity<>(error, error.getStatus());
     }
 
@@ -86,7 +86,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ApiResponse(responseCode = "422", description = "One of the Provided Argument is invalid.", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
         logger.error(ex.getMessage(), ex);
-        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNPROCESSABLE_CONTENT, ex.getMessage());
         return new ResponseEntity<>(error, error.getStatus());
     }
 
