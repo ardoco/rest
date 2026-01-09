@@ -1,4 +1,4 @@
-/* Licensed under MIT 2025. */
+/* Licensed under MIT 2025-2026. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.service;
 
 import org.eclipse.collections.api.list.ImmutableList;
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.kit.kastel.mcse.ardoco.core.api.entity.ArchitectureEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.entity.ModelEntity;
-import edu.kit.kastel.mcse.ardoco.core.api.output.ArDoCoResult;
+import edu.kit.kastel.mcse.ardoco.core.api.output.ArdocoResult;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.TraceLink;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
@@ -30,7 +30,7 @@ public class ArCoTLService extends AbstractRunnerTLRService {
     }
 
     @Override
-    protected ArDoCoApiResult convertResultToJsonString(ArDoCoResult result) throws JsonProcessingException {
+    protected ArDoCoApiResult convertResultToJsonString(ArdocoResult result) throws JsonProcessingException {
         ImmutableList<TraceLink<? extends ArchitectureEntity, ? extends ModelEntity>> traceLinks = result.getSamCodeTraceLinks();
         String traceLinkJson = TraceLinkConverter.convertListOfSamCodeTraceLinksToJsonString(traceLinks);
         return new ArDoCoApiResult(traceLinkJson);

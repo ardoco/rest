@@ -112,7 +112,7 @@ public class InconsistencyController extends AbstractController {
         SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForInconsistencyDetection runner = setUpRunner(inputFileMap, modelType, projectName, additionalConfigs);
+        InconsistencyDetection runner = setUpRunner(inputFileMap, modelType, projectName, additionalConfigs);
 
         return handleRunPipelineAndWaitForResult(runner, id, inputFiles);
     }

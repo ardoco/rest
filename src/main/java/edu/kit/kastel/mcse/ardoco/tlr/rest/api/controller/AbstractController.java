@@ -1,4 +1,4 @@
-/* Licensed under MIT 2024-2025. */
+/* Licensed under MIT 2024-2026. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
 import java.io.File;
@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
+import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArdocoRunner;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
@@ -75,14 +75,14 @@ public abstract class AbstractController {
     /**
      * Handles the process of running a pipeline and building a response based on the result status.
      *
-     * @param runner     the {@link ArDoCoRunner} instance to execute
+     * @param runner     the {@link ArdocoRunner} instance to execute
      * @param requestId  the unique request ID associated with the pipeline run
      * @param inputFiles the list of input files for the pipeline run
      * @return a {@link ResponseEntity} containing the {@link ArdocoResultResponse} with the status and result message
      * @throws FileNotFoundException   if any of the input files cannot be found
      * @throws FileConversionException if there's an error converting any file during the pipeline process
      */
-    protected ResponseEntity<ArdocoResultResponse> handleRunPipeLineResult(ArDoCoRunner runner, String requestId, List<File> inputFiles)
+    protected ResponseEntity<ArdocoResultResponse> handleRunPipeLineResult(ArdocoRunner runner, String requestId, List<File> inputFiles)
             throws FileNotFoundException, FileConversionException {
         Optional<ArDoCoApiResult> result = service.runPipeline(runner, requestId, inputFiles);
         ArdocoResultResponse response;
@@ -103,7 +103,7 @@ public abstract class AbstractController {
      * @return a {@link ResponseEntity} containing the {@link ArdocoResultResponse} with the status and result message
      * @throws ArdocoException if an error occurs during the pipeline process or waiting for the result
      */
-    protected ResponseEntity<ArdocoResultResponse> handleRunPipelineAndWaitForResult(ArDoCoRunner runner, String requestId, List<File> inputFiles)
+    protected ResponseEntity<ArdocoResultResponse> handleRunPipelineAndWaitForResult(ArdocoRunner runner, String requestId, List<File> inputFiles)
             throws ArdocoException {
         Optional<ArDoCoApiResult> result = service.runPipeline(runner, requestId, inputFiles);
         if (result.isEmpty()) {
