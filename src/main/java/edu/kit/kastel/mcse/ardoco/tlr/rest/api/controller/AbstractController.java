@@ -97,7 +97,7 @@ public abstract class AbstractController {
     /**
      * Handles the process of running a pipeline and waiting for the result, building a response accordingly.
      *
-     * @param runner     the {@link ArDoCoRunner} instance to execute
+     * @param runner     the {@link ArdocoRunner} instance to execute
      * @param requestId  the unique request ID associated with the pipeline run
      * @param inputFiles the list of input files for the pipeline run
      * @return a {@link ResponseEntity} containing the {@link ArdocoResultResponse} with the status and result message

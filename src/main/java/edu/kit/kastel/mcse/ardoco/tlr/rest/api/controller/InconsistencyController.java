@@ -64,6 +64,7 @@ public class InconsistencyController extends AbstractController {
      * @return a ResponseEntity containing the result of the processing pipeline
      * @throws FileNotFoundException   if the provided file is empty or doesn't exist
      * @throws FileConversionException if the provided file cannot be converted
+     * @throws IOException             if an I/O error occurs during processing
      */
     @Operation(summary = "Starts the SWATTR (sad-sam) processing pipeline with Inconsistency Detection", description = "Starts the inconsistency processing pipeline with the given project name, the type of the architecture model and files.")
     @PostMapping(value = "/start", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -96,6 +97,7 @@ public class InconsistencyController extends AbstractController {
      * @return a ResponseEntity containing the result of the processing pipeline
      * @throws FileNotFoundException   if the provided file is empty or doesn't exist
      * @throws FileConversionException if the provided file cannot be converted
+     * @throws IOException             if an I/O error occurs during processing
      */
     @Operation(summary = "Starts the SWATTR (sad-sam) processing pipeline with Inconsistency Detection and waits until the result is obtained", description = "Starts the inconsistency processing pipeline with the given project name, the type of the architecture model and files and waits until the SadSamTraceLinks and Inconsistencies are obtained.")
     @PostMapping(value = "/start-and-wait", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

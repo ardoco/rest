@@ -28,8 +28,8 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.repository.DatabaseAccessor;
  * asynchronous tasks, and interacting with a database for storing and retrieving
  * results.
  * <p>
- * Implementing classes are responsible for defining how the {@link ArDoCoResult} is
- * converted to JSON format by implementing the {@link #convertResultToJsonString(ArDoCoResult)} method.
+ * Implementing classes are responsible for defining how the {@link ArdocoResult} is
+ * converted to JSON format by implementing the {@link #convertResultToJsonString(ArdocoResult)} method.
  */
 public abstract class AbstractRunnerTLRService extends AbstractService {
 
@@ -64,7 +64,7 @@ public abstract class AbstractRunnerTLRService extends AbstractService {
     }
 
     /**
-     * Takes the {@link ArDoCoResult} and converts the contained trace links of the service's type to JSON format.
+     * Takes the {@link ArdocoResult} and converts the contained trace links of the service's type to JSON format.
      *
      * @param result the ArDoCo result containing trace links
      * @return JSON representation of trace links
