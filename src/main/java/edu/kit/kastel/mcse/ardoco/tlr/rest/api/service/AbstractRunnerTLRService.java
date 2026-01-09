@@ -1,4 +1,4 @@
-/* Licensed under MIT 2024-2025. */
+/* Licensed under MIT 2024-2026. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.service;
 
 import java.io.File;
@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.kit.kastel.mcse.ardoco.core.api.output.ArDoCoResult;
-import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArDoCoRunner;
+import edu.kit.kastel.mcse.ardoco.core.api.output.ArdocoResult;
+import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArdocoRunner;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.ArdocoException;
@@ -70,7 +70,7 @@ public abstract class AbstractRunnerTLRService extends AbstractService {
      * @return JSON representation of trace links
      * @throws JsonProcessingException if there is an error during conversion
      */
-    abstract protected ArDoCoApiResult convertResultToJsonString(ArDoCoResult result) throws JsonProcessingException;
+    abstract protected ArDoCoApiResult convertResultToJsonString(ArdocoResult result) throws JsonProcessingException;
 
     /**
      * Starts a new pipeline asynchronously, if the result is not already available or in progress.
@@ -80,7 +80,7 @@ public abstract class AbstractRunnerTLRService extends AbstractService {
      * @param inputFiles the input files for the pipeline
      * @return an optional containing the result if available, otherwise empty
      */
-    public Optional<ArDoCoApiResult> runPipeline(ArDoCoRunner runner, String id, List<File> inputFiles) throws ArdocoException {
+    public Optional<ArDoCoApiResult> runPipeline(ArdocoRunner runner, String id, List<File> inputFiles) throws ArdocoException {
         if (!resultIsInDatabase(id) && !resultIsOnItsWay(id)) {
             logger.info("Start new TLR of type {} for {}", this.traceLinkType, id);
             CompletableFuture<ArDoCoApiResult> future = CompletableFuture.supplyAsync(() -> runPipelineAsync(runner, id, inputFiles));
@@ -99,11 +99,11 @@ public abstract class AbstractRunnerTLRService extends AbstractService {
      * @param inputFiles the input files for the pipeline
      * @return the result in JSON format, or null if an error occurred
      */
-    private ArDoCoApiResult runPipelineAsync(ArDoCoRunner runner, String id, List<File> inputFiles) throws ArdocoException {
+    private ArDoCoApiResult runPipelineAsync(ArdocoRunner runner, String id, List<File> inputFiles) throws ArdocoException {
         ArDoCoApiResult traceLinkJson;
         try {
             logger.info("Starting Pipeline...");
-            ArDoCoResult result = runner.run();
+            ArdocoResult result = runner.run();
 
             logger.debug("Converting found TraceLinks...");
             traceLinkJson = convertResultToJsonString(result);

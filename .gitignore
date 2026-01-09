@@ -41,3 +41,4 @@ build/
 /redis/redis.env
 /.env
 /redis/redis.acl
+**/package-info.java

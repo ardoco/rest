@@ -1,4 +1,4 @@
-/* Licensed under MIT 2025. */
+/* Licensed under MIT 2025-2026. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
 import java.io.File;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import edu.kit.kastel.mcse.ardoco.core.api.models.ModelFormat;
-import edu.kit.kastel.mcse.ardoco.id.execution.runner.ArDoCoForInconsistencyDetection;
+import edu.kit.kastel.mcse.ardoco.id.execution.runner.InconsistencyDetection;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
@@ -80,7 +80,7 @@ public class InconsistencyController extends AbstractController {
         SortedMap<String, String> additionalConfigs = parseAdditionalConfigs(additionalConfigsJson);
 
         String id = generateRequestId(inputFiles, projectName);
-        ArDoCoForInconsistencyDetection runner = setUpRunner(inputFileMap, modelType, projectName, additionalConfigs);
+        InconsistencyDetection runner = setUpRunner(inputFileMap, modelType, projectName, additionalConfigs);
 
         return handleRunPipeLineResult(runner, id, inputFiles);
     }
@@ -127,10 +127,10 @@ public class InconsistencyController extends AbstractController {
         return inputFiles;
     }
 
-    private ArDoCoForInconsistencyDetection setUpRunner(Map<String, File> inputFileMap, ModelFormat modelType, String projectName,
+    private InconsistencyDetection setUpRunner(Map<String, File> inputFileMap, ModelFormat modelType, String projectName,
             SortedMap<String, String> additionalConfigs) throws FileNotFoundException, FileConversionException, IOException {
         logger.info("Setting up Runner...");
-        ArDoCoForInconsistencyDetection runner = new ArDoCoForInconsistencyDetection(projectName);
+        InconsistencyDetection runner = new InconsistencyDetection(projectName);
         ImmutableSortedMap<String, String> additionalConfigsImmutable = SortedMaps.immutable.withSortedMap(additionalConfigs);
 
         runner.setUp(inputFileMap.get(TEXTUAL_DOCUMENTATION_PARAMETER), inputFileMap.get(ARCHITECTURE_MODEL_PARAMETER), modelType, additionalConfigsImmutable,
