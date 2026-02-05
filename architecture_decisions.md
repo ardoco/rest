@@ -239,12 +239,12 @@ Sample response for waiting for the result or retrieving the result using getRes
 	],
 	"inconsistencies": [
 	{
-		"type": "MissingModelInstance",
+		"type": "TextEntityAbsentFromModel",
 		"reason": "Text indicates that \"integrations\" should be contained in the model(s) but could not be found. (confidence: 0.65)",
 		"sentenceNumber": 39
 	},
 	{
-		"type": "MissingTextForModelElement",
+		"type": "ModelEntityAbsentFromText",
 		"reason": "Model contains an Instance \"Recording Service\" (type: \"uml:Component\")  that seems to be undocumented.",
 		"modelElementId": "_kvWs4FkHEeyewPSmlgszyA"
 	}
