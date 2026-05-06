@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 /**
  * Main application class for the ArDoCo Trace Link Recovery REST API.
  */
-@OpenAPIDefinition(info = @Info(title = "ArDoCo: Trace Link Recovery", description = "provides functionality to run ArDoCoTLR and provide results"))
+@OpenAPIDefinition(info = @Info(title = "ARDoCo: Trace Link Recovery", description = "provides functionality to run SWATTR, ArDoCode, TransArC, and inconsistency detection"))
 @EnableAsync
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 public class ArDoCoRestApplication {
