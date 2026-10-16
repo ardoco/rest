@@ -9,6 +9,9 @@ updates:
       commit-message:
           prefix: "Dependency"
           include: "scope"
+      ignore:
+          # JUnit is aligned manually with the version managed by Spring Boot (junit.version in pom.xml)
+          - dependency-name: "org.junit.jupiter:*"
     - package-ecosystem: "docker"
       directory: "/"
       schedule:
