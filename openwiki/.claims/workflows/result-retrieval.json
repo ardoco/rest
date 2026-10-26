@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:3db7b8ec70ae794202043a77b4fb53562112aeb3d74a776839d806943f1c8f70",
+  "claims": [
+    {
+      "id": "claim_9f9cefc4d1f0460087f307e680a5fb71",
+      "statement": "ResultController exposes two cross-family retrieval endpoints under /api: GET /api/get-result/{id} (non-blocking) and GET /api/wait-for-result/{id} (blocking up to the wait budget). Both map a present Optional<ArDoCoApiResult> to 200 OK with ResultMessages.RESULT_IS_READY and an empty one to 202 Accepted — with RESULT_NOT_READY for get-result and REQUEST_TIMED_OUT for wait-for-result — by constructing an ArdocoResultResponse whose own status field becomes the ResponseEntity status.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java#L36-L97",
+          "version": "repo-lines-v1:sha256:cdddfbfab2d05a13f1a87488b54ad952be739eaa95a5e2b438dc01490998a8da:eyJzZWxlY3RlZExpbmVDb3VudCI6NjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYyYzU4NjUzMDJlNTA5ODUyZWU5M2FlNjkzNDNkNjYyMGIyMDYxMWI4MjVlMDZlZGZjMThmMzE5NGE3MTY1OWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI1MTdlMGU3MDg2MmEzNTljYTZkMjhmYjU3MGIyNmYzYjY0NmU3MDAwNGQ1NzkxYWY3ZjNlZmE0ODkyYzA3OWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/messages/ResultMessages.java#L9-L14",
+          "version": "repo-lines-v1:sha256:af1c800d91e9055ace44423acfc7f4b47d3297ef778d2862305d102b1f9e2c7b:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2E2MWU4OGRhY2QwNDg1M2U1YjRiYjcyNjFmZmViNmZiZGZjMGFiYmU5MmEyNDU3M2Q5MWJjZDZjMTdjN2FhMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTAwMGYwOTZkNThiZWUyMWMxMTc3NjhlZmM0YmFiZjg2NjkyZDIxNDEwZjY5NTgyYjVlZGMxMzIzMjIxYTA1OCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWVmMGZmYzg0MWQzNDE0MGE0NzYyZTAwY2Y2YzUxYjM5NDUyMTNkMzNhNjc0MzkxMWE4MzEzZDlkNzZiNTMxOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_b77b9bea09304ee68439cc4b82b501e1",
+      "statement": "ResultService.getResult returns Optional.empty() without consulting the database while the request ID is registered in CurrentlyRunningRequestsRepository (resultIsOnItsWay); otherwise it returns getResultFromDatabase(id). ResultService.waitForResult blocks on the registered future when the request is in flight, and otherwise reads the finished result directly from Redis — so a run that completed between the start response and the wait call is served from the database without waiting.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/CurrentlyRunningRequestsRepository.java#L56-L58",
+          "version": "repo-lines-v1:sha256:1e51c559bc347eb6e03b3bb105fa5b1277c3923bd6208a1d23861f1d6cb15038:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzIzZWNiZjM3MDYyYTdiNjdhMTY3ZTViY2Q5MGU5ZWJlYjhjNmE5ZjY0NjIyZWM1YjRhYTZhYmIyNGE4NzkwMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTNkMzY4MTU3ZGMwZmQzYzgwYjNhOGM2NjU3OTE2YjdiOWRhYzUwMmFkZTQ2YzI1M2MwNTU2ODFkNTBlOTcyYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDA5MjUyNTk3NWE3OGQ1Zjc4YmE0ZWE1ZTMzNzE2NWJmOWIzNWExZjFjOWEwMjU0MjU0NzczYTY3ZmU0YzQ0ZiJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java#L88-L100",
+          "version": "repo-lines-v1:sha256:c43f62708733d6f93cba2cf876ac903a249f20cfcb5aee6e92dd448cf3d6dad3:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAyNGMzZTdkYzY0ZDFkMTI5MDYwNDU3YzBjYzk1YmI1ZTM0MmYzOWJkMTY2ZDNlZmZiYjA2MmEzNTY5ZWNjMjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNhYzk3NGYyMzYzOGRhMTk5NGM1NTIwNDIyZGZjNTVhMDVlY2VlZWMxYzhlOWYyN2I3ODU0NGRmYzYyMGI1MTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ResultService.java#L41-L62",
+          "version": "repo-lines-v1:sha256:674c3b7b48aa3263f1c4769f05c06965bd734cba15b941e0e333fc0a71d2a9dc:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVjZDZiOTgzMmJlMGI2Y2ZlZTg5OWE1NjYzMzcxZTI3NDdkZWIyOGRiMzVjZDhlMzRlODNmNTVjMmE1Y2RlOTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRhMWVhN2NkN2VmZjRjZDU0YzM4ODhhZjE0NmZmM2Q2OGY1NTY1YzM3N2JmYmMxZDdlMDY0OTg2YWQyMzlkNmQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRhOWZmZmI1ODg0ZGVjNDIzMDc4ZjQ1MjU0ZTllYjBhM2NiY2EzM2YzNDQyZWNlOWI0ZjNkODMzYzUwZGI0OGMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_10201e1d1e92421ebbe29d36b7f936d5",
+      "statement": "ResultService.waitForResultHelper blocks on CompletableFuture.get(secondsUntilTimeout, TimeUnit.SECONDS), where secondsUntilTimeout is injected from the tlr.timeout.seconds property (60 by default in application.properties). A java.util.concurrent.TimeoutException is caught and converted into Optional.empty(), which the controllers translate into 202 Accepted; ExecutionException and InterruptedException are wrapped in ArdocoException, which surfaces as HTTP 500.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ResultService.java#L70-L80",
+          "version": "repo-lines-v1:sha256:7ea2f7a987e7f38ddcecd0c492e072e7a8fa98b832496a363be2094bb080ad45:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUyNDU1MWYwYTA1Mjc0YjhmZGU3MTUyMjJmNjg3MjA1NDUzZWFiNGNhYjcyOTE1ZjcxZTkyMmViOGY5NmU3MGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNhMzEzNTdjYjJiMmYwZDMzZWE4MTg2Y2RhZTE0NzgyZjVlZjc0ZGJkMWI1ZTI0NGVhMzBlMzJlZmYwOWUwMTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwNGY4OWZjMGVjOThjOTgyNDE4M2U3OTVkM2VkZDE5ZTkzMGY3YmM0NzFmOTAxMmFhM2Q1MDNiZTJmODk3NGIifQ"
+        },
+        {
+          "resource": "repo://src/main/resources/application.properties#L20-L21",
+          "version": "repo-lines-v1:sha256:0140bf9f8ec757d87574cb76ed2f44a5b5c59901802eb674fd9d962d86b32704:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmIxNzg2M2NiNzNiODY4YTVmODdiODcwOWM3MTYwODBmYzcwNTk5NDQ2NGFhMDlkMGEyZjk1MmQ2NzQxNDUxMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjA2YzlhNjQ0Zjg5Y2RhOTg4NTEwZDgxNzQ2NTBmMzVmYjc5NWM4MmI3NzZhNWI0NTdiMjg4Zjg0NTRjNjcwYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTI2NmQzODNkMGYyNmExMzg4MDMwODBjY2JkMzc5YWNlMGU0ZmRkNTY5N2Q0YjAxYzE0MmRlZTg0OTkwMGU0NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_2e68eabf2694401f81d7ef9e9e207219",
+      "statement": "AbstractService.getResultFromDatabase throws IllegalArgumentException(String.format(...No result with key %s found., id)) when the ID does not exist in the database (DatabaseAccessor.keyExistsInDatabase), and GlobalExceptionHandler maps IllegalArgumentException to 422 Unprocessable Content — so an unknown or TTL-expired result ID yields 422 on both retrieval endpoints, distinct from the 202 of a still-running pipeline.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java#L85-L91",
+          "version": "repo-lines-v1:sha256:412d1c33f0f92cfee435306bbdb3b31a202f2b4cd70065f5b1152c909cc7fe7d:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjk5OWNkYzQ2MjkwMjNiZDBlMGVmNDlkZTU3OTdlMWU0MDkyOWE2NjdmYTA3ZDUxNGNiYmY2OGEzMzRlMzlhMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDU0MmNjMDZmNjJlYmJhYTVhYjMwMWMwMmU0NzVmZTM1ZmE2MzAzNDE3M2ZlOWFkYTc5MjUzODA5ZDE5Zjg1YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNWNmNDNlNDNkMDI1Njg2MzFjMTViNWNjN2FmYmE5YjI2MTgyZjhjMjdjNzFlODcxMWE2OTEwNzMzMTBkZmRjZSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java#L58-L66",
+          "version": "repo-lines-v1:sha256:7fcce0349951b76b7e1d7130350be586c8f3a553ef4af22fa5c6a0d6f71708b0:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDJlMTVlYmVjMWJkNmViYjk3YjI2MWY0MzdkYzQzOTljMjc2ZDc0MTAwMWZjZDg5OTNlZGRiY2JiMjIxMzBhOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTZiMDQ0OTE0Njk3MjJlODM2M2E5NGU0MDQ0NTM4ZTAxM2EyYTIxN2UzNmIxZTU2OGJhNjBhY2I3YjRjOGYyZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWQzNWM4YjZhYjk3MzkzMjYzODM2MzA0ZjRmNTA5ZmE5NTBjZjcwYzg2YTkwZTliMDU3MWExMzIwMDhiMmI2NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzliMmEwODJkOGY4MWY0ZGRjMTI0OWJhODY1ZWEwY2ZlOTA4NzYyZGQxMjEzYmJkNzdiNWZjYjBlYWYyYmFiNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_9fdb8d7ad2df4cb2a9b79d0ce15518bd",
+      "statement": "AbstractService.getResultFromDatabase throws ArdocoException when the stored value is null or starts with the ERROR_PREFIX 'Error: ', and GlobalExceptionHandler maps ArdocoException to HTTP 500. Because a failed pipeline stored an 'Error: '-prefixed marker in Redis under the request ID (with the normal TTL) instead of leaving the key absent, every subsequent retrieval surfaces the stored failure as a 500 until the key expires.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java#L71-L77",
+          "version": "repo-lines-v1:sha256:457c721813be43418a03c95e2d617c797dc713863fda7064cfdd0c7e12724833:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjFiMmVmNWZjMzBmODBiNDM4YjQ1YWY5NTAzYTc4YWI4ODNjYzBiODEyMGI2YzIzYTI4MjY1NjhkNjA4ZTViNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDU0MmNjMDZmNjJlYmJhYTVhYjMwMWMwMmU0NzVmZTM1ZmE2MzAzNDE3M2ZlOWFkYTc5MjUzODA5ZDE5Zjg1YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDM3ZGM4YTM5NTNmYzk2NzFiZWQxNWNlNGEyNzkyNjhmZjc4OGMzMTkwZDA4MzE0Mzk5NDgyMzUyNTM1ODU5YiJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java#L31-L31",
+          "version": "repo-lines-v1:sha256:0e2592e54d5488230eb05229ce2624c68e99b5b941ba093c2f0774804464e6ac:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGUyNTkyZTU0ZDU0ODgyMzBlYjA1MjI5Y2UyNjI0YzY4ZTk5YjViOTQxYmEwOTNjMmYwNzc0ODA0NDY0ZTZhYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMGUyNTkyZTU0ZDU0ODgyMzBlYjA1MjI5Y2UyNjI0YzY4ZTk5YjViOTQxYmEwOTNjMmYwNzc0ODA0NDY0ZTZhYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjJmMGY4NzcyMDEzZWEyYzJmMDA0NDEyMWU0MTczNDYxZGJjNTA2Yjk5NGVhNDE2NjI0ZjEyZjY2NTljZWU3ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTI4YzkwY2UzNDE4ZjdhMzE3NTVjYjMxMzNlM2YwNTgxMjc1Nzg4NDBlM2Q3YzVjNGFhMjcxYzFkZGUyNGVjMyJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java#L58-L66",
+          "version": "repo-lines-v1:sha256:7fcce0349951b76b7e1d7130350be586c8f3a553ef4af22fa5c6a0d6f71708b0:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDJlMTVlYmVjMWJkNmViYjk3YjI2MWY0MzdkYzQzOTljMjc2ZDc0MTAwMWZjZDg5OTNlZGRiY2JiMjIxMzBhOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTZiMDQ0OTE0Njk3MjJlODM2M2E5NGU0MDQ0NTM4ZTAxM2EyYTIxN2UzNmIxZTU2OGJhNjBhY2I3YjRjOGYyZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWQzNWM4YjZhYjk3MzkzMjYzODM2MzA0ZjRmNTA5ZmE5NTBjZjcwYzg2YTkwZTliMDU3MWExMzIwMDhiMmI2NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzliMmEwODJkOGY4MWY0ZGRjMTI0OWJhODY1ZWEwY2ZlOTA4NzYyZGQxMjEzYmJkNzdiNWZjYjBlYWYyYmFiNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_acb5c9acb8a8434a8ca9ff8285fdb7fa",
+      "statement": "The stored result is re-parsed by name: getResultFromDatabase reads the stored JSON string, extracts the traceLinks and inconsistencies nodes via JsonNode.path(name).toString(), and rebuilds an ArDoCoApiResult whose @JsonRawValue fields embed the raw JSON verbatim in the response. The stored shape is exactly ArDoCoApiResult.buildJsonString() output ({...traceLinks...,...inconsistencies...}); renaming either side's keys breaks retrieval, and a parse failure is wrapped as ArdocoException (HTTP 500).",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java#L11-L61",
+          "version": "repo-lines-v1:sha256:fdf8fa8670b0ba582fe5ca7fad04a7b42347defaa417b26d6859a71c7fea6e1e:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjMDZjNzMzNjg3YWE2OGFhMGRmZmU3YzQwM2Q2YWQzZjMxNWQ4MTcyMzM4ODg3ZjE2NjM0Mjg5Y2E5MzZjN2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE3NzBiZDlkMzIxZjJhMjY2NmZiODhhZmIzMGY2YzY0OWUyNjAyZmFjM2VjNzNkMmMwM2I4N2EzYzgwM2M1MjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java#L69-L79",
+          "version": "repo-lines-v1:sha256:adaa90093e75337920e4ff11eddf67fcf63b84ca58f218cff0e2cfe14860aa81:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4NzhhMDdmNWU3MGFhMjU1NTZlYTAwYWVkZmVhNGRmOWVmOTllZTg2ZDI3NDI3NWUwM2I3ZTk3YjRmY2FkNDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdhNmRkMjU1M2VjNmI3Njg2MDdmMGRhZmE4ZTk1NjJmNmU0YjIzN2UzNTgxOTFkNzIzMzU5ODEzYTAxZTc3YTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVlMmI5ZTIxZmRjODZmYzJjMmVlNDQ3MjE4NWQ2NzY0NjdiZGQxY2JmMmUyNGI0ZGM2NDRhYjFhYmIzMzI1NDcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e21385fa05bf4b4ea9aa3a17f2353c83",
+      "statement": "The start-and-wait path does not use ResultController: AbstractController.handleRunPipelineAndWaitForResult calls runPipeline first and, only when that returns an empty Optional, calls ResultService.waitForResult; a timeout yields 202 Accepted with REQUEST_TIMED_OUT_START_AND_WAIT, directing the client to poll get-result with the ID it already holds.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L106-L120",
+          "version": "repo-lines-v1:sha256:ee568bb1d1c28e0f8e0700593ba6730a449576a94fba265bf876dd0b39f6bb59:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0OWQxMjNhMDk2ZWUxZTZmZDQ3MzU1MmNmMjlkYWM4ZjE0ZDNiM2Q0NjIwMjQ4MDdjMzgyZmFjOWVlODc0YTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFkMTAxNWVkYzEzNDBkMmYyZmFmMDhmZjMwYjMxYjYyZjQ0ODk4MzNjMzdlNjEwYTZmMzhhMzc2ZTI3NDRiZTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc1YWJkNmIyY2M4OTE2YTllMjdlY2U0YTRhZWI5NjBjMTY4OGY1ZWU0NmNhNzIwZGU0M2JlZmUxOGQxYjcxMGEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/messages/ResultMessages.java#L13-L14",
+          "version": "repo-lines-v1:sha256:ba0eff788b78826ab1f84c0740add9e841951d14ec17b5e979c04de994eb0bee:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWJkMWE5MjU1NjQxN2VjMmE2MGM0MGE4ZmRkMmI2NjFiYmIxOTI3YWQwNjk1ZThiNDVlNzM4ZDVkNzZiYzgyMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTAwMGYwOTZkNThiZWUyMWMxMTc3NjhlZmM0YmFiZjg2NjkyZDIxNDEwZjY5NTgyYjVlZGMxMzIzMjIxYTA1OCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODU5YTJkNTBhMTZhOTA2MDIzN2M0N2ZkZGRlNjI0YzlhYTkyMzJkNDQ4ODkwNjdjMDJmYjU4MjBlZjhjYmE0NiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_0f773ca5fc9a4e9eb44549811d919a6c",
+      "statement": "The custom TimeoutException is mapped by GlobalExceptionHandler to 408 Request Timeout but is never constructed in the current code; the real wait path catches java.util.concurrent.TimeoutException inside waitForResultHelper and returns Optional.empty(), so an expired wait observably yields 202 Accepted, never 408 — the 408 handler is a defensive path for the TimeoutException declared in several controller signatures.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java#L53-L58",
+          "version": "repo-lines-v1:sha256:816c94378c9a561b57eb1b79ebbe1a47883a6a9c80bf95611e08140fbed60a3d:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTk5MDY1ZjhmNTRkNGRiZWI0NDA0NjBlNTgyMGFjODFkYzI3M2M3YjI2N2EyYTNjOWQxNmU1Y2RmNTAzMTQ5ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDBkYjMxMmRiMjcxN2U4NjRlODNhM2IwMGRkZWM1YjMyZDkyNjZhZjU1OTE3NDIwNTU4NzgyZTAzOTM0MWVlYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDQyYjI3Zjg2YTYwZTNjM2Q5MWY3Nzc4MjcxOGZhN2U2N2JkNTNkZGUyMTlmYTFiMjBlYWQwZTRkOTAwNDlhNCJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java#L93-L105",
+          "version": "repo-lines-v1:sha256:eeac9226d8c419e68d57c05729e3db9fc05476e61296e6c4f1fb8ed833fb5da3:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM5Y2JiYzY1NDY5ZGIxY2EyODQyZWZkOTdkZjdlZTJjZTZjYzE1NzE0ODJkMDFhMThiNzkwYTEwYzdjNTEwZjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjEyNzAzMTZlYTViZTc4Y2YzMzZkZjE2OTM3ODg5OTg2ODFhNDAwMjAzY2NkZTM0NDQ5NmUxYjJkNGQ3NTQ4YTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImExMDhlMDgwY2ZiOThiN2I3ZTQzMDhjNjI1YTI5ZmY1OGVhNDNlYWNlODkwYTFhMzIwNDU1ZDhiN2M0MTE5MjcifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ResultService.java#L70-L80",
+          "version": "repo-lines-v1:sha256:7ea2f7a987e7f38ddcecd0c492e072e7a8fa98b832496a363be2094bb080ad45:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUyNDU1MWYwYTA1Mjc0YjhmZGU3MTUyMjJmNjg3MjA1NDUzZWFiNGNhYjcyOTE1ZjcxZTkyMmViOGY5NmU3MGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNhMzEzNTdjYjJiMmYwZDMzZWE4MTg2Y2RhZTE0NzgyZjVlZjc0ZGJkMWI1ZTI0NGVhMzBlMzJlZmYwOWUwMTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwNGY4OWZjMGVjOThjOTgyNDE4M2U3OTVkM2VkZDE5ZTkzMGY3YmM0NzFmOTAxMmFhM2Q1MDNiZTJmODk3NGIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ced188e53bec48d18cd493a8eba6eb2d",
+      "statement": "Retrieval behavior is pinned by integration tests against a live Redis container: AbstractTLRControllerTest.testRetrievingResultForInvalidId asserts 422 for unknown IDs on both retrieval endpoints; waitForResultUntilReady_test loops wait-for-result asserting the 202/REQUEST_TIMED_OUT pairing until 200/RESULT_IS_READY; tryGetResultWhenNotReady_test asserts 202/RESULT_NOT_READY; and testUtil.TestUtils pins the exact status/message/result combinations, so changing a ResultMessages constant or status pairing breaks the build.",
+      "evidence": [
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L173-L198",
+          "version": "repo-lines-v1:sha256:e8afa47e6052716a9666654d4d2026f23d6c5449f68f478143284410ba350cda:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZiNjc2ODhiZTdlYzBiNzY2ZDkxZDFjN2VmM2IzMThkZmZhY2JmOGEyNzFhZjJmOTljMWE2NGUyZWNjOGViMzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhZDU3ODZmMGVhYjY5ZjFiYmJhZjc0NDc0YzE4YzJkYjUxZWEzNTkyNjdlMDVjZjJmNDBiZWU1OTU3NDk0MjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFjYWI1NWFiZjUxZGQwYWNlNTY5NWM3NDE3NTM0MGRhODIxOWI1M2E2NGQ4YWFjNjFmNzNiOWNlZmI3OTA0ZjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNjNDMyZDlkNDUzOTJiNDljMjYyMWQxNzMwZTA0NzBjOWZkMzkxZjYwN2YyMzEyZjFkNTIzZDNjZGQ5NzNlNjIifQ"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L89-L133",
+          "version": "repo-lines-v1:sha256:041667eb7be4cd938a89ad85badcc56211be2e07b247986b8a651c19c1426160:eyJzZWxlY3RlZExpbmVDb3VudCI6NDUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBjYTA3MzEyM2ZkY2M0ZDc3ZGYwNzg2ZmY5NjVkMjZjN2VjOTZjMzM2NDQyMTMxY2NjNTc1ZDU2OGE5NjQ0NGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjkxZTNmYThjZDY1MDEzMzYwOTM4ZTA4ZmJhOWI2NzlmZjg3MzczZDBlOGVlZDRhYTI0NWM1YjlmYjhmZmM2Y2MiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU1MDgxZDY2NDIzMmFkMzRjMDY3MDE0MWYyYjMwMmI1ZDdiMjc1ZWJmYjIxNGE1ODlhNmJjMzc1YTJkOGM3NDEifQ"
+        },
+        {
+          "resource": "repo://src/test/java/testUtil/TestUtils.java#L106-L166",
+          "version": "repo-lines-v1:sha256:377a62df5faf69fee3fa4fdea86441cde78017369330a6e48811a9b23ca7544f:eyJzZWxlY3RlZExpbmVDb3VudCI6NjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg2ODY5N2IwZWY2NTk0MTNjMDMxNmExZTE4NDRhZjIyNmNkODI5MjkyNzViM2VjYjA3ZDE5NWExMDY1NmJmYzMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk4ZjhjOWU4N2U2MDFmNmY4OGU1Y2JlY2M5ZTQ5YzdlZGI5NmZmNjRlY2ViNDZmMGNlY2ZkMzZhMmM2NTk4ZDkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIyYjRiZDAzMjhlMWQ5ODNkYzY4MDIyZGI3ODM2ZGU5ZTZlZDNjNzZjMGFkZTU3NTc1ZDkxYTFlNDA0YWNkYmUifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.2",
+    "at": "2026-10-26T12:24:12.222Z"
+  }
+}
