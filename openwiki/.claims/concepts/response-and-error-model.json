@@ -1,0 +1,210 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:145c7d4eb195c0be9e2a9413b80c23e366d73b7c0c642105053290fa15c60c75",
+  "claims": [
+    {
+      "id": "claim_c4af4d43e0684bf49a8a9a20fadf22bb",
+      "statement": "ArdocoResultResponse is the single success envelope for all runner families, with fields requestId, status, message, traceLinkType, and result; on the wire status is serialized as the HttpStatus enum name (via a @JsonProperty(\"status\") getter whose HttpStatus-typed counterpart is @JsonIgnore), traceLinkType is derived automatically from the request ID via TraceLinkType.fromId, and every controller wraps the response in a ResponseEntity whose HTTP status equals the envelope's status field.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArdocoResultResponse.java#L12-L18",
+          "version": "repo-lines-v1:sha256:ea3f3373cab681e26eb8a6e200c3a9215b9f27cec9f288ae0da93b47bc0b4b2a:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWQ4ZTZlMTI4MDY2NDFkYjZlMzBjMGFlNGM2MjU0ZTg5NjMzODBlMTY0ZDAxOTAyNmIzMzUwNmZiMzY5MWEzZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTg5YjFhZGQzZGE0Njk1NjJjODdkYmYwNzJkZTdlYzJhZmEyNWIwMDUyMzI4MmE0ZDg0ZTY3ZjAzMTJlNjlkMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDA1YTBjOTgwNmZhODdhOTJkY2RhOGEyNTZmNDc0YmE4YTlhZjRjN2IwMmJkOWE5NDU3MGFiMGViMTY2NWViMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDE2MzI2YTE2YjU4NjAxMDNlMzAxMmQyNTRlYmQxMTI0NGI1Mjk3YTc5ZTY1YmZjY2JkNWFiM2MwZDJhZTYyOCJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArdocoResultResponse.java#L34-L56",
+          "version": "repo-lines-v1:sha256:e11a9cbb3e2ff693771118b1496f26b3b5dce1bfa3c6ef516a835d6aa1fd0864:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwZjVlZTExZjcyOTUxMjU1YzUwZDNlZmFkYzZhZDE1YWJhNDdlZjRhODhhMjVkYTc4MDZlZDk5NDM4NjQ5NzkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIyZGJiY2NmYmRiN2NkZjRiYWMzMzdhMDQxMDMyYWZiNGNkY2VmMThhMDg1NGZkNjIyOTRmNmIyNDdmYmFiYWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFlYjQxODM0ZWM1YmZlOGE2N2YxYTA1ZDJmZTEwYjYxZTIwOGM1MmUxNTUxMTJkOTE4M2YyODliYTJkOGZlYzYifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArdocoResultResponse.java#L81-L94",
+          "version": "repo-lines-v1:sha256:8933bd4a71d55621c8f269c4bf205cd9f3feacb1d7cf815f426bbd94aef08168:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY3ZDdlOWU2NzZlMjFjOGNkMGZjZmM1YTgyODY1ZjYyODE2ODkwM2RmYzUxZGZkOWQ0ZTM0NGM3N2FkMGNjYjkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjljNDMyODJkMzA1MDNjZTMxMzA1YzBhODI1NDE0N2Q2YmE1YzBlZWYzNzJhOGM0OGU4MTlkODY5OGUyZWI4YmQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI4NzFhYzhhNGU5ZTQ0ZTA2N2U1ZWVhOWJmOGYyZmI2YjA4NmRkODIwYzBlZDYxMDAwNjZhYmI4YWI4MjU2M2IifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java#L34-L41",
+          "version": "repo-lines-v1:sha256:db203319ce735499b4eccc27e00362bac5bb34c3b480a1ce54493469cfaccd05:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWYwNDUyMDFjOGM3YWViYzdmMjkyY2IwOGVlZWZlOWUxMzNlYjAzMDE1NzNkZDg3ODczYWJjZmQwZTJmNjMxNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmFmYjZlN2FiYTAyYjdlNjU5NDk1ZTYyOWE1MDgyNjBmYjcyOTE0OTcxYWM3YmM0MjUzZjc5ZDViZTc0YWY0ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L85-L95",
+          "version": "repo-lines-v1:sha256:575f7ce5dcf5e2703707be449242cf956c8ec2859f67b9fb5cfbd4b6f241380e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxZTMwMmM0MTI5N2JkNmM2YmQzNzg5MTVmZjAwMjAyYjdkNWI0ODMzYjVhMGU2NTMyNTIxYjkwYTFhYTNhZTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ2MjlhMTM1NmZmYTVmMDhkYjY2M2IxNzc0NmJlMGE0MjJiMGYyNjRjYzUzMzAyMDBlMTBjNzIxM2ZlZDA3NzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjcxZjAwMTIxY2I5MzYwZTJkODcyOWJkM2NlNTAzMDRmOWQ4MDllNzIzNzUwYzc2NDVlYWI2N2M0MWQyNDY2N2QifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_95aef719a2d147069a3081c1ee87cfe4",
+      "statement": "ArDoCoApiResult stores traceLinks and inconsistencies as pre-serialized JSON strings annotated with @JsonRawValue, so Jackson embeds them verbatim into the response; its single-argument constructor defaults inconsistencies to the literal \"[]\", meaning only InconsistencyService populates a real inconsistencies array while the four TLR families always emit \"inconsistencies\": [].",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java#L9-L36",
+          "version": "repo-lines-v1:sha256:70f932469837498f7f181f932083e033dc9fe3664f35d9bb12a6bf54195aac14:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQxYTYzOTY5ZjY0MjNmMzg0Nzk1ODNjMzljYjdkMGQ0NDA4YWNmMjExNGJjZTQ5ODQ5OGZiOWRlODZmNmYzMGMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZmMzI2ZjY1MDBlZDMwMmFhMzlmNTAwNjM3YzcyZDkxMzJkYzE1YTllYTQ4ZDJkYmQyNGY5OTdhNTZmZTg4NDQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYwOTU3MjE0YjliNWE5ZDk4ZTg0NjNlZWQ2MDU3NTMxODE2MmMzMjhmMWI2ZTYyNjIwMzFlMWFmNGQ3NTYxYzkifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ArDoCodeService.java#L33-L37",
+          "version": "repo-lines-v1:sha256:8b9c33dda5cd6fe90b1cf78f5aa6e86e6cf529cb8a0419ec99a9e08326b0ea44:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTA4Nzc0MjhjMDNjZjUwMTUyMTk5OTAyMDdhNzEzNzFhNGYxMmQyMDU5ZmQ1NTBhNDAyYWQwNGJjMzIyOGNjNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzY5NDZlMTAxZTVlNzhkOTBhNTEwYzY5ZjI2NmVmNzY1NDBkMzA5YjFiODIyNjk1YjUzMTcyZWQyY2FhMDI1OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/InconsistencyService.java#L27-L37",
+          "version": "repo-lines-v1:sha256:003b269abd349b1f8a2107d002c7d08a7871e5cb8d85dd74a191bacd557fd97e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUwODc3NDI4YzAzY2Y1MDE1MjE5OTkwMjA3YTcxMzcxYTRmMTJkMjA1OWZkNTUwYTQwMmFkMDRiYzMyMjhjYzYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM2OTQ2ZTEwMWU1ZTc4ZDkwYTUxMGM2OWYyNjZlZjc2NTQwZDMwOWIxYjgyMjY5NWI1MzE3MmVkMmNhYTAyNTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9ad09da772954c148203f94e8e8dcedf",
+      "statement": "The raw result payload round-trips through three serialization points that must stay in sync: runPipelineAsync stores traceLinkJson.buildJsonString() (composed exactly as {\"traceLinks\":<raw>,\"inconsistencies\":<raw>}) in Redis, getResultFromDatabase re-parses the stored JSON and re-extracts the traceLinks and inconsistencies nodes by name into a fresh ArDoCoApiResult, and the envelope then embeds those strings via @JsonRawValue — renaming either the stored keys, the node names read back, or the envelope properties breaks retrieval or the client-visible shape, and stored values must be valid JSON.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java#L59-L61",
+          "version": "repo-lines-v1:sha256:fa56e9a057b94f70a0bf2c387d1ed0d56cab5f6866050f4038eda54bf71ded67:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWMwOGEzN2Y1MzQ0ZTc3YTg2NjBmZmUxZTFhYzQ2MzNlMDFkZTgzMDRiZTZkNTg1OTc0YjIwOGRhZGU2MjlmMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDk1YmU0NzU2ODkwMGU2NTVmZmNmYzkzMThiNjUxZjhiYTY3YTBhYjg2ZmFhYWM1MGEzZDM4NmQ3NWM5ZjY4NiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L102-L126",
+          "version": "repo-lines-v1:sha256:44663f46d4490d4d47e0a1684038f70084ec073f6b4f0d47534a4d3b380fd4a5:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmMTZhYWM0ZGFiYzMyYmY4YzlhMzhlZmMwYmRiZTI3NGFhNDBlMjU2MWY1OGQ4MzJkYjdiNzE4Mzk1MzVjOWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU5NzJiMWUyMTE3YTQxZTQyYzA0M2NkMjc1YmExYTE4ODhjNmIwYjJkZjA5MWVlMjI0YTIxYjA4ZGNiZjZmYzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwNGY4OWZjMGVjOThjOTgyNDE4M2U3OTVkM2VkZDE5ZTkzMGY3YmM0NzFmOTAxMmFhM2Q1MDNiZTJmODk3NGIifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java#L58-L80",
+          "version": "repo-lines-v1:sha256:2e1e1ed3cd0f52f012924132fb5b5d293dc7b7385d53c05143ec8eb101cb0482:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQyZTE1ZWJlYzFiZDZlYmI5N2IyNjFmNDM3ZGM0Mzk5YzI3NmQ3NDEwMDFmY2Q4OTkzZWRkYmNiYjIyMTMwYTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVkMzVjOGI2YWI5NzM5MzI2MzgzNjMwNGY0ZjUwOWZhOTUwY2Y3MGM4NmE5MGU5YjA1NzFhMTMyMDA4YjJiNjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYyNzQ5NDQxMjI2NDcyM2Y2YThlZGMxYjY4NTQ1Y2YwNzc5M2YxMDAxNWM2MDcxZWFiZWJiYmY3NzU1ODg3MDcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ab29a37acf8e42f2b4e269a4c6cf7dc1",
+      "statement": "Each family's trace-link payload shape is fixed by its TraceLinkConverter method: SAD_CODE emits sentenceNumber/codeElementId/codeElementName plus modelElementId/modelElementName for TransitiveTraceLink whose first endpoint is an ArchitectureEntity, SAM_CODE emits modelElementId/modelElementName/codeElementId/codeElementName, SAD_SAM emits sentenceNumber/modelElementName/modelElementId; TransArCService reuses the sad-code converter and getSabCodeTraceLinks-equivalent getter, so SAD_SAM_CODE responses share the SAD_CODE shape and changing one converter silently changes both families.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/InconsistencyConverter.java#L21-L39",
+          "version": "repo-lines-v1:sha256:4352fe5518e83f0c32928d267358c27ff01782cc971f4d3b96e02e2d4fb49d61:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE4OWU1NjNjODFlMGE1NDA4MmY5NmJhZjE2YzQ0M2VhMjMxM2YzZWNkNDJiMzU0M2Y3NjE1ODQ3MTE1ZWI3MWQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRjOTJiYjJhMGFiNjQyMzZjMDkyNjRiNTk5NGJlYWU5Y2Q1NDc3Y2MzYjM3NzNjNGM1YmJmMjg5YmYxMTJkNWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/TraceLinkConverter.java#L102-L119",
+          "version": "repo-lines-v1:sha256:580cbe92d24a84692dc43107859cb7acbb1b64a36cad6fb7335f53e266dfe882:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEwNzg5M2E1YzcwMjEzNDBkNDc4N2E5NWI5YjRhYjE4YjllYzkxOTMzYzc4YTUxZjA3MzZhZWMxZGY5YjQ2NDEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyNDI2OWQ2MGI1NTZkYmM4YmI1NmRiMTQ4ZTU2ZTYwOTU2MTgwNGI1ZDg4N2ExYzUwYzZhNTc2ZThiNDcwMzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/TraceLinkConverter.java#L34-L61",
+          "version": "repo-lines-v1:sha256:b0cb1c5363ee53b0b9d9f975f29dbab09961681668608d3b3582c7854444c5f4:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY3ZjIzMDBmMmI5YmNmZGRiZmYyM2M1NDJiMTk3OWVmZTk5NGI0YjZhYzZiMDNhM2NhNzRkODRhYjYzODcyMzYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyNDI2OWQ2MGI1NTZkYmM4YmI1NmRiMTQ4ZTU2ZTYwOTU2MTgwNGI1ZDg4N2ExYzUwYzZhNTc2ZThiNDcwMzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjliNGMzMWJhMjQ5YjUwZWI4ZDQ1YjAwOTAxYjJjNWQyZjQxYTA2ODE4NTZkMjY2MGIxMjQxMTU3YzNkZTA0MmMifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/TraceLinkConverter.java#L72-L91",
+          "version": "repo-lines-v1:sha256:cf02598c9c1ad498886a6f2ab462a0999988f94d3f2c350b7599a605ce72d963:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM5Y2Y2MGE4MGUyYWIyMGUxNDlkNThhMDIyNzVlOTQ3Mjg2ODczZWYxMDgwMmZiZTQ3YTE3YzAyOTYwN2YwMTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyNDI2OWQ2MGI1NTZkYmM4YmI1NmRiMTQ4ZTU2ZTYwOTU2MTgwNGI1ZDg4N2ExYzUwYzZhNTc2ZThiNDcwMzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjliNGMzMWJhMjQ5YjUwZWI4ZDQ1YjAwOTAxYjJjNWQyZjQxYTA2ODE4NTZkMjY2MGIxMjQxMTU3YzNkZTA0MmMifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/TransArCService.java#L33-L37",
+          "version": "repo-lines-v1:sha256:8b9c33dda5cd6fe90b1cf78f5aa6e86e6cf529cb8a0419ec99a9e08326b0ea44:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTA4Nzc0MjhjMDNjZjUwMTUyMTk5OTAyMDdhNzEzNzFhNGYxMmQyMDU5ZmQ1NTBhNDAyYWQwNGJjMzIyOGNjNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzY5NDZlMTAxZTVlNzhkOTBhNTEwYzY5ZjI2NmVmNzY1NDBkMzA5YjFiODIyNjk1YjUzMTcyZWQyY2FhMDI1OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_7ecdd5f4cc22486fb82dd3c56356250e",
+      "statement": "The status/message pairing of the success envelope is fixed: POST start answers 200 with RESULT_IS_BEING_PROCESSED when a run is dispatched or in flight and 200 with RESULT_IS_READY when already cached; start-and-wait answers 200 + RESULT_IS_READY or 202 + REQUEST_TIMED_OUT_START_AND_WAIT; GET get-result answers 200 + RESULT_IS_READY or 202 + RESULT_NOT_READY; wait-for-result answers 200 + RESULT_IS_READY or 202 + REQUEST_TIMED_OUT; the result field is non-null exactly when the result is ready, and the wait budget comes from the tlr.timeout.seconds property (60s).",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L85-L120",
+          "version": "repo-lines-v1:sha256:0ce1064759aba171c39e1f1017130f8fedd7119d18efeb00ecb7b43505b69306:eyJzZWxlY3RlZExpbmVDb3VudCI6MzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxZTMwMmM0MTI5N2JkNmM2YmQzNzg5MTVmZjAwMjAyYjdkNWI0ODMzYjVhMGU2NTMyNTIxYjkwYTFhYTNhZTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ2MjlhMTM1NmZmYTVmMDhkYjY2M2IxNzc0NmJlMGE0MjJiMGYyNjRjYzUzMzAyMDBlMTBjNzIxM2ZlZDA3NzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc1YWJkNmIyY2M4OTE2YTllMjdlY2U0YTRhZWI5NjBjMTY4OGY1ZWU0NmNhNzIwZGU0M2JlZmUxOGQxYjcxMGEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java#L68-L97",
+          "version": "repo-lines-v1:sha256:d74c1f4624f09c58b894f1e112d6b63a1452335963afa4d362e9b3b36d801552:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1NjM1YTZiNjVhMTQ3MmYyY2M5ODJiODJhM2RhMmFiYzA0ZTBjMmE2ZjU4N2NhYzFlMjRmZTgzODUyNzFkYjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdlZTI4NGJhYzZiNzllMTZmMWE1MWYwZTIxNmYwOGFhZWNhY2Q3YjgxOTE4MTQwZjJhN2I4YjYxM2ZmZjU1ZGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/messages/ResultMessages.java#L9-L14",
+          "version": "repo-lines-v1:sha256:af1c800d91e9055ace44423acfc7f4b47d3297ef778d2862305d102b1f9e2c7b:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2E2MWU4OGRhY2QwNDg1M2U1YjRiYjcyNjFmZmViNmZiZGZjMGFiYmU5MmEyNDU3M2Q5MWJjZDZjMTdjN2FhMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTAwMGYwOTZkNThiZWUyMWMxMTc3NjhlZmM0YmFiZjg2NjkyZDIxNDEwZjY5NTgyYjVlZGMxMzIzMjIxYTA1OCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWVmMGZmYzg0MWQzNDE0MGE0NzYyZTAwY2Y2YzUxYjM5NDUyMTNkMzNhNjc0MzkxMWE4MzEzZDlkNzZiNTMxOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://src/main/resources/application.properties#L20-L21",
+          "version": "repo-lines-v1:sha256:0140bf9f8ec757d87574cb76ed2f44a5b5c59901802eb674fd9d962d86b32704:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmIxNzg2M2NiNzNiODY4YTVmODdiODcwOWM3MTYwODBmYzcwNTk5NDQ2NGFhMDlkMGEyZjk1MmQ2NzQxNDUxMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjA2YzlhNjQ0Zjg5Y2RhOTg4NTEwZDgxNzQ2NTBmMzVmYjc5NWM4MmI3NzZhNWI0NTdiMjg4Zjg0NTRjNjcwYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTI2NmQzODNkMGYyNmExMzg4MDMwODBjY2JkMzc5YWNlMGU0ZmRkNTY5N2Q0YjAxYzE0MmRlZTg0OTkwMGU0NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_237a74b9ed984b7881e7ac55e50d57b6",
+      "statement": "GlobalExceptionHandler is a @ControllerAdvice extending ResponseEntityExceptionHandler that maps the API's own FileNotFoundException and FileConversionException and IllegalArgumentException to 422 UNPROCESSABLE_CONTENT, ArdocoException to 500 INTERNAL_SERVER_ERROR, the custom TimeoutException to 408 REQUEST_TIMEOUT, and any other Exception to 500; it builds an ErrorResponse whose own status is reused as the ResponseEntity status, and because the API's FileNotFoundException shadows java.io.FileNotFoundException the 422 mapping intercepts empty-or-missing uploaded files rather than JDK file I/O errors.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/FileNotFoundException.java#L8-L16",
+          "version": "repo-lines-v1:sha256:91d5374be5474ea4c0f9ad1c81f8ac3b5aae6602557a2e7a8ec2a2ad38f8b150:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDBlNmRkOGNlYTUzMDIwMjBlYjJjNjU1YTU4MmUyYmRiYWZhNjk0MTkyODgwM2ZjOGFjZjliZWZkMGM2MWY4NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMWJkMDM5MmI1NzVhMWI3OTIyNzYwMzNmOTNkZTczYzUyNGVhZGIyYjM3MGE3ZWMyMTQzMmFhNzUxMWFjMjcxOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODU0NGMwNWI0YWZlZWFhZTY2NjVlZTZmMzhlN2E2OGM3ZmI4YjgzZjQ4MGIyZjQ3MTk1YzU5ZmRhYzFmZjY4MiJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java#L25-L49",
+          "version": "repo-lines-v1:sha256:b886c22208b1392915a004e3d50f2adcc5a6f2291a602bcbad64f5cc69fca1e9:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2Mzc0N2ZjNmRjMzc4MTMyM2Q5YTA4MGFmOTcwNDE2NjMyYjM4MDYxMjE5N2Q5Zjc5NzUxMTBjMTUzZmQyOWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU3MTU2NWJjMDA3Y2VjOGVmZGY4ZDQ1OGI0YmZmMjNjMmRlM2ZiNzY4M2FlM2VjY2U0ZTQzMzUzMjFiZTRmODIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFmMGNhZmQxZjQ1YjAwMDI4NTM4YTFkNzNkNTMxNmE1ZWJiNDM1NTkxMDhiNDM4NzdjMzBhN2FjOTk1YmU4N2MifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java#L57-L118",
+          "version": "repo-lines-v1:sha256:232ba6b1540effb5dcdabce6230e075e8ea5691f2293016e8416fe231b26b697:eyJzZWxlY3RlZExpbmVDb3VudCI6NjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJkMTk1NTk1MDkyMDIxNjkzZmVjYWVmNzc5ZmE0NDc5Y2U1YjJhYTc0ZTY1NGM5YWExNTFkYmY2MTAyYjMzMjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ1NDJjYzA2ZjYyZWJiYWE1YWIzMDFjMDJlNDc1ZmUzNWZhNjMwMzQxNzNmZTlhZGE3OTI1MzgwOWQxOWY4NWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwNGY4OWZjMGVjOThjOTgyNDE4M2U3OTVkM2VkZDE5ZTkzMGY3YmM0NzFmOTAxMmFhM2Q1MDNiZTJmODk3NGIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8f32996c90a54879a8af55ec78ad114e",
+      "statement": "ErrorResponse is the failure schema with three fields: timestamp (a ZonedDateTime stamped from the system clock in the no-arg constructor and serialized with @JsonFormat pattern dd-MM-yyyy HH:mm:ss z), status (HttpStatus serialized as the enum name), and message (defaulting to \"Unexpected error\" when only a status is given); unlike the success envelope it does not echo the request ID as a field.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ErrorResponse.java#L16-L52",
+          "version": "repo-lines-v1:sha256:183b4e406ac20a6c3ea924be6be415b2268dc3e54db0f5e09afce312dab4c3d7:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgxODE5Y2IwY2IzYWU1ODFkZDgwNWE5MjA2YTZjN2YxMjY4ZjFjMTdmNzE0ZWIxN2ExOTliYTMyNmRkYzA4NjkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFkODc1ZDA5M2ZjZDZmYTBhNzRlNTg1Y2FkMjZiZGU1OTUzZTEwZjJlZTQzOTBiOTUyOTUyNzdhYTc3ZjVjZmMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUxMDliMDc1ZmVhYjg4NDdmNzQ4NzYxYjgxZjhkODQxYTI0Nzk0ZjA0MGEwZjEwODVhZjUzYTU2OGM4MmNkZTMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a2c278774875443a88aee2a629e125ff",
+      "statement": "Failure provenance determines the HTTP code: input failures thrown synchronously in the controller/converter layer (empty or null multipart files, failed transfers, invalid additionalConfigs JSON, unknown model format strings) surface immediately as 422 before any pipeline starts, whereas pipeline failures are caught in runPipelineAsync which stores an \"Error: \" prefixed marker in Redis under the request ID and throws ArdocoException — the failure resurfaces as 500 both to clients blocked in waitForResult and to later queries reading the error marker via getResultFromDatabase, persisting until the Redis TTL expires, while unknown or expired IDs raise IllegalArgumentException and thus 422.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L144-L157",
+          "version": "repo-lines-v1:sha256:1526a661711a6da944c92f3401bc080d26d0c6882bda22a9697ce8a8e7496936:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI2ZTVjMmRkMDhiYmZiYjAxMTkwNWM4ZTcwMGQxNTViMGNmMDhmY2I5MjlkMTQ4MmI3YmYzYmQyOTc0ZjdiNjkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYyNmU5MTQ1MmFlOGFjYjA2NjZkMGQ0YjkxZTJjNjI1MGY3NTFkMGM1MjMzODU4NjUwN2E3ZjQzYzcxYzU4YzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java#L61-L82",
+          "version": "repo-lines-v1:sha256:a99da205f6f95efb41ebfd1956e6c5a5a0b6f23c1e1c499e6dc9c68fd2b0f4e1:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ1MDIxZjc4NzJlZDdhM2Q3NGQ2MjNhOTU1MjhlYjA1YmFkNDRmMWVlYzQyZjg4NjkxMmMxM2JlZGQ1ZTRmOTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE2OWUyYzU0NDA1YzQ1OWU5ZWY5NWViNjgyNTk0NTkxM2RhY2QxMDM2ZmI4OTdjYzUzZjMzZGY0OTc4NjJjZGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/ModelFormatTypeConverter.java#L17-L23",
+          "version": "repo-lines-v1:sha256:d07c542d25ec09c8b44d2627e6b0c3ad2678f378268a6bf8429187a5689fea23:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWVjMGMzMjIyZTY3OGUwYWFkZjEyZTEzYzcwODQzMzE4ZjU0MTJlNjdkZjk3ODcxZjBiMDdiZWIzOGMyZDJlMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzI1YmVjYjk1YjY1YjE1NDMzMTQ5ZGQxMmI5NWY0MjdmZThlOTMzNjIxODQ0NDBkMTQ5MjU3NGZlOGE4ZTNhZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L114-L124",
+          "version": "repo-lines-v1:sha256:e7ebfd3fd85b475ae1831a8ecfd2406ed9796abd78f549474eb99c2d2e304a81:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhNjJhMmIwNjY4NmFiYWRiNzMzMmY4NTQ5NzFkM2FmOGNmZDllOWZhNWNmZmEwNTlhMjk0MDJhMWFjNDkxNmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBhZDQ1YTU3YjBhMGQ2NzkwMDIzNWZmNGYwZTE1NzBkMjJkMjUxZTMwNzRlYzA4ZmM3NGYyZGEyNmQwNzRhNTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjZjNzMyZDYzMzM3NTc3N2U1NzgyYzY0OWQ1YjEwYzQxNDNmYmE5NjRmNzY0NDY2NjE3NzY1MDkxYzJhMjFlYWQifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java#L58-L66",
+          "version": "repo-lines-v1:sha256:7fcce0349951b76b7e1d7130350be586c8f3a553ef4af22fa5c6a0d6f71708b0:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDJlMTVlYmVjMWJkNmViYjk3YjI2MWY0MzdkYzQzOTljMjc2ZDc0MTAwMWZjZDg5OTNlZGRiY2JiMjIxMzBhOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTZiMDQ0OTE0Njk3MjJlODM2M2E5NGU0MDQ0NTM4ZTAxM2EyYTIxN2UzNmIxZTU2OGJhNjBhY2I3YjRjOGYyZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWQzNWM4YjZhYjk3MzkzMjYzODM2MzA0ZjRmNTA5ZmE5NTBjZjcwYzg2YTkwZTliMDU3MWExMzIwMDhiMmI2NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzliMmEwODJkOGY4MWY0ZGRjMTI0OWJhODY1ZWEwY2ZlOTA4NzYyZGQxMjEzYmJkNzdiNWZjYjBlYWYyYmFiNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_9d7fde34b3e14747be88814d53a30bc7",
+      "statement": "The observable behavior of an expired wait is 202 Accepted, not 408: the custom TimeoutException is never constructed anywhere in the code; ResultService.waitForResultHelper blocks on CompletableFuture.get(tlr.timeout.seconds, SECONDS), catches java.util.concurrent.TimeoutException, and returns Optional.empty(), which the controllers translate into the 202 + REQUEST_TIMED_OUT / REQUEST_TIMED_OUT_START_AND_WAIT responses; the GlobalExceptionHandler's 408 mapping for the custom TimeoutException is a defensive path for signatures that declare it.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java#L88-L97",
+          "version": "repo-lines-v1:sha256:d41eebf066a4f87e3aa3247f47afc167aa1e1aadac1d8d99cb5f0a48464da60a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJhYzI5ZjMwYjA4NzE2ZGQ2MjQ4NzFhZTYyZjJmYTg4OTczODg1ZjRhYzI4NDc2NWUzY2YyNjE0MjgwNzlkMTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQwYzY5MDJkMWM4NTU2MzBhNTA1MmI2YmEwYjZhZTMzOWViMmU1N2Y4ZDc5OTRlNjNmYzU2ZDYyNmM5N2U4ZjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/TimeoutException.java#L3-L12",
+          "version": "repo-lines-v1:sha256:adfaab833f507b60edc3b99b45799f53b78d737f4d8d5918971ef7e107aae083:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNhNzYxYzc0YWVmMDZkNmU0MzVhYjIzNWI1NWVhM2MzOTgxNTM4Zjc4MzBkNDViNjJiYTZmMjAzZmFiYmM5NDciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQxMGIzNmFhNzRhNTliY2Y0YTg4MTg1ODM3ZjY1OGFmYWYzNjQ2ZWZmMmJiMTZjMzkyOGQwZTkzMzVlOTQ1ZDIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjoyLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE4OTM5NWRmYmRmYmE3YjZmZjgzZDRkMjgwYzFkY2U3MWQzMmQzNmQ1NWNhYjczZjdmMDJjZjg1ZmM5ZjcyYTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ResultService.java#L70-L80",
+          "version": "repo-lines-v1:sha256:7ea2f7a987e7f38ddcecd0c492e072e7a8fa98b832496a363be2094bb080ad45:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUyNDU1MWYwYTA1Mjc0YjhmZGU3MTUyMjJmNjg3MjA1NDUzZWFiNGNhYjcyOTE1ZjcxZTkyMmViOGY5NmU3MGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNhMzEzNTdjYjJiMmYwZDMzZWE4MTg2Y2RhZTE0NzgyZjVlZjc0ZGJkMWI1ZTI0NGVhMzBlMzJlZmYwOWUwMTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwNGY4OWZjMGVjOThjOTgyNDE4M2U3OTVkM2VkZDE5ZTkzMGY3YmM0NzFmOTAxMmFhM2Q1MDNiZTJmODk3NGIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e501b23d2f8040548030cce0e12da761",
+      "statement": "The response model is pinned by tests: testUtil.TestUtils asserts the exact HTTP status, envelope status, message constant, traceLinkType, and result presence for every flow in the matrix (fresh start, cached start, not-ready get, timed-out and ready waits, invalid IDs, empty files); AbstractTLRControllerTest exercises the unknown-ID and empty-file paths end to end against a live Redis container asserting UNPROCESSABLE_CONTENT; and TraceLinkConverterTest pins that an empty trace-link list serializes to \"[]\", the minimum shape the @JsonRawValue contract relies on.",
+      "evidence": [
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L108-L133",
+          "version": "repo-lines-v1:sha256:0aafcc806c2627b044194a3855c5074bf857a69a8b5fabe53655db7d0599c0b3:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRjZjA5ZWIwYzU3NDRmYjk3MzMxYjk4ZmYzZmJmMDVhNjAyYmEzZjdmNjdlNWRhNWJlOTA5NTAzM2Y2MjU4MjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQxYWU0N2Q0MGI1ZjgzNmYxMjdjZDA4OWFhOTEzMTE5OTk4NmNmOWY5ZmMxZjg0Nzk0NGIzNWEyMDg1ZTc2ZDEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU1MDgxZDY2NDIzMmFkMzRjMDY3MDE0MWYyYjMwMmI1ZDdiMjc1ZWJmYjIxNGE1ODlhNmJjMzc1YTJkOGM3NDEifQ"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/util/TraceLinkConverterTest.java#L19-L31",
+          "version": "repo-lines-v1:sha256:b4b5c1fd49a290f9969f34fbce4548ba0f648cdd468cf1dabf83e5cb4298e011:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRjZjA5ZWIwYzU3NDRmYjk3MzMxYjk4ZmYzZmJmMDVhNjAyYmEzZjdmNjdlNWRhNWJlOTA5NTAzM2Y2MjU4MjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJiMzEzYjU2ZTBlYWNlYTdlMDc0OWRlM2UyMWNjNmQ4MDRkYWEwYjNmYzhiNjRmZGY2NDIyMDRiOTAwMGQwYzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/test/java/testUtil/TestUtils.java#L82-L174",
+          "version": "repo-lines-v1:sha256:6cb29a4f959415b334c195ab209ed66f4ef851174ec4cb51667cff8fa6875a5b:eyJzZWxlY3RlZExpbmVDb3VudCI6OTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRiMDJiOGY5NzZjNTY4NWQ2MmYxMjU3MWU0NjUwMzkxZWExMmY5YTkzYmYzM2VjZWE5NzEyZGQxMmM4NTk1OTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRhZGE0M2UyODE5MTBjOGIxYjNmOTI5MmZiMjY3NTI2YjA1OTA1NGRlMTc4NzFmNDBjMzFiNDIyZDE4ODNhMGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwNGY4OWZjMGVjOThjOTgyNDE4M2U3OTVkM2VkZDE5ZTkzMGY3YmM0NzFmOTAxMmFhM2Q1MDNiZTJmODk3NGIifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.2",
+    "at": "2026-10-26T12:24:12.222Z"
+  }
+}

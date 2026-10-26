@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:c58bb73b1aa3ffdb0555a9b5e1935a78b03ee8a5dde91ed124f6696a9c8ee325",
+  "claims": [
+    {
+      "id": "claim_1ed10eaff46746bf8afbbd06507e9d42",
+      "statement": "DatabaseAccessor is the application's persistence boundary: all four data operations (saveResult, getResult, keyExistsInDatabase, deleteResult) are keyed by the string request ID, both service base classes (AbstractService and AbstractRunnerTLRService) depend only on this interface, and RedisAccessor is annotated @Primary so it is the implementation Spring injects — enabling the backing store to be swapped by adding another DatabaseAccessor implementation without touching service code.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/DatabaseAccessor.java#L4-L41",
+          "version": "repo-lines-v1:sha256:31324c38651f2fa4e6c9b6a24f13a74bf113e63c023731d3ab26d331537129f1:eyJzZWxlY3RlZExpbmVDb3VudCI6MzgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcyYzI1ZWJhMjU0OGQxNWE3NjVhYWFhOTVmY2FmNWU1OGZkODY4MTA4MDI3NDk5N2U3YzIzMjc5NWFjNDdiOWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYyMDZhNzBhYzIzYWUzMjI1OTRhNGFjMDE1OTM1NTY4YmU1M2M2MjEyODdhZDFhNjAwODZlNDdjNWYyMmM5ZDgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessor.java#L13-L24",
+          "version": "repo-lines-v1:sha256:4d22bc7e6871e7169dbc922826604bf19c164607a0df87949e62ba8f909a3518:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYxZTQ5Y2Y2OTAzZmFiMTNlZGJjNGNjOGYzODQyYzUwMzUxZWYwYmIzMDAzMjgyOGRiMzA2YTEyZjdmMTBkM2QiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI3ZWJmN2NiMGIwMDJkN2Y3YWZjMzk2MzhlYjJiMDUxMTExMGE0ZjRhMjI3NWU4NDNjMjdiY2JkMWRkMDdhOTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImZjNmMxZDNhM2Y1ZmQyNWU5MTkxZTQ5NmE5OGMyYmFiMzlhYzAyOWI0Yzk1NWUwYjM4NDczMDA1ZmExMDNmMDMifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L43-L50",
+          "version": "repo-lines-v1:sha256:c9accfaaf8387817bfebf0af0af4862bf1c907a27e946369552696d00d905343:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDhjZGU2ODdhYmJmMDU3ZDRiN2Q3NzcwMjg0N2ExNmUyZDBjZDM1NmNhMjkxNjM2MDJkMjc4YzkyYjRiN2Y0OSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODkwNWRiMGRmODU4ODZhY2M3M2NhMmYwYjZhMGVjODM0MzI0ODhiNzY1ZTJhMDUyYmY0MmQ0NDUwNzM5MDFlNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNWY0NTBiMjQwOGQwYmRmZGNjMmYxN2Y4YTRiYTgyODc2NTA2OGM3YWI1MjA0ODc2ZmFhZmE3YjUzOWVhM2IyYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTMxODBlZTBkY2RhOGYwOGE2YjZmMmY0NWQyOThmZTRhY2MxMDU2ZDJhZDE5NTZjYWI2ZDY5MTRiYzk2OTEwOSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java#L33-L40",
+          "version": "repo-lines-v1:sha256:53350b2a9cb2fa213a67119ab3b6618be1397dfa8b541f952881dd8b0a397cb0:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDhjZGU2ODdhYmJmMDU3ZDRiN2Q3NzcwMjg0N2ExNmUyZDBjZDM1NmNhMjkxNjM2MDJkMjc4YzkyYjRiN2Y0OSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzBjYTg5NDEwZGNhYzEyNzBhM2FhNWJlYmYyMzU1NDQxMjk5MGIyZDBjZWY0NWRjNjg2ZTNkMGE5MmU4ODFmYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDY3NjEwZDM5ZmUyMjZiNDE2Y2M0YmNlOTY0NWNlNTkzMjJjYWI3ODI5NGYyZmE4MDYyMzdiY2M3NTYyZjVlYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGQzNWY5MmI1MWEzMTlmYmU1NTEzZDNhNTBkMDNiNTQwY2U0ZTI5NjQ2OGIwZTA3ZDY0MTZkNDQ3YzY1NDgwZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_15cc1807b1ac46cb8c9fec380769bea6",
+      "statement": "RedisAccessor reads its expiry from redis.time-to-live.hours (24 in application.properties) and writes every result through opsForValue().set(id, value, timeToLive, TimeUnit.HOURS), so every stored entry expires after 24 hours; reads are thin wrappers over opsForValue().get, null-safe hasKey, and delete.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessor.java#L17-L44",
+          "version": "repo-lines-v1:sha256:1295a3d87221c2856d9161195adeff80e0abdb702bc8d46f43403094d3feeb63:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlmOGQwMzU3ZDNiOTVjNzBkZWY5YzYyYjQyYmI0NTI5YTA3NWZmOGFhNzA5OWRmZjY4ZmE0MTY4NzMwODEwODYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg5NzYzMjk5ODJlOWQ1ZTVkYTA4NGYzZDZjMzg2ZTczOTczZTkyYzA3ZGRiZWZiOTY5ZDA0YWNiYzA0NWZjNzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhZTk2Y2UyYTM2ZmQzOGUzMjI0MjliN2IyZTExZWI3NzJmMTY3NzZlZGFmOWU0ZDk4NTg5ZDk4MDI4MWJlOTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3OTRkMDJhODEyMTk0NGQxNzZkMjY1ZTliYjljYzU5ZjZhYjg5MGJjYWRmOGFlZmRlYmRiYmI0ZjJlYTg0NDQifQ"
+        },
+        {
+          "resource": "repo://src/main/resources/application.properties#L10-L10",
+          "version": "repo-lines-v1:sha256:e1c8b462954dbaec1982b906567215af4c4c346e97a87e58623d0180ff8a4916:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTFjOGI0NjI5NTRkYmFlYzE5ODJiOTA2NTY3MjE1YWY0YzRjMzQ2ZTk3YTg3ZTU4NjIzZDAxODBmZjhhNDkxNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTFjOGI0NjI5NTRkYmFlYzE5ODJiOTA2NTY3MjE1YWY0YzRjMzQ2ZTk3YTg3ZTU4NjIzZDAxODBmZjhhNDkxNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmE3Njk2YWIwMGQ1MTNjMjdjYjI4N2EyMzUwNGZkNmE3NTk1MTBhOWFhZTY1MmU3ZWQzODEzMmI3NzBlNWE5MyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTg0ZWMzNmY2YmE4NjUwYmVkNjk2YWFmNjAxMzljMjNkNmMzMmQ3YjRjY2YxNzRlZGViNTU5OWNkY2YzOTVhYyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_26ee278936854d9282e83bc9d1280291",
+      "statement": "Successful pipeline runs store one plain string per request ID: the raw JSON payload built by ArDoCoApiResult.buildJsonString() ({\"traceLinks\":...,\"inconsistencies\":...}); AbstractService.getResultFromDatabase later parses the traceLinks and inconsistencies fields out of that string with Jackson.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java#L59-L61",
+          "version": "repo-lines-v1:sha256:fa56e9a057b94f70a0bf2c387d1ed0d56cab5f6866050f4038eda54bf71ded67:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWMwOGEzN2Y1MzQ0ZTc3YTg2NjBmZmUxZTFhYzQ2MzNlMDFkZTgzMDRiZTZkNTg1OTc0YjIwOGRhZGU2MjlmMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDk1YmU0NzU2ODkwMGU2NTVmZmNmYzkzMThiNjUxZjhiYTY3YTBhYjg2ZmFhYWM1MGEzZDM4NmQ3NWM5ZjY4NiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L108-L112",
+          "version": "repo-lines-v1:sha256:825ab010999750b947f8c9c8f2394044aa7dfa6cc0b76c5fff09ec6c157fdf22:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOThkY2FmYWViNDY5YmQ4YjJmNzU3MThmYzA2MzUwMmU4MTdmN2NhMDk0ZTUyNGU2ZGNhNTBjZmUxOWUwYjEzYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMGU4ZTdjYzliYjdiZGNkZDg4ZjQ2MzYyYWI0N2JlMWIyNTE0YTYzYjNmZGQwMTY1MWZjY2E4MGNlNjdkYWUzNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTk1YzhlMWNiMDI3NzExOTc2YTAzMzcyZWYyOGRiOTEzYWUxM2Y0ZGNjYzExMTAyMTc3OTU3ZjkxOWFmNTFiNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTExYzczYzFlMjgyYWU3Njc2ZWQ1NDJlNmZhYTk5OWM3MjUzODQ1MTNhMDljMWUxNGUxMzRjYzMwNDQ2Y2FlYiJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java#L69-L79",
+          "version": "repo-lines-v1:sha256:adaa90093e75337920e4ff11eddf67fcf63b84ca58f218cff0e2cfe14860aa81:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4NzhhMDdmNWU3MGFhMjU1NTZlYTAwYWVkZmVhNGRmOWVmOTllZTg2ZDI3NDI3NWUwM2I3ZTk3YjRmY2FkNDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdhNmRkMjU1M2VjNmI3Njg2MDdmMGRhZmE4ZTk1NjJmNmU0YjIzN2UzNTgxOTFkNzIzMzU5ODEzYTAxZTc3YTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVlMmI5ZTIxZmRjODZmYzJjMmVlNDQ3MjE4NWQ2NzY0NjdiZGQxY2JmMmUyNGI0ZGM2NDRhYjFhYmIzMzI1NDcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_f3ebe18f5bfd468ca010c9f7fd69dd75",
+      "statement": "Failed pipeline runs cache their error like a result: AbstractRunnerTLRService.runPipelineAsync stores \"Error: \" + message under the ID with the normal TTL, and on the read side getResultFromDatabase throws ArdocoException when the stored value is null or starts with the \"Error: \" prefix (AbstractService.ERROR_PREFIX), or IllegalArgumentException when the key is absent entirely — so within the TTL window a cached failure surfaces as an exception instead of a re-run.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L114-L118",
+          "version": "repo-lines-v1:sha256:566c35095660765227472bb8fcb557418f402fba5069c0b537d2b3b01bd249e1:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWE2MmEyYjA2Njg2YWJhZGI3MzMyZjg1NDk3MWQzYWY4Y2ZkOWU5ZmE1Y2ZmYTA1OWEyOTQwMmExYWM0OTE2ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWMwZTk0ZTU2YWNjNmFiODA4OWFhZmJjOGM1MDM1Zjc0OGIyN2UzZWYyNjU1M2NhOTg3ZThmY2NmMzFjNjNlMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGFkNDVhNTdiMGEwZDY3OTAwMjM1ZmY0ZjBlMTU3MGQyMmQyNTFlMzA3NGVjMDhmYzc0ZjJkYTI2ZDA3NGE1NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTQzY2I2MGY1ZDgwMWFiYTI5MWFmMzk5OGI0N2U2MzM5MWUxYjMwOWJmZjg4MzNiOTk0ZTIwOWUxY2JmMzE2MiJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java#L31-L66",
+          "version": "repo-lines-v1:sha256:61aa2764a440220f334fb55eee4c929fd8b0160cdf36ffe1f3d7eace2db6e03a:eyJzZWxlY3RlZExpbmVDb3VudCI6MzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlMjU5MmU1NGQ1NDg4MjMwZWIwNTIyOWNlMjYyNGM2OGU5OWI1Yjk0MWJhMDkzYzJmMDc3NDgwNDQ2NGU2YWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIyZjBmODc3MjAxM2VhMmMyZjAwNDQxMjFlNDE3MzQ2MWRiYzUwNmI5OTRlYTQxNjYyNGYxMmY2NjU5Y2VlN2UiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM5YjJhMDgyZDhmODFmNGRkYzEyNDliYTg2NWVhMGNmZTkwODc2MmRkMTIxM2JiZDc3YjVmY2IwZWFmMmJhYjUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_dd4a3a8fbeb942788397de221a8c992c",
+      "statement": "ApplicationConfig owns the Redis connection: it reads spring.data.redis.host and spring.data.redis.port via @Value, builds a LettuceConnectionFactory from an explicit RedisStandaloneConfiguration seeded with those values (the in-code comment notes this is required for the app to work with docker), and defines the redisTemplate bean that RedisAccessor injects.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ApplicationConfig.java#L22-L59",
+          "version": "repo-lines-v1:sha256:5caff484997db7ef32880a5c87361ab31a48b711f537db683a38416d6b683580:eyJzZWxlY3RlZExpbmVDb3VudCI6MzgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ2MGFhZmY1YTE0OTkyY2E0YjQ1ZDk2ZTFhMGM2MjEwMjhiYjM2NGVhMmE3YWRjZGE4MDViOWRmNmIzMzdkY2UiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQzNWNmY2VhYWY0Mjc4OGFlN2QwZTRhOWM3MjhhYzdkMGI0MzRjNDk4OTcyMmFiZWIwMmExNWUxNzQ4Zjk2Y2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdhMmQzZDQ5ZjY1NTA2NGFkZjRhZmRiY2IzZGJiNzgyODNiYzk1Y2MyM2JiMWFkNGFlNWFmMDhkNWFiMTE2YWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3OTRkMDJhODEyMTk0NGQxNzZkMjY1ZTliYjljYzU5ZjZhYjg5MGJjYWRmOGFlZmRlYmRiYmI0ZjJlYTg0NDQifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessor.java#L20-L24",
+          "version": "repo-lines-v1:sha256:9766447fc01d02bd3cf2b7d8531618bacc6a37306963acbf1be328f805bea855:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTBkZTYyNTQ2ZTk0ODI4M2ZmMGJjNjVkMWVjNTFiMDIxZmQ1ZWE1MWQxZTE3NDQxOTA3ZmRmNTM1ODYyOGUyZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZGU1ZTlkZjNmZjljZTJhN2FmZGEwZTY4NGFiNDZiNDYxNmY4Y2IzZmYwNGUyMGQ5ZDJiNzc4MWNlODVhYWJmOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmM2YzFkM2EzZjVmZDI1ZTkxOTFlNDk2YTk4YzJiYWIzOWFjMDI5YjRjOTU1ZTBiMzg0NzMwMDVmYTEwM2YwMyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_b935047e6277488fb69c7e38de536e52",
+      "statement": "Only the Redis host differs per deployment topology and is switched by Spring profile: application-docker.properties sets spring.data.redis.host=redis (the compose service hostname, matching the Dockerfile's ENV SPRING_PROFILES_ACTIVE=docker for container networking), while the default profile and application-local.properties both use 127.0.0.1; port 6379, empty username/password, and redis.time-to-live.hours=24 live only in the base application.properties and are not overridden by any profile.",
+      "evidence": [
+        {
+          "resource": "repo://Dockerfile#L12-L12",
+          "version": "repo-lines-v1:sha256:e54e84fbaa6dda909d2d6c2e21186071840c8808855650f1cd241e242a6eeb57:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTU0ZTg0ZmJhYTZkZGE5MDlkMmQ2YzJlMjExODYwNzE4NDBjODgwODg1NTY1MGYxY2QyNDFlMjQyYTZlZWI1NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTU0ZTg0ZmJhYTZkZGE5MDlkMmQ2YzJlMjExODYwNzE4NDBjODgwODg1NTY1MGYxY2QyNDFlMjQyYTZlZWI1NyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmVmMzM3ODBjZDgwODBmMTQ0OGUxN2FmZWNiMjUwNjFjNGZmNzQ0MDllMzk5MTQ1NDM2YzUxMTQ3MmFkYzBmYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNWViZDViMmJjMGM3YzIxOTM2NTllMmY3MDc1MjBhNjFlZTc5MjIxZDZmMTFlZDY1MDI3YmJmNWI0OTE1ZDcwOSJ9"
+        },
+        {
+          "resource": "repo://src/main/resources/application-docker.properties#L1-L2",
+          "version": "repo-lines-v1:sha256:a6d8c5c75ab9f62eb5a8a1ff4c5ce6d439f6480628a2b40745400db082c5b85b:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjIxNDk2OGI2ZjhkNWIzMjdhZWEyOWFmYTE3ZjA5N2IzN2M2MzA4MDQ0MjNjZDlmNDM5NWQyNDIzZTk1ZjdkNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTExYmU4NzMxODNmN2U1ZjE5NWZhYWEwNDVjMzFmYTI5MGU2ZjBhZTg4NWExYWEzYmExOGUzOTg3NWY3NmI0NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/main/resources/application-local.properties#L1-L2",
+          "version": "repo-lines-v1:sha256:8cc13dcff343b5014d3e0848e67a6d2e8d7d6a381cb237315973ad40b0aeda09:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjhmMjc1MjhjNDc1ZjE4NjNjMTkxMDBkMTQwMzM5ODdjMTIyNTJmYzE5YjQzZDFjNWExMTY5ZjZkNWRlZGU2NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZGVmOGNkZjI0YzlkMTI3ZjM2OTJjMTY5NjM2OTk1ZDM5MmExZjczM2I3Zjc2OGNkNzllN2Q5MTFiYTQ2OGIyNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/main/resources/application.properties#L6-L10",
+          "version": "repo-lines-v1:sha256:848038552fbb4faa5507c789128e74c9b2f000c1e851852c20ea1963de1bb888:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjRhYWI2MTdkYjY1ZWQxNDljN2JmMzNjNmZjMjIxZjg2Y2ZmNjJmYTlmMzMyYjM2YzAyNDdlMDEwODllYjQ4ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTFjOGI0NjI5NTRkYmFlYzE5ODJiOTA2NTY3MjE1YWY0YzRjMzQ2ZTk3YTg3ZTU4NjIzZDAxODBmZjhhNDkxNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmQ3NzIyOTc0OGU0M2RjMDM5YjU2NWM4M2UwYWQ2NmNhMTdmZGMzYzk0ZjNhYzVhZjcwZGNmODM4NmQ1NWMwZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTg0ZWMzNmY2YmE4NjUwYmVkNjk2YWFmNjAxMzljMjNkNmMzMmQ3YjRjY2YxNzRlZGViNTU5OWNkY2YzOTVhYyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_0c516f054153439a8a95d1981fb39420",
+      "statement": "CI (.github/workflows/ci.yml) runs mvn verify with SPRING_PROFILES_ACTIVE=docker next to a redis service container published on port 6379, but the test JVMs actually connect to Testcontainers-started Redis instances because the test classes override spring.data.redis.host/port via System.setProperty and @DynamicPropertySource, which take precedence over the profile property file.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/ci.yml#L13-L34",
+          "version": "repo-lines-v1:sha256:fa626ea6b51cf2765ffb9fbd670bee933363528e961c68d898980f6fc97cb8e0:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdlZTNjNjBkYjI1M2NiY2VhNzI0YWFkZDkxOGViOTQ2NjRmN2M2N2U3ODRmNzk2Zjc4NGNmMTAyMjA3ZDI2YmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxM2RhZDdjMmI5YzkwMWRiYzQ1NDEzNDdjNDc5ZjQ5OTY1MjdkZTYwNzRhZjY3ZGZmYjRmMGY0YjUzYmFmMGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjgxMDljMjc1YmMzOTRhYTg3OGEzYzBhNDZlNzQ1MWU4ZjE5ZjVmNWZkY2U2NzU2NDVkNjBjMjI0MDcwMzcwNDIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessorTest.java#L30-L45",
+          "version": "repo-lines-v1:sha256:a7ad238f48399c6777219af22407c96636fea50aaaf9eb7c00b5d6cc85dbeba9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFkYWQ3MzNhMGZlODRjMjk0ZGRmMzZjODZjMjkwNjg5ZmNhYTcwODBmZDNmNzA3MzgzMTg0ZDliMzJkZTJkMDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM3MTI5NzY5NjI2MjhkOTA5N2I2MDJlN2U2NGQzYWJjNDQwYjQzZGEwMzc1NTliNDVkNjlmNDNiZjI3YjQ1NzIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE0OGI3ZjY0ZmU2ZTAxNTNiYWI4YTc2ZTUyZTY3MjkxZTQ3OTI2ZTM4N2RhYWU1OGM2ZjdkZWY1NjY0YmE3MGYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e6eb328e6f3b4fceb65016390d1d37b4",
+      "statement": "docker-compose-template.yaml defines three services on the app-network bridge: redis (image redis, restart always, ./data:/data volume, command redis-server --bind 0.0.0.0 --port 6379, port 6379 only exposed — not published to the host), redisinsight (redis/redisinsight published at 127.0.0.1:5540, depends_on redis, ./redisinsight:/data volume), and app (built from the Dockerfile as ghcr.io/ardoco/rest, published at 127.0.0.1:8080, depends_on redis).",
+      "evidence": [
+        {
+          "resource": "repo://docker-compose-template.yaml#L1-L42",
+          "version": "repo-lines-v1:sha256:b63d7f4a2c2fbc2df5d37c34ec82b51d2bc29ecf6cb5711ee90adc5ae284109c:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZhNzNmY2NkYzk5ZWE4MzU5NjdjN2RlZTdlZmJlZDFmM2NhODcyNjBkOTI5MzE4NTBmZGQ2NmRhOGNiMTJmMWQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI5NjcwZTEyNjliODgxNzdhNGVjNzhmYWI1ODhjNDM2MzU2NGNkZDg1YWJlYzQwNDY0NjZhYmE4NTU0NzRjZDkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3816694f157f4c05b74fba9e36a44f86",
+      "statement": "As shipped, the containerized Redis runs unauthenticated and the documented credential flow is inert: the compose template does not wire redis/redis.env into the redis service, spring.data.redis.username/password are empty in application.properties, and the spring.config.import of the .env file is commented out; redis_template.env (REDIS_PASSWORD, REDIS_USERNAME, REDIS_HOST, REDIS_PORT) documents the intended flow and README instructs renaming it to redis.env, so enabling credentials requires local adaptation.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L9-L10",
+          "version": "repo-lines-v1:sha256:0c865cd8b46588d646774915b7a2ee2a5a371a7f189ae4a6dfa89de87ac33f53:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiM2MwMmViMTg2OTg3OWI1Y2QwOGQyYTYxMjY1YTI5NzFmMjBhMjFmNmQ3YzdmNzVmNDQ4MWRkZjRlNDMwOTA2ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2QxMDZkMTc1ODlmMzg1YjhmOTQ5YTNkMDk0Yjc1MWRiNTM4MDExNTNjOGExOGQ0NDgyNDEyODIxMjU3MWFjYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNGM5MjMwYWVmZmU1OGVkZjgzNDBiYWI5ZWI5ZmI3YzQ5ZDMzMjdiZmFlZWRmYjEzMDUyYmYwOTU3ODc1OWUzYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiN2NjOGM5MzM1MWU4OTAwZjg2ZTU4ZGEyYWU3NzZmYWQxZTMwYmZlN2M2MWJmZjczMDU0MzMxOTI4MmEwYzAxYSJ9"
+        },
+        {
+          "resource": "repo://docker-compose-template.yaml#L1-L25",
+          "version": "repo-lines-v1:sha256:6584b1af8f527e0e2aa84c94eda8cd620e8cb250784307839b4a3e7cac4aa424:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZhNzNmY2NkYzk5ZWE4MzU5NjdjN2RlZTdlZmJlZDFmM2NhODcyNjBkOTI5MzE4NTBmZGQ2NmRhOGNiMTJmMWQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBiYTA0YmY1MzEyN2FiNjBjODA4YWU3NTJjZWM2ZDE3NWZhNWMzZjM0YWE4MDU3ZGU3OWFmNDM0ZTY1OTUxMDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ2ZWIwMzZlODVmNjY0NWViMTk5ZjgwNTBiZWY4MGU0M2EyYzhmZDgxYzkzNzNmYWZiY2U1NjAwOGFjOTZkY2UifQ"
+        },
+        {
+          "resource": "repo://redis/redis_template.env#L1-L4",
+          "version": "repo-lines-v1:sha256:fe3ecd778e77d3d0f5f1dae04ec3272b28d88c8830c781821fb74792688f1f37:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODQ4ZWMzYmQ2MWJlN2MxMjdlMmE4NzU4OGUyZmJlMTliYzc2ZTE2NjRhMmMyMjdlMzdjNmIxODA1ZWEzODllZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZWViNjYzMDhmZTZjYmIyMTUzNzgxY2Q4MzM3MzVhNzA4MTA1NzRhNjU1Nzg4NGYwNDMwNDdiNGE0NmJmN2RhOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/main/resources/application.properties#L1-L9",
+          "version": "repo-lines-v1:sha256:4f5857a5af92340ca54401ac749a0756295074eb30897b789d5253b768959aae:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYThmZTRmZDY0Nzc1MDkwMDcyOTk2OGFjOTZhNmNiYmQxNjMzYmI2NTI5MTIwNWVlNWU1NWZmODRhMDRjY2FkNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2Y5OWE0YmNlNWIxMTUzYjE2YTJkYmMzZmFiZjU3YzdiNDljODM4NTJlODVmMDExMjczMTA5NWVmZTI5NTQ4YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjE5NDVjNjQ2Yzk1MWJhZmEzOTFlOWY0NDY4Y2ZlMzIwNTI0ODQ3ZDhhZTI3NDRmNjk5MDA5ZjQ4NjNkNjYwZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_8d94306f9b69475f8128cb438b17d593",
+      "statement": "Because 6379 is only exposed (never published) in the compose template, an application run on the host with the default or local profile (127.0.0.1:6379) cannot reach the containerized Redis unmodified — it needs a published host port in its local docker-compose.yml or a host-local Redis — while the full-docker topology (app container plus docker profile) works as-is.",
+      "evidence": [
+        {
+          "resource": "repo://docker-compose-template.yaml#L1-L25",
+          "version": "repo-lines-v1:sha256:6584b1af8f527e0e2aa84c94eda8cd620e8cb250784307839b4a3e7cac4aa424:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZhNzNmY2NkYzk5ZWE4MzU5NjdjN2RlZTdlZmJlZDFmM2NhODcyNjBkOTI5MzE4NTBmZGQ2NmRhOGNiMTJmMWQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBiYTA0YmY1MzEyN2FiNjBjODA4YWU3NTJjZWM2ZDE3NWZhNWMzZjM0YWE4MDU3ZGU3OWFmNDM0ZTY1OTUxMDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ2ZWIwMzZlODVmNjY0NWViMTk5ZjgwNTBiZWY4MGU0M2EyYzhmZDgxYzkzNzNmYWZiY2U1NjAwOGFjOTZkY2UifQ"
+        },
+        {
+          "resource": "repo://src/main/resources/application.properties#L6-L7",
+          "version": "repo-lines-v1:sha256:c87ae3b73d9d767d8e6e73e256ba73e9a39d646a618db639a3c211fe71ba12fa:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjRhYWI2MTdkYjY1ZWQxNDljN2JmMzNjNmZjMjIxZjg2Y2ZmNjJmYTlmMzMyYjM2YzAyNDdlMDEwODllYjQ4ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTczMTRlYTE5MTQwZWNkZjFkNjE2MGVlZjczZTA5MzAxZmZiNGE5YzkyNDU0NWVmM2U3YWVmMDkwNmUzYzc4NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNmQ3NzIyOTc0OGU0M2RjMDM5YjU2NWM4M2UwYWQ2NmNhMTdmZGMzYzk0ZjNhYzVhZjcwZGNmODM4NmQ1NWMwZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTFjNzJmM2U2NTE3Y2QxNmY5YjM3YWMxZjc1MmE1MDZkM2Q4ZjQzZDU4MDA5NTIwOTUwOTI5ZjMxNGQ2MTRhMSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_de8a7e7c6d2640a9a0f72bb7778fbca1",
+      "statement": "The application-level /api/health endpoint returns a static OK and does not verify the Redis connection; Redis reachability is instead observable via the actuator health endpoint, which application.properties exposes with management.endpoint.health.show-details=always, and spring data redis client activity is logged at DEBUG level by default.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/HealthController.java#L31-L34",
+          "version": "repo-lines-v1:sha256:cfc244d535c6be53c50a1014043d7aded062c46188e30c9162dd8946613de7e1:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDEwYmM3YjI0YTQzMDc0MDdmNTM3YzcxMjU1MTIwYzZkYjZlZDc3Y2IwOGNjOTVhYTQ1M2Q3YmNmN2FmZTM0MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzVjODRiMTQwYmEyZmY5MWIyNTk0N2U2NWIyOGJlZDlkMzAzOTQyNjYwNjVkNjQ5MzJjZWVhNjQ5ZWM3MDI2NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://src/main/resources/application.properties#L12-L19",
+          "version": "repo-lines-v1:sha256:11b6ae522318acd4a7a3dbb7e9662ce9776102bde4826ca47b3f39f7b1c44aaf:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzI1NjY3YjAwMjZlODU4YjZlZTZjZGYxYmFiMjY5MDBkNWI2ODk4MTQyOGVjYzFmNTNkZjk3ODZmOWY5YzFkMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTdjM2M2ZmFjYmM5ZDU1MzU1NzdmNjA0ODA4NWE5OGRiZGUyMDhiMzE5MTE1MmYwMTVhOTFiMTMwY2FmZWUxMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjBjYzQwZmUyYmI2OTUwNmU5MjMzMTg0MzEzODc4ZjBkM2M0YzUwOTE5NzdjMWQ1YzkyYzQ5OTZlNzljMjA4NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDE0MGJmOWY4ZWM3NTdkODc1NzRjYjc2ZWQyZjQ0YTViNWM1OTkwMTgwMmViNjc0ZmQ5ZDk2MmQ4NmIzMjcwNCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_b827257e6b724842b66b157863d773fb",
+      "statement": "ApplicationConfig carries @EnableRedisRepositories, but the api/repository package defines no Redis entities (@RedisHash) and no Spring Data repository interfaces — its only three types are the DatabaseAccessor interface, the RedisAccessor @Repository (template-based, not a Spring Data repository), and CurrentlyRunningRequestsRepository, which is a singleton in-memory ConcurrentHashMap of CompletableFuture<ArDoCoApiResult> tracking in-flight runs; all Redis persistence goes through RedisTemplate string operations.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ApplicationConfig.java#L17-L20",
+          "version": "repo-lines-v1:sha256:e6a773a31f4d42b068d50b3e7a82da2ded344c5be01a65a6693dfb1052f1c8f7:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGIxNDc2MmFhYWQ1OGQxMzg0NGNmMmVjNTQ3NDBhNGQ5N2Y1ZTA3ZWU1MTZkMzIwZDYwMzZjMWM3Y2U0MmRmZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDg2MGNjMGEzYjI2OTQ2OTExNmU4Y2NmNmE2YjAzNjFlNWM4YzUxODk5YjJmMTQxNzQxM2YzOWU3OWJhODc0YyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYWU0MzM0OTVkYTNlODkyNTViYTIyOWYwZGJkYzA2YTZjMWQxYzBjYTg4YzFmZTZhOTliOGI4MjAwNzUzN2FmNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGI0ZTFmMjM4YmRiZGYyOGM4ZTU3YjYyMDkxYjMwZmY4Yjk5YzA2MGQ0NjkyYzE3MWY0MzE0OTkxN2U2NDlhYiJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/CurrentlyRunningRequestsRepository.java#L17-L21",
+          "version": "repo-lines-v1:sha256:a2ed8604858d6ec52825bcdaa68d855b74b7433964dc5e0ac85e017eb5b17017:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzM2NDRkM2E3ZjEwMTVlMDhhNmZmOTFkNGJiNjBiOWE1MjA2MzRkMWRjYWM4YTZkYjcwNWYzMjZhMzY4Nzg4ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWE3MWIxNjk2YjNmMTcyOWZjYmNkOWMxMjQ5N2E4OTcyZGE2MGYwOWU3NjJjMmIwMjc0MzJjMzFmZDg1NWZiMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGVhMGZjMDczMjRhNDYxMTYyMWE3NmUxNzg0NTQ0YjEzZTU1N2NjMGUxODI4YmE3NjQ4YzMyOWVlMzQyNmZjZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjIyNDE5NDhjNDAwNTUwNjljYjE5MWU0YWQ0NTM1ODgyMGNmMDEyY2I5ODM4ZjI5NjUzZTY0OGUzMjE1NTQ3ZCJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/DatabaseAccessor.java#L8-L8",
+          "version": "repo-lines-v1:sha256:a90b80904eef5362b1993908fcd90c5cccf1f9f63e39b641f4b0caf2e20e7a90:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTkwYjgwOTA0ZWVmNTM2MmIxOTkzOTA4ZmNkOTBjNWNjY2YxZjlmNjNlMzliNjQxZjRiMGNhZjJlMjBlN2E5MCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTkwYjgwOTA0ZWVmNTM2MmIxOTkzOTA4ZmNkOTBjNWNjY2YxZjlmNjNlMzliNjQxZjRiMGNhZjJlMjBlN2E5MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmMxNTQyYzUzYTYxOWM2ODNmMGE2NGM4M2JmODBjYTgwOTM1OWZmMzJhOGI5NzRkNWIzNjJmYmFhOTExMjEwZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDEzMTgyNTM0MDY2NmIxNzU4OTQ0OTc5MzhhMWFmZjFmZWI4Zjc3OTU2ZjUzM2ZiY2U1MmRmYTY2ZWJjYzYxNSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessor.java#L13-L15",
+          "version": "repo-lines-v1:sha256:6212994cc03a6c8f6799025bcc3df3118be5a48de3dcef044f9f24904d43f917:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjFlNDljZjY5MDNmYWIxM2VkYmM0Y2M4ZjM4NDJjNTAzNTFlZjBiYjMwMDMyODI4ZGIzMDZhMTJmN2YxMGQzZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWFiZjk5Nzg0OTZkN2UxYzUzNTk0OTc3Njc0M2I5ZGVkZDM1M2QwYTZhZjg0ZWJmMDhmNGM2ODkwMzRjNGM0MiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjdlYmY3Y2IwYjAwMmQ3ZjdhZmMzOTYzOGViMmIwNTExMTEwYTRmNGEyMjc1ZTg0M2MyN2JjYmQxZGQwN2E5MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2ZiMDEyNWQ3YzQ1Yzk1NmVmMWE4MGEzYzkxZTg5YzA3MmFmYTZhMWM3YWU4NmRlYzQ2NWFlZmY1YTBjYmRiMiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_89567b938c104c2f89b2b94d2d8722fd",
+      "statement": "The redisTemplate bean is created without explicit serializer configuration, so Spring Data Redis' JDK-serialization defaults apply to keys and values; stored results therefore appear under binary-serialized keys (rather than the plain request-ID text) when inspected in RedisInsight or redis-cli.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ApplicationConfig.java#L55-L59",
+          "version": "repo-lines-v1:sha256:3dc863140e7e646276c776413274b4f1014926e2254163d50958add985aeeef5:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzVlNTkwNjljM2YzODc3MTllZmVkMjU2YzZjNGJmMjE5Y2NjNGY2ZTRiNDFhYmZkNDQ3NjFkNDU0OTIxNGQwOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZDM1Y2ZjZWFhZjQyNzg4YWU3ZDBlNGE5YzcyOGFjN2QwYjQzNGM0OTg5NzIyYWJlYjAyYTE1ZTE3NDhmOTZjYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjlkMWVjOTY1OWVhYjJlMGQzZjY1NWYzZmZkM2U0M2QyNjJjMzNhNWMxOTMwODkxZGNkNTVlYzk4ZmM2ZDdlMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzc5NGQwMmE4MTIxOTQ0ZDE3NmQyNjVlOWJiOWNjNTlmNmFiODkwYmNhZGY4YWVmZGViZGJiYjRmMmVhODQ0NCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_e79e52c66f364e729f3f3670a44e27f5",
+      "statement": "pom.xml declares both spring-boot-starter-data-redis and redis.clients:jedis:8.0.2, but no source code references Jedis — the active connection path is entirely the LettuceConnectionFactory from ApplicationConfig.",
+      "evidence": [
+        {
+          "resource": "repo://pom.xml#L131-L136",
+          "version": "repo-lines-v1:sha256:7c6d344062a460671f746365e89c3560412a4df4612b01ec845786a1c19a52ac:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmZmZmUxZTQyMzAxNGUwMTc5OTNlZmM5NjYyODAyZWEyZTZiNjI4MGE4NzUzYWY5NGE0ZTI5ZDU1NWEzN2FkNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzlmNzI2YzgzNGNjMTQ4YzZiMzdjYmQzY2UyOTc2NDQyMDFmMTAzYzZjYzMzNjljODIwNjY3ZDFkMzlhYzk5MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjljMWM1YmFiMTcyYzQxZWVkZmI0YzViYmFhMDNlNmFlOGMxOGE5NDExNWMwMzgyM2Y4MGE0YzlmOTU4N2JiYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjBjYzYyNjJhN2RmNGI4YmMzZjA1Njk4OGM1ZGQzZGVhMjNiYTc5MmRhZGZhNWM5ZTk1NTM3OGZlY2M0MWJjNSJ9"
+        },
+        {
+          "resource": "repo://pom.xml#L87-L94",
+          "version": "repo-lines-v1:sha256:7dc719b7c33a0abeb1d3645c79461e645821f3324fdedef6a0507426715df875:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjY2NGMwZmMxYWRlYzMzMWI1MTJhMzlmZDI4NjI5OWUzNDgyNzZkZDBhY2UyOTA1ZWYwODQyM2YwNGIyNWU2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzlmNzI2YzgzNGNjMTQ4YzZiMzdjYmQzY2UyOTc2NDQyMDFmMTAzYzZjYzMzNjljODIwNjY3ZDFkMzlhYzk5MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDFkODI2ZGU2N2QxYmNjNTZiMWU5MTUzOGQ4MDNiODUxZWNlYmFiMzI2NTBjZWE1MTkyYTM4ZmZhNzJkYTZhNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjUxZDVmM2MzNTBjNjRjOGNlMWM1NDBlN2FjODY1MThkZDhlNWJhZmNjMjk5MTU3ZGM2ZTZlNWI4OWQ2ZTgxYSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_e11daaa7c7b04129b47d7efb7d252487",
+      "statement": "RedisAccessorTest is a @SpringBootTest that starts a real Redis via a Testcontainers redis:7.0-alpine GenericContainer and overrides spring.data.redis.host/port dynamically; it verifies the accessor semantics — save-then-get round-trip with the ID echoed back, keyExistsInDatabase turning true, overwriting an existing key, null/false for unknown keys, and IllegalArgumentException for a null key.",
+      "evidence": [
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessorTest.java#L20-L91",
+          "version": "repo-lines-v1:sha256:a65980831961a05f9d4a84e70f59173f0497961226c97b39d8cfe9abade58da5:eyJzZWxlY3RlZExpbmVDb3VudCI6NzIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ5OGFmZjRlNjIwMWEwNzk0Y2ZiNmVjMjFjNmRhMDM5N2ZkMGZjYzI5ZGY5NGNiZWMyNDUzMTVhZDcwZGY0YjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZhYjRhYzhhNjA3ZWEwNDMzNTQwZjA5ZGRiNGI3MzU2YmVjNDU4NDljZGRlMzZlNjUyMGU1NDkyMWEyODYzNTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwNGY4OWZjMGVjOThjOTgyNDE4M2U3OTVkM2VkZDE5ZTkzMGY3YmM0NzFmOTAxMmFhM2Q1MDNiZTJmODk3NGIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_72a898d98ac74579955b7766a5637325",
+      "statement": "The controller integration tests (AbstractTLRControllerTest and its per-family subclasses) bind against the real Redis persistence: they inject RedisAccessor, assert keyExistsInDatabase at each stage of the start → poll → retrieve flow, and use deleteResult as cleanup; RedisConnectionTest and RedisRealConnectionTest are entirely commented-out shells providing no active coverage.",
+      "evidence": [
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/RedisConnectionTest.java#L6-L29",
+          "version": "repo-lines-v1:sha256:bf76168ed01bb4d5ade796e9d3a981bcf98bac9779f12204a0661d91879aef5f:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ5OGFmZjRlNjIwMWEwNzk0Y2ZiNmVjMjFjNmRhMDM5N2ZkMGZjYzI5ZGY5NGNiZWMyNDUzMTVhZDcwZGY0YjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIxY2UwNDcxNjZiMTIyN2I3YWQ4OGJiMDA4YWNlZmNiZDVjNDdiZTU2MWY4MTE4NGJhNmM5MzBkZjZlYjUyYmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/RedisRealConnectionTest.java#L1-L48",
+          "version": "repo-lines-v1:sha256:a05a585c49c73a183d7a31b2dfbc7f03aaf5f39169a00a710a610c462fca603e:eyJzZWxlY3RlZExpbmVDb3VudCI6NDgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUwYzZiZDQ3OWVhY2Q4ZmM3N2JiY2Q1NzhhZWRmYTExMWE2MDZhODNmOTU1YWJhZjdhNGZmNGJkOGY2NGM0Y2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI5MTA0MDgxZjQ3MTM4NDI3Nzg3ZjJlNjMzNjJmNDEzYWIyOWQxNTc3OTAzMGUxYmNlNWI0OWU2NDdiYWRmY2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L225-L232",
+          "version": "repo-lines-v1:sha256:6ba2358a38b62eb9fff78727fef302fb85417013b5f8adb2ee290779e6deb453:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODU2MDBlZGZlNGQ0MTQ5ZmY5NWVmYWM1ZTc4NTBjMTVjOTMzNTEzNTUzOTQ5YjI1Y2FhNDQ2OGM3MjBiNTc1MCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDNlMWM0YWU4MTYzZTU3MDk0Y2QwNDAzYWU3OGU2OGNiOWY4YmQxY2FjYzcxZjE0ZmZjZjQ0ZDljZWZlYjllMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODA0Zjg5ZmMwZWM5OGM5ODI0MTgzZTc5NWQzZWRkMTllOTMwZjdiYzQ3MWY5MDEyYWEzZDUwM2JlMmY4OTc0YiJ9"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L51-L65",
+          "version": "repo-lines-v1:sha256:7de72bf51dca35860e39e6ef686acb57baaee68f469428b26efe812a202e1299:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4Y2RlNjg3YWJiZjA1N2Q0YjdkNzc3MDI4NDdhMTZlMmQwY2QzNTZjYTI5MTYzNjAyZDI3OGM5MmI0YjdmNDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ2M2I1ZTIwMjczMTAxMWIwMzRkMThlMDhhZjJiYjIxMDI0OWI2NTk0YjNlNWRkYzkwYWNhOWI2ZjY5NmRhMDgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjUzZGM1YzIzMjZhYjg3ODUyNTBjNjNiZTk2NjMxMjkwNzE2YzgzNzkzM2FmMmJjMjdjNjQxM2M3MjMwOWYyNzcifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.2",
+    "at": "2026-10-26T12:24:12.222Z"
+  }
+}
