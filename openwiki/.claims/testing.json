@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:dce4a1e09dc5995fcc39d21cd347b0128aa815143b0da3af49ab39d130372f1e",
+  "pageVersion": "sha256:4f3709aa637f0b2f664517547b4bcb8eabd80f1156f07fbec1877f27155ea5ad",
   "claims": [
     {
       "id": "claim_ffd3d9ab2aae4a69bb3b187e020ba2fd",
@@ -222,21 +222,49 @@
     },
     {
       "id": "claim_399d6642892c44b49d9c34fa38c63a7a",
-      "statement": "The ArchUnit dependency is not declared in the module POM; it is inherited through the io.github.ardoco:parent dependency chain.",
+      "statement": "The ArchUnit dependency is not declared in the module POM; it is inherited through the io.github.ardoco:parent dependency chain. The test stack otherwise declared in the module POM comprises spring-boot-resttestclient and spring-boot-restclient (both test scope, providing TestRestTemplate for the controller tests), JUnit Jupiter pinned to 6.0.3 via a junit.version property plus explicit junit-jupiter-api/engine/params declarations overriding the parent POM, spring-boot-starter-test, and the testcontainers/testcontainers-junit-jupiter pair.",
       "evidence": [
         {
           "resource": "repo://pom.xml#L34-L138",
-          "version": "repo-lines-v1:sha256:cee271d5dee1ab831e72d7eff5ab2a52fbe6662c92ec1fea66c83bf8c772fa9a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTA1LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI3YjE3YTBjMmQyMTYwNTFkMDgwZWE2MDNhMmZlYzYzMzAzYmIyNTUxYTBhZTU1ZTM4M2E5Mzc0NjEzOTIwZDhjIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJmNDVmMDQzNWRhYjBjOWQ3YmZhYzY1YjVlNzIyZWY3MGI5NTY4NzMyN2Q2MTE2NzUwNGQ0OGFkNDE0NThjMTIwIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIwNzZmNGI1NDA2MjE1NmY0YzUzNDZjN2MzMTkyNWVlMzE0YThjNjQ1NGFiMzcyYzI4MTg1OTIyYWNiMDk5MTgxIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJjMDkzOTk0NzczMDgyM2MzNDZmOTg1OTAzOWQwYzQ2NWQ5NWU5N2Y2NmJiNGIzZWNmZmEzMTJlM2EyMjc1ZjdjIn0"
+          "version": "repo-lines-v1:sha256:75aa0955bc1648dfb07f636170f545313b309ddf95885147df6e7cedac0afadb:eyJzZWxlY3RlZExpbmVDb3VudCI6MTA1LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI3YjE3YTBjMmQyMTYwNTFkMDgwZWE2MDNhMmZlYzYzMzAzYmIyNTUxYTBhZTU1ZTM4M2E5Mzc0NjEzOTIwZDhjIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJmNDVmMDQzNWRhYjBjOWQ3YmZhYzY1YjVlNzIyZWY3MGI5NTY4NzMyN2Q2MTE2NzUwNGQ0OGFkNDE0NThjMTIwIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIwNzZmNGI1NDA2MjE1NmY0YzUzNDZjN2MzMTkyNWVlMzE0YThjNjQ1NGFiMzcyYzI4MTg1OTIyYWNiMDk5MTgxIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJjMDkzOTk0NzczMDgyM2MzNDZmOTg1OTAzOWQwYzQ2NWQ5NWU5N2Y2NmJiNGIzZWNmZmEzMTJlM2EyMjc1ZjdjIn0"
         },
         {
           "resource": "repo://pom.xml#L5-L9",
           "version": "repo-lines-v1:sha256:3d727fa8e0a2bdae9e67d80615c3d178863ea2ced9ce2152a76a660f3d334d6d:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTRhNDE0YWE2YmE1MDYyMTA2M2Y2YzhhOTQ1M2Q4MjgxMDk4MjUzNzk5YjVlMGE5ZDYxNmU5YTQ0MzgwOGVlOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGU2ZmRlYzY2ODA3YTUzODdlMDQ2ODQwNDhiY2NkNGVhY2NkYmJiOGZmNjgwZDNjOTc2ZWM4YWNkMzFjOGFhNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjkwNWY1NGU2M2U4ODJjNDA1NmMxNDk4YTdmZDQ3Y2U5OGUzYmY2ZjBkOWEzNmRhODBhNzBmZjZiOWMxNWRjMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzg1MTgxYTIxNThmODE5Mzc3NTI0YzljOTk1Mzc5ZmU3Y2VjMmRkZDI2NWVkODJjMTMzZDdjYzMwNTRkOTUyMSJ9"
         }
       ]
+    },
+    {
+      "id": "claim_0c6053c2570446feb9b4cac290574e75",
+      "statement": "The controller tests drive the running application through org.springframework.boot.resttestclient.TestRestTemplate, which comes from the spring-boot-resttestclient test dependency declared in the module POM (spring-boot-restclient is also test-scoped there), instead of the older spring-boot-starter-test TestRestTemplate.",
+      "evidence": [
+        {
+          "resource": "repo://pom.xml#L74-L81",
+          "version": "repo-lines-v1:sha256:7d27fa395171ffbfa97608f9343147d0d6d492f0196b411f4858f9458570e39a:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDdmYTJkMWE0MmE2NjIzMjcxOTI5OTlhZDBhZDA4ZTM1Y2Q3ZDYyOGE3MzJhOTkyMjU3Mzg2Nzc1MzgwNDE0NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTQ5N2NhYzBiNjg4MTg4NzQxYzk3NmQzYjYxODk1MzFhZDQyYTYwYWE3ZDUxZmM1MmJlMjBhOWNiODRlNjY1MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjEwMzRiYjg0ZjA1ZWEzM2E2NjMxYTNkZTdlZWUwODYwNDk5MjU2MTU5ZjQyYTcwMmYwOTY2NGU4MjkwMzRjNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiN2M5Y2Q1YTBjOTYyZWY1ZDUxYWI0MDZjZjk5YTdjNDZlOTY5YWQwNmM0NTFkNThkYWRjYzU2MzI5ZDlhNjI0NSJ9"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L16-L38",
+          "version": "repo-lines-v1:sha256:9ca4b4a75a91eba69dc976865b62520633e3fb73f236fd749b544f9a02d11ddc:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNjYjkwMzRiOWIwYTIxMGQwOGZmNjMxOGUxYzY2MmZiODk0MDdmZGQ1ZTgzOTdmNmQyYzQzMDFkNDY3YzFmY2UiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdkNWRiNzQxNTc4M2ZlMmY4ZDljMjU5ZjljZmM5ZDgwOWJiN2NiM2QzNjgwNzVhOWI2MGU2YjZmZTI5YjEzZmMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjlmYzM5MDBiZTVmOWUxNzZiZDVjZDA3OTY5YWI0NzJhZTE1NzYzMmVhYzJiZGU1NDFhNTA5YTI2ZTk1MDdkOGEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ff64dc8883b448b7b7ab9e9a1b8b8571",
+      "statement": "JUnit Jupiter is pinned to version 6.0.3 in the module POM via a junit.version property (with a comment noting it overrides the parent POM's JUnit version with Spring Boot 4.0.6's version) and explicit junit-jupiter-api, junit-jupiter-engine, and junit-jupiter-params test-scope declarations, alongside the version-managed junit-jupiter aggregate artifact.",
+      "evidence": [
+        {
+          "resource": "repo://pom.xml#L110-L129",
+          "version": "repo-lines-v1:sha256:4b1fff6c85cb0678e242851d77cd761bc7947d331e9be857192875494d8bef58:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNzAyMjhjODhkZWE4MDJiMmJjYTI5MmI0OTI2MWYyZmM4ZDMxZTYxMDUzMWQ3OGJlZjgwZjVhNDA1ZWQzNWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0OTdjYWMwYjY4ODE4ODc0MWM5NzZkM2I2MTg5NTMxYWQ0MmE2MGFhN2Q1MWZjNTJiZTIwYTljYjg0ZTY2NTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM4MzAyNWZhM2E3Y2NiZjk0ZTNkZmMyYmJiM2QxNzZmZmI5NDQwMzIyZjBhNWM2MmQ3MDE4ZDQxNGVjYjQ3ZWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU2ZDgxMTNjNmMwY2FhZGU1ZDhmNTJjZTdlOWUwYzNiZjBmMTRhNDMyMDg5N2YzMzgzMGI0YTBiNzRjOGJmMWYifQ"
+        },
+        {
+          "resource": "repo://pom.xml#L16-L20",
+          "version": "repo-lines-v1:sha256:4a5f5852b93a10fb1521bdef4057d99c862f45308080ef79222b0513fc255b7a:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZDA4ZTI4OTE5NGM2ZmUxMjhjNmZhZGEzMzllYWZmNThjMjJiOTc2ZTkyZjExODJhOTg3MDgzNmVlYTU2MTJlYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmNjYjljN2EzOTJmMjU3YjRjNjA2MjQxYjNjZWQ3ZjRiYjNiYTI3YjYwZGZhNWE1NzVjYjc3NTZlOTI5ZWE4ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDNjZGRlZGQxNWIxM2MyMjU5OWE3YmM5Yjc5NmQxMWUyODQxY2RjZGJhMDNhOGZlY2E5ZTMwZjI3ODNkNzE1NCJ9"
+        }
+      ]
     }
   ],
   "verification": {
-    "by": "openwiki/0.7.2",
-    "at": "2026-10-26T12:24:12.222Z"
+    "by": "openwiki/0.7.3",
+    "at": "2026-11-02T14:56:49.573Z"
   }
 }

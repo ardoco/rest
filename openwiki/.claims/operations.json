@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:3b224c9a142b22ad466610d3eb98bae41aa5c9b0b8fd0203a483d044935ab81f",
+  "pageVersion": "sha256:7a8424d82c58a68331dd8083d1c49a9acf28c63fd3e3e8822c2d5eff35cff35c",
   "claims": [
     {
       "id": "claim_e41c29edde844c368f6843e280c71bb1",
-      "statement": "ArDoCo REST builds as io.github.ardoco:rest:2.1.0-SNAPSHOT on the io.github.ardoco:parent:2.1.0 parent POM; Spring Boot is managed by importing the spring-boot-dependencies 4.1.1 BOM into dependencyManagement, and the spring-boot-maven-plugin repackages the executable jar with main class edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication while the Failsafe plugin binds integration-test and verify to the integration-test phase.",
+      "statement": "ArDoCo REST builds as io.github.ardoco:rest:2.1.0-SNAPSHOT on the io.github.ardoco:parent:2.1.0 parent POM; Spring Boot is managed by importing the spring-boot-dependencies 4.1.2 BOM into dependencyManagement, and the spring-boot-maven-plugin repackages the executable jar with main class edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication while the Failsafe plugin binds integration-test and verify to the integration-test phase.",
       "evidence": [
         {
-          "resource": "repo://pom.xml#L158-L210",
-          "version": "repo-lines-v1:sha256:1aae8f712a36f20f80c9fac163015625568e16d5167f990d80158fe3c088a529:eyJzZWxlY3RlZExpbmVDb3VudCI6NTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFiZjlkNmFmMmVmOTY1Y2ZiNGI0ZmMwZmU2Mzg3NmMwOTVjYzgzYzljYmZmZTlhMTk5ODgzNDM2OTViMzQ4N2IiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdiMGQwZjhjMjFhM2VhYjNjZDJjZmU1OTAxNDQyYTA1YmU1OGI1MDQwOTU5NDQzNTRiY2ZiNWEzMjM5ZjhlNzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVlOGYwYWUzNjMzMzFiZTQzNjgwMjU4MzkwMGY3OWRkNzQ5OGFmMTAyMDVhNjJhMjg3ZTAzMzkxNzAzOTg4M2EiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg3YWQxMmI1ZWE5MGFkMTUyNTExYWYzZWU3OTQzYjMxZDZmOGFlOWZkNTE0YmEzOTUxYjk5ODJhYmQyZWMzYjkifQ"
+          "resource": "repo://pom.xml#L158-L212",
+          "version": "repo-lines-v1:sha256:4cfb2191c4230a7ae41f49463e7bd18271dd68700edf74e364ad9ce08644e345:eyJzZWxlY3RlZExpbmVDb3VudCI6NTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFiZjlkNmFmMmVmOTY1Y2ZiNGI0ZmMwZmU2Mzg3NmMwOTVjYzgzYzljYmZmZTlhMTk5ODgzNDM2OTViMzQ4N2IiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI2ZTMyYTMwZjNmMjBiYmM4MmY1YzUzZDQ4MDg4M2RhODk0OWQwYWJhYTllZGQwNWFkMzJjZDdhYzRlMjc5ZTciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVlOGYwYWUzNjMzMzFiZTQzNjgwMjU4MzkwMGY3OWRkNzQ5OGFmMTAyMDVhNjJhMjg3ZTAzMzkxNzAzOTg4M2EiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         },
         {
           "resource": "repo://pom.xml#L22-L32",
-          "version": "repo-lines-v1:sha256:489f7589b8097790f733cd9627569934df854ffa73b485a07c889a11c486c21f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYyMmQ3YTJjMDhlYzVjZjc3YTc0YTA4NGI5YzRlOTA4N2I2YzNkZDlmNDIzNDE0ZTNjNmQ3ZDIzMGI0YmJlYWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcwMmQwMjBhMjQ3NjEzMDlkMWRlNGQxOGFkZDU2OTc1NzlhMjliNTRiOTk1ZWE3Zjc1NDE4NzE0M2ZlODQ1NTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVjMmNiNjQ4MjkzOGYzZmRlODY4NTJmMDIyYmEzMjY5ZWNmZTQ1NDQ4OTVmNzg2YzZkNjI0ZGI3ZTIyZGFlMmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI2N2U2ZmYzMWFhMzAyM2E2ZWQ5OTRhNmZkZWM2ODJkNmZhOWRkOGIwZGU1NzJlYTg1YWQ0NDAwODliNDExZDAifQ"
+          "version": "repo-lines-v1:sha256:4e2eac7a15be687ef530f54aa5c7e8da64e4d5233ec0dd066bf52b7517e8e849:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYyMmQ3YTJjMDhlYzVjZjc3YTc0YTA4NGI5YzRlOTA4N2I2YzNkZDlmNDIzNDE0ZTNjNmQ3ZDIzMGI0YmJlYWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcwMmQwMjBhMjQ3NjEzMDlkMWRlNGQxOGFkZDU2OTc1NzlhMjliNTRiOTk1ZWE3Zjc1NDE4NzE0M2ZlODQ1NTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVjMmNiNjQ4MjkzOGYzZmRlODY4NTJmMDIyYmEzMjY5ZWNmZTQ1NDQ4OTVmNzg2YzZkNjI0ZGI3ZTIyZGFlMmIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI2N2U2ZmYzMWFhMzAyM2E2ZWQ5OTRhNmZkZWM2ODJkNmZhOWRkOGIwZGU1NzJlYTg1YWQ0NDAwODliNDExZDAifQ"
         },
         {
           "resource": "repo://pom.xml#L5-L12",
@@ -269,10 +269,38 @@
           "version": "repo-lines-v1:sha256:6758b5b57cb662da42616fe2884984be444da8407c704d9c0b35ec24ed21881f:eyJzZWxlY3RlZExpbmVDb3VudCI6NzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg0NDY4ODRhNzJlNGZkMWE3YTQyYzNlY2Y0NTY2ZGQ5YmNjN2UyNTA5Y2M1MDQ1ZDZlNWQ2Y2U0NjkyOGVjMzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ1NDJjYzA2ZjYyZWJiYWE1YWIzMDFjMDJlNDc1ZmUzNWZhNjMwMzQxNzNmZTlhZGE3OTI1MzgwOWQxOWY4NWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwNGY4OWZjMGVjOThjOTgyNDE4M2U3OTVkM2VkZDE5ZTkzMGY3YmM0NzFmOTAxMmFhM2Q1MDNiZTJmODk3NGIifQ"
         }
       ]
+    },
+    {
+      "id": "claim_cb85a6ba35ef4712ba51c34e19c301c2",
+      "statement": "The pom adds two test-scope Spring Boot artifacts — spring-boot-restclient and spring-boot-resttestclient — alongside spring-boot-starter-test, and the controller integration tests use them: AbstractTLRControllerTest imports TestRestTemplate from org.springframework.boot.resttestclient and drives its HTTP calls with it.",
+      "evidence": [
+        {
+          "resource": "repo://pom.xml#L83-L92",
+          "version": "repo-lines-v1:sha256:f736590ab2e195556e58b6bff04e669710b693bedee37bab1b8a0a92554ca4c6:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI2NjRjMGZjMWFkZWMzMzFiNTEyYTM5ZmQyODYyOTllMzQ4Mjc2ZGQwYWNlMjkwNWVmMDg0MjNmMDRiMjVlNjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA3ZmEyZDFhNDJhNjYyMzI3MTkyOTk5YWQwYWQwOGUzNWNkN2Q2MjhhNzMyYTk5MjI1NzM4Njc3NTM4MDQxNDYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRlMDhkYTNmZjEzZjNhYjU4ZjRiN2Y1ZTk3MjQwYTNiMzBmZDRlY2Q2NDVkZGEzMjI1ODAyYjc4MTUxMjZmYzciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg5MDczNDZiYTExZjhiMzIxYzllYTNkM2VjYmJhNjgyZmY4NjMxMDY2MTM0OTBkNTIzZmE2ZjNiZmIzNzFkZWEifQ"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L16-L49",
+          "version": "repo-lines-v1:sha256:36a7688a4cfc666f1b2f3208bca220d4940cc5b97da02ca6015cf5609ddf8e86:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNjYjkwMzRiOWIwYTIxMGQwOGZmNjMxOGUxYzY2MmZiODk0MDdmZGQ1ZTgzOTdmNmQyYzQzMDFkNDY3YzFmY2UiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY1OWZhYjFlNzczYzc1YTMyM2NiOGZjZDQ2ZjNmNGU3YmMzZGM5YzQ0YzRjZDNjNTRkNGFiZTBhNGVlNTJhZTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdkNWRiNzQxNTc4M2ZlMmY4ZDljMjU5ZjljZmM5ZDgwOWJiN2NiM2QzNjgwNzVhOWI2MGU2YjZmZTI5YjEzZmMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBiZTI2Y2RjYTU4ZjU5YzY0NzdhMDRjZmMxZGNlNTY4MTY2OWE3NDBmYThlZTBjMWQxYmZiMTRlNDI3MjZhNmIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_17cd05954a024cd3a351edf875df4ccc",
+      "statement": "The pom declares the Jedis client (redis.clients:jedis, compile scope, currently 8.0.2), but no Java source or test references it — the runtime Redis path is Spring Data Redis over Lettuce via the LettuceConnectionFactory and RedisTemplate beans in ApplicationConfig. The declaration is dead weight and must not be mistaken for the active persistence client.",
+      "evidence": [
+        {
+          "resource": "repo://pom.xml#L131-L136",
+          "version": "repo-lines-v1:sha256:7c6d344062a460671f746365e89c3560412a4df4612b01ec845786a1c19a52ac:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmZmZmUxZTQyMzAxNGUwMTc5OTNlZmM5NjYyODAyZWEyZTZiNjI4MGE4NzUzYWY5NGE0ZTI5ZDU1NWEzN2FkNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzlmNzI2YzgzNGNjMTQ4YzZiMzdjYmQzY2UyOTc2NDQyMDFmMTAzYzZjYzMzNjljODIwNjY3ZDFkMzlhYzk5MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjljMWM1YmFiMTcyYzQxZWVkZmI0YzViYmFhMDNlNmFlOGMxOGE5NDExNWMwMzgyM2Y4MGE0YzlmOTU4N2JiYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjBjYzYyNjJhN2RmNGI4YmMzZjA1Njk4OGM1ZGQzZGVhMjNiYTc5MmRhZGZhNWM5ZTk1NTM3OGZlY2M0MWJjNSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ApplicationConfig.java#L40-L61",
+          "version": "repo-lines-v1:sha256:08dbd694aab8ec51ab3ea74eedfe757aa048fb87d931dde5321e9712fb6c78f4:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFmMWE4YmFhZTBjNmRjYjUwNmUyNmM4ZDFhYjZiZDg2ZDZmMGUxYTc3NTZlNmZkODdhOWRhMDNkN2FhNGFlZTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyOTBmYTU0ZTcwOTQxMzBhOGRlYTYwZWQ0Mzc3MGM4ZmRhNjQyMjEyM2QzNTBmZThhY2QzYjdhM2EwYzkyNzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
     }
   ],
   "verification": {
-    "by": "openwiki/0.7.2",
-    "at": "2026-10-26T12:24:12.222Z"
+    "by": "openwiki/0.7.3",
+    "at": "2026-11-02T14:56:49.573Z"
   }
 }
