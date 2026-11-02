@@ -5,8 +5,8 @@ description: "How to build, run, deploy, and observe ArDoCo REST: Maven builds o
 tags: [operations, build, maven, spring-boot, docker-compose, dockerfile, spring-profiles, ci, github-actions, redis, redisinsight, endpoints, actuator]
 openwiki_generated: true
 verified:
-  - by: openwiki/0.7.2
-    at: 2026-10-26T12:24:12.222Z
+  - by: openwiki/0.7.3
+    at: 2026-11-02T14:56:49.573Z
 sources:
   - id: openwiki-source-79b37831c9c81206da1d88ec
     resource: repo://.github/dependabot.yml
@@ -56,15 +56,19 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java
   - id: openwiki-source-dcb821af11b2c9f3ac31b92e
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ResultService.java
+  - id: openwiki-source-bf5c518e98898c34abe35f38
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ApplicationConfig.java
   - id: openwiki-source-e3ffd60732c9031388dc514a
     resource: repo://src/main/resources/application-docker.properties
   - id: openwiki-source-c8948fffa3abb80f9c097fd5
     resource: repo://src/main/resources/application-local.properties
   - id: openwiki-source-ece093ad10b91f3da0b7e34f
     resource: repo://src/main/resources/application.properties
+  - id: openwiki-source-0ead47b845f38f77026ad2b9
+    resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java
   - id: openwiki-source-6a5bbd855283885f6ff02dc6
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessorTest.java
-generated: { by: "openwiki/0.7.2", at: "2026-10-26T12:24:12.222Z" }
+generated: { by: "openwiki/0.7.3", at: "2026-11-02T14:56:49.573Z" }
 ---
 
 # Operations
@@ -83,11 +87,13 @@ Other build wiring: Spotless formatting (repo-root config in `formatter.xml`, `s
 
 ### Dependency management quirks
 
-Three quirks matter when changing dependencies:
+Five quirks matter when changing dependencies:
 
-1. **Spring Boot BOM import.** `pom.xml` does not use Spring Boot as its parent; instead it imports `org.springframework.boot:spring-boot-dependencies:4.1.1` into `dependencyManagement` with `scope=import`, on top of the ArDoCo parent POM.
-2. **JUnit version override.** `<junit.version>` is pinned to `6.0.3` with the stated intent of overriding the JUnit version inherited from the parent POM by the Spring Boot-managed one. For the override to take effect, `pom.xml` additionally declares explicit `junit-jupiter-api`, `junit-jupiter-engine`, and `junit-jupiter-params` dependencies pinned to `${junit.version}`, while the `junit-jupiter` aggregate stays unversioned so the BOM manages it. Dependabot's config confirms the alignment is deliberate and manual: it ignores `org.junit.jupiter:*` with the comment "JUnit is aligned manually with the version managed by Spring Boot (junit.version in pom.xml)". (The inline comment still names "Spring Boot 4.0.6" although the imported BOM is 4.1.1.)
+1. **Spring Boot BOM import.** `pom.xml` does not use Spring Boot as its parent; instead it imports `org.springframework.boot:spring-boot-dependencies:4.1.2` into `dependencyManagement` with `scope=import`, on top of the ArDoCo parent POM.
+2. **JUnit version override.** `<junit.version>` is pinned to `6.0.3` with the stated intent of overriding the JUnit version inherited from the parent POM by the Spring Boot-managed one. For the override to take effect, `pom.xml` additionally declares explicit `junit-jupiter-api`, `junit-jupiter-engine`, and `junit-jupiter-params` dependencies pinned to `${junit.version}`, while the `junit-jupiter` aggregate stays unversioned so the BOM manages it. Dependabot's config confirms the alignment is deliberate and manual: it ignores `org.junit.jupiter:*` with the comment "JUnit is aligned manually with the version managed by Spring Boot (junit.version in pom.xml)". (The inline comment still names "Spring Boot 4.0.6" although the imported BOM is 4.1.2.)
 3. **`ardoco.version` snapshot property.** The four ArDoCo libraries (`common`, `pipeline-id`, `pipeline-tlr`, `text-preprocessing`) use the inherited `${ardoco.version}` property from the parent POM, which tracks ArDoCo snapshot builds. The pom therefore enables the Sonatype snapshot repository (`https://central.sonatype.com/repository/maven-snapshots/`, snapshots enabled, releases disabled) next to Maven Central. The REST layer's dependency on these runners is covered in [ArDoCo runner integration](integrations/ardoco-runners.md).
+4. **New test-scope Spring Boot starters.** The pom declares `spring-boot-restclient` and `spring-boot-resttestclient` (both `test` scope) next to the usual `spring-boot-starter-test`; the controller tests import `TestRestTemplate` from `org.springframework.boot.resttestclient`, so these two dependencies are what make the integration tests compile under Spring Boot 4.
+5. **`redis.clients:jedis` is declared but unused.** The pom lists `jedis` at compile scope (no version-property indirection, currently `8.0.2`), but no Java source or test references Jedis — the runtime Redis path is Spring Data Redis over Lettuce (`LettuceConnectionFactory` in `ApplicationConfig` plus `RedisTemplate`, see [Redis persistence integration](integrations/redis.md)). Treat the declaration as dead weight to remove (or wire up deliberately) rather than as the active Redis client.
 
 Note the Java version split: verification (CI) runs on Temurin **Java 21**, while the container image builds and runs on **Java 25** (`maven:3-eclipse-temurin-25-alpine` build stage, `eclipse-temurin:25-jre-alpine` runtime).
 
@@ -179,7 +185,7 @@ The service exposes:
 
 | Endpoint | Purpose |
 | --- | --- |
-| `http://localhost:8080/swagger-ui/index.html` | Swagger UI (springdoc-openapi-starter-webmvc-ui 3.1.1) |
+| `http://localhost:8080/swagger-ui/index.html` | Swagger UI (springdoc-openapi-starter-webmvc-ui 3.2.0) |
 | `http://localhost:8080/v3/api-docs` | Generated OpenAPI specification |
 | `http://localhost:8080/actuator/health` | Spring Boot Actuator health, with `show-details=always`; only `health` is in the exposure include list |
 | `http://localhost:5540` | RedisInsight GUI (separate container) |

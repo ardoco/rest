@@ -4,9 +4,6 @@ title: "Testing"
 description: "What the ArDoCo REST test suites cover and what to run after a change: the Testcontainers-based controller integration tests per runner family (AbstractTLRControllerTest), the RedisAccessor container tests, the utility unit tests (FileConverter, HashGenerator, TraceLinkConverter), and the ArchUnit ArchitectureTest rule."
 tags: [testing, testcontainers, controller-integration-tests, redis, archunit, junit, ci, mvn-verify]
 openwiki_generated: true
-verified:
-  - by: openwiki/0.7.2
-    at: 2026-10-26T12:24:12.222Z
 sources:
   - id: openwiki-source-164e2da859b5277df81c7d94
     resource: repo://.github/workflows/ci.yml
@@ -46,7 +43,10 @@ sources:
     resource: repo://src/test/resources/bigBlueButton/bbb.repository
   - id: openwiki-source-fe6ea4bbcfa4165dae50b647
     resource: repo://src/test/resources/bigBlueButton/bigbluebutton.txt
-generated: { by: "openwiki/0.7.2", at: "2026-10-26T12:24:12.222Z" }
+generated: { by: "openwiki/0.7.3", at: "2026-11-02T14:56:49.573Z" }
+verified:
+  - by: openwiki/0.7.3
+    at: 2026-11-02T14:56:49.573Z
 ---
 
 # Testing
@@ -188,6 +188,18 @@ static ArchRule disallowLog4j = noClasses().that()
 ```
 
 In other words: **no class in the application may depend on Log4j classes (`org.apache.logging.log4j.LogManager` or `org.apache.logging.log4j.Logger`), except `ArchitectureTest` itself** — which imports Log4j classes precisely to reference them in the rule. New code must log through SLF4J (`org.slf4j.Logger` / `LoggerFactory`), which is what the production code uses. Adding a `log4j` import anywhere outside `ArchitectureTest` will fail the build. The ArchUnit dependency is not declared in the module POM; it comes through the `io.github.ardoco:parent` dependency chain.
+
+## Test dependencies (pom.xml)
+
+The module POM (`pom.xml`) declares the test stack explicitly rather than relying on the parent POM's defaults:
+
+- `spring-boot-resttestclient` (test scope) provides `org.springframework.boot.resttestclient.TestRestTemplate`, which `AbstractTLRControllerTest` uses to drive the running application; `spring-boot-restclient` is also declared with test scope.
+- JUnit Jupiter is pinned to 6.0.3 via a `<junit.version>6.0.3</junit.version>` property (overriding the version managed by `io.github.ardoco:parent`) and explicit `junit-jupiter-api`, `junit-jupiter-engine`, and `junit-jupiter-params` declarations, alongside the managed `junit-jupiter` aggregate.
+- `spring-boot-starter-test` (test scope) supplies Mockito (used by `FileConverterTest`) and the Spring test utilities (`@SpringBootTest`, `@LocalServerPort`, `@DynamicPropertySource`, `MockMultipartFile`).
+- `testcontainers` and `testcontainers-junit-jupiter` back the `GenericContainer` Redis containers.
+- The Redis connection itself uses `spring-boot-starter-data-redis` (Lettuce); the `jedis` client (8.0.2) is declared as a production dependency, not a test-only one.
+
+The Failsafe plugin binding (integration-test + verify) and the Spring Boot repackage configuration are in the POM's build section, so `mvn verify` covers unit and integration tests in one lifecycle.
 
 ## What to run after changes
 

@@ -4,9 +4,6 @@ title: "OpenWiki quickstart"
 openwiki_generated: true
 description: "Entry point for coding agents: one-paragraph system summary, task-routing map into the wiki hierarchy, and the key conventions (request-ID hashing, Redis persistence, async execution) needed before touching code."
 tags: [quickstart, overview, ardoco-rest, task-routing]
-verified:
-  - by: openwiki/0.7.2
-    at: 2026-10-26T12:24:12.222Z
 sources:
   - id: openwiki-source-17e67da21bbb452f6e1b70e3
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java
@@ -52,7 +49,10 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArDoCoRestApplication.java
   - id: openwiki-source-ece093ad10b91f3da0b7e34f
     resource: repo://src/main/resources/application.properties
-generated: { by: "openwiki/0.7.2", at: "2026-10-26T12:24:12.222Z" }
+generated: { by: "openwiki/0.7.3", at: "2026-11-02T14:56:49.573Z" }
+verified:
+  - by: openwiki/0.7.3
+    at: 2026-11-02T14:56:49.573Z
 ---
 
 # OpenWiki quickstart
@@ -63,9 +63,8 @@ ArDoCo REST is a Spring Boot application — entrypoint
 trace-link recovery pipelines over HTTP. It offers four runner endpoint families, each with its own
 controller under `/api` (ArDoCode/sad-code at `/api/ardocode`, ArCoTL/sam-code at `/api/arcotl`,
 SWATTR/sad-sam at `/api/swattr`, TransArC/sad-sam-code at `/api/transarc`) plus an
-inconsistency-detection workflow at `/api/find-inconsistencies` and a shared
-<!-- openwiki: broken internal link [src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java] file "src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java" does not exist. Fix the href or restore the target, then delete this comment. -->
-[ResultController](src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java)
+inconsistency-detection workflow at `/api/find-inconsistencies` and a shared `ResultController`
+(`src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java`)
 for `/api/get-result/{id}` and `/api/wait-for-result/{id}`. Each start endpoint accepts multipart
 uploads, converts them to temporary files, derives a content-hash request ID, and hands a pre-built
 ArDoCo runner to the service layer, which runs the pipeline asynchronously on a
@@ -82,9 +81,8 @@ The application provides REST access to several ArDoCo trace-link recovery workf
 - **SWATTR / sad-sam** (`SAD_SAM`, prefix `swattrResult`): textual documentation + architecture model
 - **TransArC / sad-sam-code** (`SAD_SAM_CODE`, prefix `transarcResult`): combined architecture, documentation, and code workflow
 
-<!-- openwiki: broken internal link [src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java] file "src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java" does not exist. Fix the href or restore the target, then delete this comment. -->
-The prefixes live in the [`TraceLinkType`](src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java)
-enum and double as Redis key prefixes. Auxiliary endpoints: `/api/configuration` (reflection-derived
+The prefixes live in the `TraceLinkType` enum (`src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java`)
+and double as Redis key prefixes. Auxiliary endpoints: `/api/configuration` (reflection-derived
 ArDoCo default configuration), `/api/health`, and `/` which redirects to the Swagger UI at
 `http://localhost:8080/swagger-ui/index.html`; actuator health is exposed at
 `http://localhost:8080/actuator/health`.
