@@ -3,8 +3,8 @@ type: "Reference"
 title: "Workflow: result retrieval and waiting"
 openwiki_generated: true
 verified:
-  - by: openwiki/0.7.2
-    at: 2026-10-26T12:24:12.222Z
+  - by: openwiki/0.9.0
+    at: 2026-11-09T15:26:30.664Z
 sources:
   - id: openwiki-source-176362edb7d4360cef66ced2
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java

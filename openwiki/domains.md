@@ -5,8 +5,8 @@ description: "The five trace-link recovery and inconsistency-detection domains o
 tags: [domains, trace-link-recovery, runners, api-endpoints, inconsistency-detection, naming]
 openwiki_generated: true
 verified:
-  - by: openwiki/0.7.2
-    at: 2026-10-26T12:24:12.222Z
+  - by: openwiki/0.9.0
+    at: 2026-11-09T15:26:30.664Z
 sources:
   - id: openwiki-source-176362edb7d4360cef66ced2
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java
@@ -50,7 +50,7 @@ sources:
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java
   - id: openwiki-source-afbc8fe03b772afdcb77babf
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamCodeControllerTest.java
-generated: { by: "openwiki/0.7.2", at: "2026-10-26T12:24:12.222Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-09T15:26:30.664Z" }
 ---
 
 # Domains
@@ -95,7 +95,7 @@ The application distinguishes between:
 - retrieving a result later by ID
 - waiting for a result later by ID
 
-`ResultController` exposes the shared retrieval endpoints, and they are **cross-family**: `/api/get-result/{id}` and `/api/wait-for-result/{id}` serve any family's result, because IDs are self-describing — `TraceLinkType.fromId(id)` matches the ID prefix regardless of which start endpoint produced it. `ResultService` implements both operations against the two stores (in-flight futures and Redis): `getResult` returns empty while the request is in flight, and `waitForResult` blocks on the registered future rather than polling Redis. Unknown or expired IDs surface as 422 errors; a cached pipeline failure surfaces as a 500. See [Request IDs and result caching](concepts/request-ids-and-caching.md) for the dedup/TTL semantics and [Response and error model](concepts/response-and-error-model.md) for the exact status/message pairing.
+`ResultController` exposes the shared retrieval endpoints, and they are **cross-family**: `/api/get-result/{id}` and `/api/wait-for-result/{id}` serve any family's result, because IDs are self-describing — `TraceLinkType.fromId(id)` matches the ID prefix regardless of which start endpoint produced it. `ResultService` implements both operations against the two stores (in-flight futures and Redis): `getResult` returns empty while the request is in flight, and `waitForResult` blocks on the registered future rather than polling Redis. Unknown or expired IDs surface as 422 errors; a cached pipeline failure surfaces as a 500. The step-by-step execution and retrieval flows — including the exact wait budget behavior and the `202 Accepted` timeout outcome — are documented in [Pipeline execution](workflows/pipeline-execution.md) and [Result retrieval](workflows/result-retrieval.md); [Request IDs and result caching](concepts/request-ids-and-caching.md) covers the dedup/TTL semantics and [Response and error model](concepts/response-and-error-model.md) the exact status/message pairing.
 
 ## Input conventions
 
@@ -146,6 +146,7 @@ The repository contains multiple naming conventions that are useful to keep stra
 - **endpoint names** in the enum: `ardocode`, `arcotl`, `swattr`, `transarc`, `other` — these are what the controller tests use to build `/api/<endpointName>/start`
 - **runner classes**: `Ardocode`, `Arcotl`, `Swattr`, `Transarc`, `InconsistencyDetection`
 - **service bean names**: `sadCodeTLRService`, `ArCoTLService`, `swattrService`, `transArCService`, `InconsistencyService`
+- **runner setup signatures and temp output dirs**: each family's `setUp` call and its `ardoco-<family>` temp directory prefix (`ardoco-sad-code`, `ardoco-sam-code`, `ardoco-sad-sam`, `ardoco-sad-sam-code`, `ardoco-id`) are documented in [ArDoCo runners integration](integrations/ardoco-runners.md); the TLR runners take `ArchitectureConfiguration`/`CodeConfiguration` objects while `InconsistencyDetection.setUp` takes the files and `ModelFormat` directly.
 
 The drift is visible in several places: the TransArC runner class is `Transarc` while its controller and service are `TransArCController`/`TransArCService`; the ArDoCode runner is `Ardocode`; test class names (`ArDoCoForSadCodeControllerTest`, `ArDoCoForSadSamTLRControllerTest`, `ArDoCoForSadSamCodeControllerTest`) use different names than their controllers; and some Swagger annotations still say "ardoco-pipeline" or "Arcotl". When adding a family, prefer the current controller/service names in code and keep the `TraceLinkType` binding, ID prefix, and endpoint path consistent — the docs and source both show naming drift over time, so user-facing docs should be updated carefully.
 
@@ -156,6 +157,9 @@ Adding a new family means: a new `TraceLinkType` entry (label + ID prefix + endp
 ## Related pages
 
 - [Architecture](architecture.md) — layering, the request lifecycle, and the runner-setup trade-off
+- [ArDoCo runners integration](integrations/ardoco-runners.md) — runner classes, their `setUp` signatures, ModelFormat conversion, and the throwaway temp directories
+- [Pipeline execution](workflows/pipeline-execution.md) — what happens between a `/start` call and the runner running
+- [Result retrieval](workflows/result-retrieval.md) — the retrieval endpoints, polling, and the wait budget in detail
 - [Request IDs and result caching](concepts/request-ids-and-caching.md) — how family IDs are constructed and why they enable caching
 - [Response and error model](concepts/response-and-error-model.md) — the envelope, the per-family payload shapes, and the status/message pairing
 - [Testing](testing.md) — the per-family controller tests and what to run after changes

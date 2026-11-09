@@ -1,7 +1,7 @@
 ---
 type: "Reference"
 title: "Testing"
-description: "What the ArDoCo REST test suites cover and what to run after a change: the Testcontainers-based controller integration tests per runner family (AbstractTLRControllerTest), the RedisAccessor container tests, the utility unit tests (FileConverter, HashGenerator, TraceLinkConverter), and the ArchUnit ArchitectureTest rule."
+description: "What the ArDoCo REST test suites cover and what to run after a change: the Testcontainers-based controller integration tests per runner family (AbstractTLRControllerTest plus subclasses), the RedisAccessor container tests and the Testcontainers Redis pattern, the utility unit tests (FileConverter, HashGenerator, TraceLinkConverter), the ArchUnit ArchitectureTest rule, and the change-sensitive areas."
 tags: [testing, testcontainers, controller-integration-tests, redis, archunit, junit, ci, mvn-verify]
 openwiki_generated: true
 sources:
@@ -9,6 +9,8 @@ sources:
     resource: repo://.github/workflows/ci.yml
   - id: openwiki-source-2355f81d7cf522f8dbdaabd4
     resource: repo://pom.xml
+  - id: openwiki-source-f5df1fa4999bf0efe9f01e6b
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java
   - id: openwiki-source-fbe8e79a4110d3bef05db863
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java
   - id: openwiki-source-dcb821af11b2c9f3ac31b92e
@@ -43,10 +45,10 @@ sources:
     resource: repo://src/test/resources/bigBlueButton/bbb.repository
   - id: openwiki-source-fe6ea4bbcfa4165dae50b647
     resource: repo://src/test/resources/bigBlueButton/bigbluebutton.txt
-generated: { by: "openwiki/0.7.3", at: "2026-11-02T14:56:49.573Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-09T15:26:30.664Z" }
 verified:
-  - by: openwiki/0.7.3
-    at: 2026-11-02T14:56:49.573Z
+  - by: openwiki/0.9.0
+    at: 2026-11-09T15:26:30.664Z
 ---
 
 # Testing
@@ -59,6 +61,8 @@ All tests live under `src/test/java` in two roots:
 
 - `edu.kit.kastel.mcse.ardoco.tlr.rest` — the controller tests (`AbstractTLRControllerTest` plus four subclasses), the Redis tests (`RedisAccessorTest`, `RedisConnectionTest`, `RedisRealConnectionTest`), the utility tests (`FileConverterTest`, `HashGeneratorTest`, `TraceLinkConverterTest`), and `ArchitectureTest`.
 - `testUtil` — `TestUtils`, a shared helper class for the controller tests.
+
+This matches the current tree: `ArchitectureTest` sits directly in `.../tlr/rest`, the controller tests in `.../rest/api/controller`, `RedisAccessorTest` in `.../rest/api/repository`, `RedisConnectionTest`/`RedisRealConnectionTest` in `.../rest/api`, and the three utility tests in `.../rest/api/util`.
 
 ```mermaid
 flowchart TD
@@ -89,7 +93,7 @@ System.setProperty("spring.data.redis.host", redis.getHost());
 System.setProperty("spring.data.redis.port", redis.getMappedPort(6379).toString());
 ```
 
-The comment in `AbstractTLRControllerTest` shows a commented-out alternative using `@ServiceConnection` and `@DynamicPropertySource`; the active approach keeps the container shared across all subclasses of the base test. `RedisAccessorTest` combines both mechanisms (`System.setProperty` plus `@DynamicPropertySource`).
+The comment in `AbstractTLRControllerTest` shows a commented-out alternative using `@Container`, `@ServiceConnection`, and `@DynamicPropertySource`; the active approach instead starts the container manually in the inherited static `@BeforeAll`. Because that `@BeforeAll` runs once per concrete subclass, every controller test class provisions its own container and repoints the JVM-wide `spring.data.redis.*` system properties at it — the controller tests never stop their containers explicitly, whereas `RedisAccessorTest` stops its container in `@AfterAll`. `RedisAccessorTest` combines both mechanisms (`System.setProperty` plus `@DynamicPropertySource`).
 
 Because every Redis-backed test class provisions its own container, the suite requires a working local Docker daemon (or a remote Docker host), but it does **not** depend on the CI `redis` service container. The CI workflow (`.github/workflows/ci.yml`) runs `mvn verify` on `ubuntu-latest` with Java 21 and `SPRING_PROFILES_ACTIVE=docker`, and declares a `redis` service container published on port 6379 — the Testcontainers-based tests override the Redis host/port dynamically, so they bypass that service container. The Maven Failsafe plugin is bound to the `integration-test` and `verify` goals, so the full suite runs as part of the `mvn verify` lifecycle.
 
@@ -115,7 +119,7 @@ flowchart TD
 
 This asserts the dedup behavior of the API directly: re-running `start` and `start-and-wait` with the same inputs must return the cached result (HTTP 200 with `RESULT_IS_READY`) instead of dispatching a new pipeline, because the content-based request ID is unchanged. The test also asserts the key's absence in Redis before the pipeline finishes and its presence afterwards, tying the API response contract to the actual database state. `test_runPipelineAndWaitForResult_helper` accepts two legal outcomes for a fresh `start-and-wait` call: HTTP 200 with a ready result already in the database, or HTTP 202 with the `REQUEST_TIMED_OUT_START_AND_WAIT` message (the wait budget is `tlr.timeout.seconds`, 60 s) — in the latter case the test then polls `wait-for-result` until ready.
 
-Each subclass supplies one abstract hook: `prepareRequestEntityForEmptyFileTest(projectName)` builds the multipart request for the empty-file rejection test.
+Each subclass supplies one abstract hook: `prepareRequestEntityForEmptyFileTest(projectName)` builds the multipart request for the empty-file rejection test (emptied text for sad-code/sad-sam/sad-sam-code; emptied architecture model for ArCoTL).
 
 ### Subclass → family mapping
 
@@ -128,7 +132,7 @@ Each subclass supplies one abstract hook: `prepareRequestEntityForEmptyFileTest(
 
 There is **no controller test** for the `InconsistencyController` (`/api/find-inconsistencies`) — the inconsistency workflow has no dedicated test class. The subclasses build their requests with real `bigBlueButton` fixtures from `src/test/resources/bigBlueButton/` (`bigbluebutton.txt`, `codeModel.acm`, `bbb.repository` for PCM, `bbb.uml` for UML), so they exercise the actual `ModelFormat` binding and the actual ArDoCo runner setup, not mocked runners. The three architecture-model families (ArCoTL, SWATTR/sad-sam, and sad-sam-code) are each tested against both `ModelFormat.UML` and `ModelFormat.PCM`.
 
-The subclass test methods carry `@Timeout(value = 3, unit = TimeUnit.MINUTES)` — the shared `runPipeline_start_and_getResult` helper in the base class is itself annotated with a 6-minute timeout, and the `ArDoCoForSadSamCodeControllerTest` PCM variants use 6 minutes, reflecting the heavier TransArC pipeline.
+The subclass test methods carry `@Timeout(value = 3, unit = TimeUnit.MINUTES)` — the shared `runPipeline_start_and_getResult` helper in the base class is itself annotated with a 6-minute timeout, and in `ArDoCoForSadSamCodeControllerTest` three of the four tests use 6 minutes (both PCM variants and the UML start-and-wait variant; only the UML start test keeps 3 minutes), reflecting the heavier TransArC pipeline.
 
 ### Error paths
 
@@ -147,7 +151,7 @@ Each subclass then supplies its own empty-file fixture: the sad-code test emptie
 - parses a `ResponseEntity<String>` into an `ArdocoResultResponse` (reading `requestId`, `message`, `status`, `traceLinkType`, and the raw `traceLinks`/`inconsistencies` JSON);
 - asserts the exact status/message/traceLinkType pairings for every flow using the `ResultMessages` constants: fresh start (`RESULT_IS_BEING_PROCESSED`), cached start (`RESULT_IS_READY`), not-ready get (`RESULT_NOT_READY` on `ACCEPTED`), ready get (`RESULT_IS_READY` on `OK`), timed-out wait (`REQUEST_TIMED_OUT`), ready wait (`RESULT_IS_READY`), and `start-and-wait` timeout (`REQUEST_TIMED_OUT_START_AND_WAIT`).
 
-Because every pairing is asserted explicitly, changing a message constant, a status pairing, or the `traceLinkType` derivation breaks the build — the response model is pinned by these tests. The response model itself is documented in [Response and error model](concepts/response-and-error-model.md).
+Because every pairing is asserted explicitly, changing a message constant, a status pairing, or the `traceLinkType` derivation breaks the build — the response model is pinned by these tests. Two helpers in `TestUtils` are currently dead code: `testStartPipeline_new` and the parameterless `setUpRequestParamToStartPipelineBBB()` are defined but never called by any test. The response model itself is documented in [Response and error model](concepts/response-and-error-model.md).
 
 ## Redis tests
 
@@ -167,7 +171,7 @@ The details of `RedisAccessor` and its TTL behavior are documented in [Redis per
 
 The three utility tests pin the conversions that sit between the HTTP layer and the runner/Redis:
 
-- **`FileConverterTest`** (uses `@TempDir` and `MockMultipartFile`): verifies `convertFilesToByte` concatenates the raw bytes of all files in list order (the byte stream that feeds the request-ID hash); that an empty file list throws `FileNotFoundException` with `"File list is empty"`; that an empty multipart upload throws `FileNotFoundException` with `"The file with name testfile.txt is empty."`; and that a `transferTo` failure throws `FileConversionException` with `"Error occurred while transferring the MultipartFile to File"`. The multipart-to-file conversion is the mechanism that creates the temporary files consumed by the pipeline.
+- **`FileConverterTest`** (uses `@TempDir` and `MockMultipartFile`): verifies `convertFilesToByte` concatenates the raw bytes of all files in list order (the byte stream that feeds the request-ID hash); that an empty file list throws `FileNotFoundException` with `"File list is empty"`; that an empty multipart upload throws `FileNotFoundException` with `"The file with name testfile.txt is empty."`; and that a `transferTo` failure throws `FileConversionException` with `"Error occurred while transferring the MultipartFile to File"`. It also verifies `convertMultipartFileToFile` round-trips the upload into a file of the same original name in the temporary directory.
 - **`HashGeneratorTest`**: verifies identical file contents produce identical hashes, that a multi-file hash differs from the single-file hash of the same content, that different content produces different hashes, and that empty file lists (`FileNotFoundException`) and unreadable files (`FileConversionException`) raise the expected exceptions. This is the direct guard for the hash part of request-ID generation; see [Request IDs and result caching](concepts/request-ids-and-caching.md).
 - **`TraceLinkConverterTest`**: pins that an empty trace-link list serializes to `"[]"` — the minimum shape the `@JsonRawValue` contract of `ArDoCoApiResult` relies on. (The converter's per-family payload shapes are documented in [Response and error model](concepts/response-and-error-model.md).)
 

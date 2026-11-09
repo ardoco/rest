@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:fbe07ac55848acb6ebc5c60e2e33a2f3db7517ce6d4090bebe84557a7c7e3a6f",
+  "pageVersion": "sha256:de3de56b80200479b33760e04f8364e1e3913c5bb80553abeb8c98010fd7796e",
   "claims": [
     {
       "id": "claim_9ed3f975733348bf978e7da679ed2428",
@@ -84,15 +84,11 @@
     },
     {
       "id": "claim_f3f137ecfc704da39e7846c8d89ff477",
-      "statement": "The REST layer performs no file-type validation beyond the empty-file check in FileConverter — whether the uploaded file is a valid PCM, UML, or OpenAM model is checked by ArDoCo itself when the runner runs; this is documented (\"So far no file checks have been implemented. This is left to ArDoCo itself\"), so the REST layer only rejects empty files (422) and lets ArDoCo surface format errors as pipeline failures (500).",
+      "statement": "The REST layer performs no file-type validation beyond the empty-file check in FileConverter — whether the uploaded file is actually a model of the requested architecture format is checked by ArDoCo itself when the runner runs; this is documented (\"So far no file checks have been implemented. This is left to ArDoCo itself\"), so the REST layer only rejects empty files (422) and lets ArDoCo surface format errors as pipeline failures (500).",
       "evidence": [
         {
           "resource": "repo://architecture_decisions.md#L39-L41",
           "version": "repo-lines-v1:sha256:1d0f4be5fbadf7f6b1ed71504ab187eb0fbb74b937bd8473b80eded490ac08d9:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYmIxNjFiNGQwNjJiMWJhOWUxZGE2NDExMjdhOGZmY2I1YWNiNjQxNWZkNTQzNWM3YjIwMDc0ZTU1ZGI0ZmNhNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDY0ZWQxNTRjY2UzNGRlOWFjNjE4ODhkZTJhNThhNjcwM2MwYzZmNGI3MzJhNDI4YWMwMGFiODYwOTM4NDVjNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTljYTE1NTIwOWQwOTc2NWI1NzA4MzZlMDdhZTZkYjFhMWU2Y2Q4OTBjMDA1Y2E3NDFmYThlZmNjZGY3NWU1YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOGMxMTJhNGQ5MzM3ZWRjZTMwOTViYzI0NTVhMTYzODEwM2JlMWMyNDg4YTI1NWQ4ODE4MjM4NGY1ZGQ0YjViNyJ9"
-        },
-        {
-          "resource": "repo://architecture_decisions.md#L75-L80",
-          "version": "repo-lines-v1:sha256:09ca6fcf76d694ba04c3b4715637d89071f4f0203c34efba942314afa7ceba8c:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiM2Q2ZjlhMGFlMTJiYWFkOGQ5ZGIxNDA2MGFhNmY0NGM2Y2U0NjFhZTExYzZiNzhmYjQxYmI2NDg4NDc2N2RmMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzAyYzAyMzY1YmU1ODI2OGVkNTk5NmYxZjc0ODE4ZDhhYzRkYjQ0MGY3NWI2ZWE2MzZmMjBmNTI4NGM3Y2NmMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTRmM2VlMGUxYWQ0NjI4MjU4NTQyOTZkYjA1OTQzMTMzMTU5ODZmMDc1ZGRhZjllNDhhMjBkNjQ5N2NkODU2NiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTQzYjA4Njc2NzNlNDkyM2I5NmZhNjU4NTVkZTUzZDdhYjJmYzljOWVmNDNjMDI5YzE0MzI1MjBhM2RlMWY4YyJ9"
         },
         {
           "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java#L61-L82",
@@ -102,7 +98,7 @@
     },
     {
       "id": "claim_5a1dc2a2938446dc8267298a6220ea5c",
-      "statement": "The runner's required output directory is a throwaway temp directory created per request via Files.createTempDirectory with a per-family prefix (ardoco-sad-code, ardoco-sam-code, ardoco-sad-sam, ardoco-sad-sam-code, ardoco-id); the REST layer never reads from it because results are returned via the API response entity, and the input files are likewise temp files deleted in the runPipelineAsync finally block.",
+      "statement": "The runner's required output directory is a throwaway temp directory created per request via Files.createTempDirectory with a per-family prefix (ardoco-sad-code, ardoco-sam-code, ardoco-sad-sam, ardoco-sad-sam-code, ardoco-id); the REST layer never reads from it because results are returned via the API response entity, and the runPipelineAsync finally block deletes only the converted input files — the temp output directory itself is never deleted by application code and is left to the JVM's temp-file handling.",
       "evidence": [
         {
           "resource": "repo://architecture_decisions.md#L73-L77",
@@ -127,6 +123,10 @@
         {
           "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/TransArCController.java#L147-L149",
           "version": "repo-lines-v1:sha256:173f282e639221f3d19b92774dab6447d426eca33204eafce089efac59c359d4:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTEyNmFjMTViYzhjMTEzODliMDU0NmU0ODBhMGI0MWU3ZWJiMDc1ZjU2OWI3N2E3YzFiZjE5N2QzYTVkZmY2YSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjJjMmU2NGQyMjU3Nzc3MWFmYzQ1MGY4NjYwNjhkOGZlMzBmY2YwMzJhODAzMDNlNGMyNDk0YTBlNmZlZTY5ZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTE1NjdiZWZkY2QzNmRmM2M4NDE3MDJiZmEwMDY4NTc0OWVkMGRjMmM3NjllNmU4NDhhOTdhNmQ5ZTA0NTAyMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzYzM2NlODI4Mjg0ZTAxYTNjYTNhMDExNTc1ZjFkNjE3NDVmMzM1YzEzYTk3MjQzM2JmYWEzZDI0Mzk3MWFkZiJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L115-L126",
+          "version": "repo-lines-v1:sha256:87ce9d356ffc558a8f592714adde98a97857ffa62d1a2a8cc8fd7f06dea29630:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNiZTJkNDY5OTUwZjFlNGQzYmYxZjAzZTA5NGY3Y2RlNmM5MzlhZjM4NTU1ZTFkNWYyN2VhZmFjMDFhNDE1YWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIxYWQwYTg2ODM0Y2I0NDQ4MGYwNTVmOGUzODIxNmZkMzZkZDc0YTE0NmYyNTUwZDM0OTVmMWRiMWM0ZmY2NDUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwNGY4OWZjMGVjOThjOTgyNDE4M2U3OTVkM2VkZDE5ZTkzMGY3YmM0NzFmOTAxMmFhM2Q1MDNiZTJmODk3NGIifQ"
         }
       ]
     },
@@ -201,10 +201,46 @@
           "version": "repo-file-v1:sha256:906d6aa5be25b8fd2131304ec68ba695604b76783fd4c214e8e9207128fd0146"
         }
       ]
+    },
+    {
+      "id": "claim_518320baa9184a0fb6db879c895fedc0",
+      "statement": "No integration test exercises the inconsistency endpoint: the four AbstractTLRControllerTest subclasses (ArCoTLControllerTest, ArDoCoForSadCodeControllerTest, ArDoCoForSadSamCodeControllerTest, ArDoCoForSadSamTLRControllerTest) cover only the four TLR endpoints, so the InconsistencyDetection.setUp binding and the /api/find-inconsistencies flow are not pinned by tests.",
+      "evidence": [
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArCoTLControllerTest.java#L26-L28",
+          "version": "repo-lines-v1:sha256:97fa34615183736cc0da496b70334543e77095af9f5c5c6c0fb63890004fea55:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTM1M2FmZmFkNzlhYjE5MWY0NjdlZGIzYTQ5NGEyYjA5ODYzY2NhM2Q2ODQzZDNiM2UzMDI5ZmYzYjkwYzQyMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTJmZmJmNmQyZmQzMGIyNDdjOTYxOTdiM2E3NTE4ZTU0YWE5ZGYwYjIwNmIzZThkMzRhZTJlZmIxM2NhZjQ4NCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzU1MjRjZmY1YTZiYjdlZTEzZTNkMTYwOTdjNmIxMjQzMGViNTdkZjYyYTYxZWFkODA5NzdlNGIyNmYxMjMxMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTkxM2RiNDg0MDc1MGY4NDZkODY5NGMzNTk1N2RhNjFhMjhjNTRmMWJkODU1Mjk5Njc4NGRjOTg5MjYzYWY1MSJ9"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadCodeControllerTest.java#L20-L22",
+          "version": "repo-lines-v1:sha256:f2e7e53962b23cb10ca32dce63572ddc30a1040709e41e337d44aa2af996cb85:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWI5YjAyM2YwNGIwMmYwNjAyOGY2ZTc1NWQ0NWY1MTIyZDE4YWQ5YmRkOWFiNjYzMzMzMGU3YjNiZGZhNTFiYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMGMzNTQzMjE3OTc5Y2FlNmI5YmUyYTJhMmNkYTY4ODVjZTBhNTEwOTdjNWU0M2ZlOWJhOWNhNDgyYWQ5ZjU5OSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDNiNDA3ZDFhOWE4OGU2MTU2NGFlMmM1ODg1NjRkNzEyMzMyNGVjYjBhOTcyNzc1NjY1Y2ZlMzE3M2RiOWE2OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDY3MjgxNDI4MTZlNDA0NjU4MDc1Yjk5OTU2NTc2OTJkMTRhMTcwZjkwMGRmOGUxNjNhZjFmYmIwNTFkZmJkYiJ9"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamCodeControllerTest.java#L21-L23",
+          "version": "repo-lines-v1:sha256:c32ba384aa21c994eb6508bb55f7467c893a3f2e8b299fb33167bf092572747a:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDVlZWJiMWY0NGE5ZmMyMDYyNGJjZDE5MjVlMDc2ZjgyMDhmZGMzZDFjMzNiY2FlZDE5ODI1Yzk5ZDgzNjBhYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjEzNmZhODBjZDZhMDgyYzdiNmFhOTUxMWU0ODU1YTdjOGIzZDljZjUxZmI4ZDRjOGQ2ZTQxYjI2MGZmNTEyYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjNiZDE5YmQyNGEwYTNiZjljNjRjZWIwNTg4NTAwYmE5M2JiYmE4YzA0YmQyYTRkOWQyNjI1ODc2ODIzODY4OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGZjYzM0YWM1ZTdkMTNmMjdkODQyYzY3MjJkZDU4NDM1NDkwYjJhZmE4Yzc2YjUwOTNmOGJhMTAzNTdmYTY4OSJ9"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamTLRControllerTest.java#L21-L23",
+          "version": "repo-lines-v1:sha256:0468733dcdc608e38b800d460c6afa4b5f06a9ac9996682bd62a228ffb5ec5f7:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzhjMDNmMjAwNzFjZTVmNzdkMGEzMjk1MDNlYTMyNmUxYzkzNGI1OWNlZmQzYTZlYzY5MzEwZWI5ZTQyNTkzNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDAwNjI5M2RhMjg4M2M0Nzk2NWY1ZmMzMTA0MTI0ZDE1ZDczMDg5NDkxZDdhMzk0OTliNWQxMjQ1Nzg0N2JjNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjNiZDE5YmQyNGEwYTNiZjljNjRjZWIwNTg4NTAwYmE5M2JiYmE4YzA0YmQyYTRkOWQyNjI1ODc2ODIzODY4OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjM1NTVlNmFlYzE3ZWNmNmU1ODk2NjAwMTZjZWRlNjFkMTdiZTc5Nzc1MmZjMTM3ZDU2NmFjYWZkZjkzMGRhZCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_147c629769f54fde9abd8a671599cb5a",
+      "statement": "Because the controllers instantiate the external ArDoCo runners directly and the controller integration tests execute the real pipelines end-to-end, the integration-test suite doubles as the compatibility check for the ArDoCo snapshot dependencies: an ArDoCo snapshot that changes a runner's setUp signature breaks the build in the controllers, while a behavioral change in a runner or converter breaks the controller tests.",
+      "evidence": [
+        {
+          "resource": "repo://pom.xml#L41-L61",
+          "version": "repo-lines-v1:sha256:74534ea6cb7f5970505b6d158f5e035b58fb3c4268f5c5b5159a5d07083e9f56:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzZTBhNmFkODYyNTI5OTNkZjliMjJiOTc2NDk1ODE5NjY3MTdlYTJjMTJmYmZkYTM0MGM0ODM2YzMzZDQ5ZDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc5ZjcyNmM4MzRjYzE0OGM2YjM3Y2JkM2NlMjk3NjQ0MjAxZjEwM2M2Y2MzMzY5YzgyMDY2N2QxZDM5YWM5OTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE3M2Q4NTcyYjg0NTM3NTE2ZWRiMzIxMDgyNDQxYTQ1YTU0OTBhOGE3ZjIwNmQyZWI2MGM2NmJlZDU2NTkyYTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc3Y2NmMmZlNjQ4OGE0MTdjNWEyZTRlMzFmZjAzODJhYTdkN2RkZmVkM2IzOThmMTRiNzNmYjViODkwOGNkMjQifQ"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L35-L83",
+          "version": "repo-lines-v1:sha256:7f30661ddff30931795d56da3a04bb65692726ea0e9d4cae1684869e7d0493f6:eyJzZWxlY3RlZExpbmVDb3VudCI6NDksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIzYjZhYTZiMmU0NzMzNDU1N2E2NGMyYjNiODFjNzRmNDNlODkwNjEzOWIxODdhODgwYTNlNTVkZjczMGUyNjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVlMGYzMmQxYjg4YTU5MDIzYjRhMmRiZGRiMDE1MTU2YWY4YWRjNTJkOTVkZWMxY2EwMzkxMTY4ZWZhOTgyOTgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5Y2QxM2IxNTQzZThkNTQyMDA4NDI3YTk5ZjVkYjhlODM4ZTU1OTk0YjBmYTA3N2MyNWI3MGM2ZTk0YTA1ZDMifQ"
+        }
+      ]
     }
   ],
   "verification": {
-    "by": "openwiki/0.7.2",
-    "at": "2026-10-26T12:24:12.222Z"
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-09T15:26:30.664Z"
   }
 }

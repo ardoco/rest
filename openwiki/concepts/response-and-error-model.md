@@ -4,8 +4,8 @@ title: Response and error model
 description: The two response schemas of the ArDoCo REST API — the ArdocoResultResponse success envelope (requestId, status, message, traceLinkType, raw-JSON result) and the ErrorResponse body — plus the status/message pairing per endpoint and the GlobalExceptionHandler mapping of file, argument, pipeline, and timeout exceptions to HTTP 422, 500, and 408.
 tags: [rest-api, response-schema, error-handling, json, jackson, exception-handling, api-contract]
 verified:
-  - by: openwiki/0.7.2
-    at: 2026-10-26T12:24:12.222Z
+  - by: openwiki/0.9.0
+    at: 2026-11-09T15:26:30.664Z
 sources:
   - id: openwiki-source-176362edb7d4360cef66ced2
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java

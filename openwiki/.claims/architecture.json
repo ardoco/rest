@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:441a256f8f587ba02cd76fafeadea73c027a6b2ac8e011c6e77aa252dea93f01",
+  "pageVersion": "sha256:ff52d885cebed16c0cca9c9ce3760dc7ca30306a78b5a83e5fb727cdfb1760a9",
   "claims": [
     {
       "id": "claim_e1a41bcc193247cc9dd423aed927e77f",
@@ -229,10 +229,50 @@
           "version": "repo-lines-v1:sha256:2a941f270c016283d690d6e34b654fe352e92786fadecf3dfce6b5be66fdc0b0:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1Y2RkOWJjZmM5ZDQ3ZDY2ZjUzMDhhMTJhODQ0MzYxODBjOGIzOGJmZTU0ZjQzOThiZThhY2ExNGE3ZGQ3ZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRlNDgzZTcyZGNkOTc1MGFkMDg3ZDliYWE4YmI4M2UxYjE5MTAzY2U5MTZlMmE3OTkwMzVlMzEwNmJiNGU2MDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUxMDEyNmQwMmMyN2RjOGUyYzBmYmYyYTgzMmRhMTJkNDdkYmM2MmIxZTg0OTlhMDZjZGZkMmU5ZDcwMzdmZTcifQ"
         }
       ]
+    },
+    {
+      "id": "claim_b158d8e527a54f90a19ec3a70d3ddc2f",
+      "statement": "WebConfig registers ModelFormatTypeConverter as a Spring converter so the required inputArchitectureModelFormat request parameter binds directly to the ModelFormat enum; an unknown format name throws an IllegalArgumentException ('Invalid architecture model type: ...') that GlobalExceptionHandler maps to 422 Unprocessable Content.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java#L12-L21",
+          "version": "repo-lines-v1:sha256:f0ec96e824c2dcef0a9fe7f04a5dda6c73410d0a63aeb595cb331d13202d0ba8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4NzQyYzY5ODFkZjg1ZmY3MzU0MTc2N2IwYjQ0NzgzMWU4NDg2NWI4MGE4NzE0YzUyOGJlZGYwYzFhOWRhZTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZkMDY1YjgzMjU2MzliZGNlMDM5MGE1MTBkNmJiYTI0NGU0MzExMzg0MTgzZjIyMWMyYTcyYzZiMzg0MTQ1OTgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3OTRkMDJhODEyMTk0NGQxNzZkMjY1ZTliYjljYzU5ZjZhYjg5MGJjYWRmOGFlZmRlYmRiYmI0ZjJlYTg0NDQifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/ModelFormatTypeConverter.java#L15-L23",
+          "version": "repo-lines-v1:sha256:b5bf25c35d09fd0f4a47d3e73d35836f4688ba7aa237719d2af81e95bcacb35f:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTk0ODIyZjYwZmRlMTBjMGQ5ZWQxNGViODQ5NzgwMzhmMzFiYzk3YzgyYjM0OWRjMGU1ODdlOWMyN2EzMmVmZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java#L85-L97",
+          "version": "repo-lines-v1:sha256:6127a73dc8bfd4df2501ff9572f2042eb265599171428a96477cf462c727b1f3:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY5OTljZGM0NjI5MDIzYmQwZTBlZjQ5ZGU1Nzk3ZTFlNDA5MjlhNjY3ZmEwN2Q1MTRjYmJmNjhhMzM0ZTM5YTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI4NzEyZmZlOTNhMDI5NDYwNGIzMDdjNDYyY2RjYzM1NGY4NjhkMWUwMTlmM2Q1NzcyZDVkNzc1ZGZjMTA3MGEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ1NDJjYzA2ZjYyZWJiYWE1YWIzMDFjMDJlNDc1ZmUzNWZhNjMwMzQxNzNmZTlhZGE3OTI1MzgwOWQxOWY4NWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBhNjZkNjdjMjNiODRkZmM1ZTIxNThiYzNmYzA5NjMyMDg2NmQzODZkZGEzMzIyYTc2NTEwZTJlNjZjMDEwYmQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c03ea87d4f7f4a67afba323aa232dacd",
+      "statement": "Three auxiliary controllers complete the HTTP surface beside the family and result controllers: HomeController redirects the root URL to the Swagger UI, HealthController serves /api/health with a plain OK body, and ConfigurationProviderController serves /api/configuration where ConfigurationProviderService reflects over concrete AbstractConfigurable subclasses under edu.kit.kastel.mcse.ardoco to return each @Configurable field's key and default value — a map clients can feed back as the additionalConfigs request parameter.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ConfigurationProviderController.java#L43-L48",
+          "version": "repo-lines-v1:sha256:78ab0184ee8328ba78b576bbee712b5ff384061d1ee58eb1a2477c61db0910c2:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWRhMDFmYjI2NzZkYzRlNjZmODk1OWY5N2YyOTQ3YmVkNDgzMDBhYzRkNGVhODNhNDI2NmM2N2FhMzYyNTYxNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmE2OTU4OGY0YzA5ZTM1YzI4NGM3NmIwZjgwNDFhZmRmMWRmM2U4YjBmZDA0YjJkNWZjZGEyNTRmMmI3OGNhOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODA0Zjg5ZmMwZWM5OGM5ODI0MTgzZTc5NWQzZWRkMTllOTMwZjdiYzQ3MWY5MDEyYWEzZDUwM2JlMmY4OTc0YiJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/HealthController.java#L15-L33",
+          "version": "repo-lines-v1:sha256:b0d2d35110bb041cdc798fdc52372b285e6973799b4ec79ec15611912f4c3909:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgwMmI1ZjJkZmE2OTM5MDYxOGY2NmFkYjZiNzk2YzM0NjYyMzIxYzc3YjQwZjAzZGFiZTUwYmUyMTg3ZmU3ZTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYwZDVjMjU2NWNiMDFhMmM0OTFiYjFlNzU3Yjg0ODNhY2U1MDAwYTE4MWEwZjBhMDRjYmRhMzhjNmE2ODhiZGMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRlZGVlYTE5YzAxZGQ2NzA2ZDI2NGU0ZTI2Mjg1ZjgxZWMwODdhNDFlOGYwYTJkNzNiNWQ5M2E0YTVkMDM1YmMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3OTRkMDJhODEyMTk0NGQxNzZkMjY1ZTliYjljYzU5ZjZhYjg5MGJjYWRmOGFlZmRlYmRiYmI0ZjJlYTg0NDQifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/HomeController.java#L20-L28",
+          "version": "repo-lines-v1:sha256:82f77c485404cb3c10a36f6e0a2d79c333d91c30738cf9cfeff03aaa650d9f9c:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzljYmJjNjU0NjlkYjFjYTI4NDJlZmQ5N2RmN2VlMmNlNmNjMTU3MTQ4MmQwMWExOGI3OTBhMTBjN2M1MTBmMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDA1MzMxMjQwMWIxYzgxMDgzMWY2Zjc2Y2FlNDc0MzMwY2NmZDBmYjIwZjk4Mzc4NGM0NjhhY2YwMGVlOWZjNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ConfigurationProviderService.java#L48-L61",
+          "version": "repo-lines-v1:sha256:2a941f270c016283d690d6e34b654fe352e92786fadecf3dfce6b5be66fdc0b0:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1Y2RkOWJjZmM5ZDQ3ZDY2ZjUzMDhhMTJhODQ0MzYxODBjOGIzOGJmZTU0ZjQzOThiZThhY2ExNGE3ZGQ3ZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRlNDgzZTcyZGNkOTc1MGFkMDg3ZDliYWE4YmI4M2UxYjE5MTAzY2U5MTZlMmE3OTkwMzVlMzEwNmJiNGU2MDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUxMDEyNmQwMmMyN2RjOGUyYzBmYmYyYTgzMmRhMTJkNDdkYmM2MmIxZTg0OTlhMDZjZGZkMmU5ZDcwMzdmZTcifQ"
+        }
+      ]
     }
   ],
   "verification": {
-    "by": "openwiki/0.7.2",
-    "at": "2026-10-26T12:24:12.222Z"
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-09T15:26:30.664Z"
   }
 }

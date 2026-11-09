@@ -3,8 +3,8 @@ type: "Reference"
 title: "Workflow: pipeline execution"
 openwiki_generated: true
 verified:
-  - by: openwiki/0.7.2
-    at: 2026-10-26T12:24:12.222Z
+  - by: openwiki/0.9.0
+    at: 2026-11-09T15:26:30.664Z
 sources:
   - id: openwiki-source-aed92bcc8ea721affa9f52be
     resource: repo://architecture_decisions.md

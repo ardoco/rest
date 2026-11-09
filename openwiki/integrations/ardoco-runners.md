@@ -1,11 +1,11 @@
 ---
 type: Integration
 title: ArDoCo runner integration
-description: How the REST layer binds to the external ArDoCo libraries (pipeline-id, pipeline-tlr, text-preprocessing) — the runner classes Ardocode, Arcotl, Swattr, Transarc and InconsistencyDetection, their setUp signatures and configuration objects, ModelFormat conversion, throwaway temp output directories, and the reflection-based /api/configuration default-config endpoint.
+description: How the REST layer binds to the external ArDoCo libraries (pipeline-id, pipeline-tlr, text-preprocessing) — the runner classes Ardocode, Arcotl, Swattr, Transarc and InconsistencyDetection, their setUp signatures and configuration objects, ModelFormat conversion, throwaway temp output directories, additionalConfigs handling, and the reflection-based /api/configuration endpoint.
 tags: [ardoco-runners, integration, pipeline-tlr, pipeline-id, text-preprocessing, configuration, model-format, reflection]
 verified:
-  - by: openwiki/0.7.2
-    at: 2026-10-26T12:24:12.222Z
+  - by: openwiki/0.9.0
+    at: 2026-11-09T15:26:30.664Z
 sources:
   - id: openwiki-source-aed92bcc8ea721affa9f52be
     resource: repo://architecture_decisions.md
@@ -29,19 +29,23 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java
   - id: openwiki-source-98e8b8003b4c402c08f37fcd
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/ModelFormatTypeConverter.java
+  - id: openwiki-source-fbe8e79a4110d3bef05db863
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java
   - id: openwiki-source-c7cab41393f5428b55d377f6
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ConfigurationProviderService.java
   - id: openwiki-source-bd27e22b24a569b1300c8892
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java
   - id: openwiki-source-0ead47b845f38f77026ad2b9
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java
+  - id: openwiki-source-c71470a540c52c842bbad746
+    resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArCoTLControllerTest.java
   - id: openwiki-source-833316eb38fa349072572fb5
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadCodeControllerTest.java
   - id: openwiki-source-afbc8fe03b772afdcb77babf
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamCodeControllerTest.java
   - id: openwiki-source-042c8e5e0935e0174006d660
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamTLRControllerTest.java
-generated: { by: "openwiki/0.7.2", at: "2026-10-26T12:24:12.222Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-09T15:26:30.664Z" }
 ---
 
 # ArDoCo runner integration
@@ -115,7 +119,7 @@ public class ModelFormatTypeConverter implements Converter<String, ModelFormat> 
 
 `WebConfig` registers the converter as a Spring MVC converter, so the `inputArchitectureModelFormat` request parameter binds directly to the `ModelFormat` enum value. An unknown format name surfaces as `IllegalArgumentException("Invalid architecture model type: ...")`, which the `GlobalExceptionHandler` maps to a 422 error body. The set of valid values is defined by the ArDoCo libraries themselves — the REST layer does not maintain its own list, so a new ArDoCo model format becomes available automatically without a REST-layer change.
 
-The REST layer does not perform any file-type validation beyond the empty-file check in `FileConverter`. Whether the uploaded file is a valid PCM, UML, or OpenAM model is checked by ArDoCo itself when the runner runs the pipeline. This is a documented decision ("So far no file checks have been implemented. This is left to ArDoCo itself"), so the REST layer only rejects empty files (422) and lets ArDoCo surface format errors as pipeline failures (500).
+The REST layer does not perform any file-type validation beyond the empty-file check in `FileConverter`. Whether the uploaded file is actually a model of the requested format is checked by ArDoCo itself when the runner runs the pipeline. This is a documented decision ("So far no file checks have been implemented. This is left to ArDoCo itself"), so the REST layer only rejects empty files (422) and lets ArDoCo surface format errors as pipeline failures (500).
 
 ## Throwaway temp output directories
 
@@ -127,7 +131,7 @@ Files.createTempDirectory("ardoco-sad-code").toFile()
 
 The prefix differs per family: `ardoco-sad-code` (ArDoCode), `ardoco-sam-code` (ArCoTL), `ardoco-sad-sam` (SWATTR), `ardoco-sad-sam-code` (TransArC), `ardoco-id` (InconsistencyDetection). The temp directory exists only because the ArDoCo runners require an output directory — the REST layer never reads from it, because results are returned via the API rather than as output files. This is a documented design decision ("The output directory, which is required by ardoco when running any pipeline, is internally set to a temporary directory and is not made available to the outside, since the result will be returned in form of a response entity").
 
-The input files are also temporary: `FileConverter.convertMultipartFileToFile` writes each uploaded multipart file to `System.getProperty("java.io.tmpdir")`, and the `finally` block in `AbstractRunnerTLRService.runPipelineAsync` deletes all of them after the pipeline finishes (or fails). The temp output directory is left to the JVM's own temp-file cleanup, since it never contains anything the client needs.
+The input files are also temporary: `FileConverter.convertMultipartFileToFile` writes each uploaded multipart file to `System.getProperty("java.io.tmpdir")`, and the `finally` block in `AbstractRunnerTLRService.runPipelineAsync` deletes all of them after the pipeline finishes (or fails). The temp output directory itself is never deleted by application code — the `finally` block deletes only the converted input files — since it never contains anything the client needs.
 
 ## Passing additionalConfigs to the runner
 
@@ -154,12 +158,13 @@ The result-conversion side of the integration — how the `ArdocoResult` produce
 
 The runner integration is pinned by integration tests that run against a live Redis container (`redis:7.0-alpine` via Testcontainers):
 
-- `AbstractTLRControllerTest` and its four subclasses exercise the full start → poll → retrieve flow for every family, including the `start-and-wait` endpoints and the empty-file rejection path. The tests use real project artifacts (`bigBlueButton/bigbluebutton.txt`, `codeModel.acm`, `bbb.repository` for PCM, `bbb.uml` for UML) — so they exercise the actual `ModelFormat` binding and the actual ArDoCo runner setup, not mocked runners.
+- `AbstractTLRControllerTest` and its four subclasses — `ArCoTLControllerTest`, `ArDoCoForSadCodeControllerTest`, `ArDoCoForSadSamCodeControllerTest`, and `ArDoCoForSadSamTLRControllerTest` — exercise the full start → poll → retrieve flow for the four TLR endpoints, including the `start-and-wait` variants and the empty-file rejection path. The tests use real project artifacts (`bigBlueButton/bigbluebutton.txt`, `codeModel.acm`, `bbb.repository` for PCM, `bbb.uml` for UML) — so they exercise the actual `ModelFormat` binding and the actual ArDoCo runner setup, not mocked runners.
 - `ArDoCoForSadSamCodeControllerTest` and `ArDoCoForSadSamTLRControllerTest` both run against `ModelFormat.UML` *and* `ModelFormat.PCM`, pinning the `ArchitectureConfiguration` + `ModelFormat` binding from both formats.
 - `ArDoCoForSadCodeControllerTest` covers the sad-code runner, whose `setUp` only takes text + code (no `ArchitectureConfiguration`).
+- The inconsistency endpoint (`/api/find-inconsistencies`) has no controller test — of the five runner endpoints, only the four TLR families are pinned this way.
 - `HashGeneratorTest`, `FileConverterTest`, and `TraceLinkConverterTest` pin the file-to-hash, multipart-to-file, and trace-link-to-JSON conversions that sit between the HTTP layer and the runner.
 
-Because the runner classes are external libraries at snapshot versions, the integration tests double as the compatibility check: a new ArDoCo version that changes a runner's `setUp` signature or converter behavior breaks the controller tests.
+Because the controllers call the external runners' `setUp` directly and the integration tests run the real ArDoCo pipelines, the tests double as the compatibility check for the snapshot libraries: an ArDoCo snapshot that changes a runner's `setUp` signature fails the build in the controllers, while a behavioral change in a runner or converter breaks the controller tests.
 
 ## Related pages
 

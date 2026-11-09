@@ -1,11 +1,11 @@
 ---
 type: Integration
 title: Redis persistence integration
-description: The persistence boundary of ArDoCo REST — the DatabaseAccessor interface, the @Primary RedisAccessor writing TTL-bound plain-string values, the Lettuce connection setup in ApplicationConfig, the docker/local Spring profile host split, and the local docker-compose and RedisInsight tooling.
-tags: [redis, persistence, database-accessor, ttl, lettuce, spring-profiles, docker-compose, redisinsight]
+description: The persistence boundary of ArDoCo REST — the DatabaseAccessor interface, the @Primary RedisAccessor writing TTL-bound plain-string values, the Lettuce connection setup in ApplicationConfig, the docker/local Spring profile host split, the docker-compose and RedisInsight tooling, and the health/observability notes.
+tags: [redis, persistence, database-accessor, ttl, lettuce, spring-profiles, docker-compose, redisinsight, testcontainers]
 verified:
-  - by: openwiki/0.7.2
-    at: 2026-10-26T12:24:12.222Z
+  - by: openwiki/0.9.0
+    at: 2026-11-09T15:26:30.664Z
 sources:
   - id: openwiki-source-164e2da859b5277df81c7d94
     resource: repo://.github/workflows/ci.yml

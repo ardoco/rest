@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:4f3709aa637f0b2f664517547b4bcb8eabd80f1156f07fbec1877f27155ea5ad",
+  "pageVersion": "sha256:b46eedde4de7bccb09c7acb54d9051686ea80b39ac51af8923a9266e34ead3d0",
   "claims": [
     {
       "id": "claim_ffd3d9ab2aae4a69bb3b187e020ba2fd",
@@ -190,15 +190,15 @@
     },
     {
       "id": "claim_ec87e94c1e6449dcba5e0c26d791d77e",
-      "statement": "Controller test methods carry @Timeout(value = 3, TimeUnit.MINUTES); the shared base-class helper runPipeline_start_and_getResult and the ArDoCoForSadSamCodeControllerTest PCM variants allow 6 minutes, reflecting the heavier TransArC pipeline.",
+      "statement": "Controller test methods carry @Timeout(value = 3, unit = TimeUnit.MINUTES); the shared base-class helper runPipeline_start_and_getResult is itself annotated with a 6-minute timeout, and in ArDoCoForSadSamCodeControllerTest three of the four tests use 6 minutes (both PCM variants and the UML start-and-wait variant, only the UML start test keeps 3 minutes), reflecting the heavier TransArC pipeline.",
       "evidence": [
         {
-          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L89-L91",
-          "version": "repo-lines-v1:sha256:e98b65dd23c9ef69685e491fbb9c55b8d8bf8c7e9bab941f5a7fde2ef2a55b62:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGNhMDczMTIzZmRjYzRkNzdkZjA3ODZmZjk2NWQyNmM3ZWM5NmMzMzY0NDIxMzFjY2M1NzVkNTY4YTk2NDQ0ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTcyMzA4NDhmMDc3Y2FkODE5NDczMjY4ZjQyZTIzZWU1YTM4MzllOGUxNDRlY2Y3Yzk3NmFlNmJmYWI3NzVkYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTFlM2ZhOGNkNjUwMTMzNjA5MzhlMDhmYmE5YjY3OWZmODczNzNkMGU4ZWVkNGFhMjQ1YzViOWZiOGZmYzZjYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODI5NDU1MjcwMTkxMmMzYzc3MWY3ZmQzMzhlZjgwOTU0YzBjNzBiZThlMjE4MWQzMjlhNGMwN2EyMjQzMTZjNiJ9"
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L88-L91",
+          "version": "repo-lines-v1:sha256:697071d2201a24b2a9dbc470ceca3cff8b22d5776484122525594ed058ec4073:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTcyMzA4NDhmMDc3Y2FkODE5NDczMjY4ZjQyZTIzZWU1YTM4MzllOGUxNDRlY2Y3Yzk3NmFlNmJmYWI3NzVkYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2UzNjRmZTkyMjkzODcxYTI1ODkyMDRmOTM0MWQ3NGZiYjIyZTc1ZmVkMzcyOTZiZjkxZjY3ZDU0NWJmNGE1NiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODI5NDU1MjcwMTkxMmMzYzc3MWY3ZmQzMzhlZjgwOTU0YzBjNzBiZThlMjE4MWQzMjlhNGMwN2EyMjQzMTZjNiJ9"
         },
         {
-          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamCodeControllerTest.java#L34-L53",
-          "version": "repo-lines-v1:sha256:d7cc26be2aa8c1d7173a7f32f8f86b3dc279cf3fc15b592745b7f4e959d6daa7:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRjZjA5ZWIwYzU3NDRmYjk3MzMxYjk4ZmYzZmJmMDVhNjAyYmEzZjdmNjdlNWRhNWJlOTA5NTAzM2Y2MjU4MjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImViZmQyYmEwYTE2NTE2NGE3YWFkN2M2ZWMyY2NmMWM5ZDA3YjVjZmViNzYxZDE5OTQ0NzMwNWRhYThhY2FmOGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE2ODRlYTUxOTM4NGFiOTRiNjkzMjkwYWMxNmZkNDE2OTYwODUzYWNlMWMxYzBjZmU3ZGMzNjNjMTU0ZmViYWYifQ"
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamCodeControllerTest.java#L27-L53",
+          "version": "repo-lines-v1:sha256:34e4153f52d48923fbe71764687925eee262886ed2724339e37ed4d4a08141b0:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRjZjA5ZWIwYzU3NDRmYjk3MzMxYjk4ZmYzZmJmMDVhNjAyYmEzZjdmNjdlNWRhNWJlOTA5NTAzM2Y2MjU4MjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBmY2MzNGFjNWU3ZDEzZjI3ZDg0MmM2NzIyZGQ1ODQzNTQ5MGIyYWZhOGM3NmI1MDkzZjhiYTEwMzU3ZmE2ODkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE2ODRlYTUxOTM4NGFiOTRiNjkzMjkwYWMxNmZkNDE2OTYwODUzYWNlMWMxYzBjZmU3ZGMzNjNjMTU0ZmViYWYifQ"
         }
       ]
     },
@@ -261,10 +261,56 @@
           "version": "repo-lines-v1:sha256:4a5f5852b93a10fb1521bdef4057d99c862f45308080ef79222b0513fc255b7a:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZDA4ZTI4OTE5NGM2ZmUxMjhjNmZhZGEzMzllYWZmNThjMjJiOTc2ZTkyZjExODJhOTg3MDgzNmVlYTU2MTJlYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmNjYjljN2EzOTJmMjU3YjRjNjA2MjQxYjNjZWQ3ZjRiYjNiYTI3YjYwZGZhNWE1NzVjYjc3NTZlOTI5ZWE4ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDNjZGRlZGQxNWIxM2MyMjU5OWE3YmM5Yjc5NmQxMWUyODQxY2RjZGJhMDNhOGZlY2E5ZTMwZjI3ODNkNzE1NCJ9"
         }
       ]
+    },
+    {
+      "id": "claim_4ca91979a6fd4d17986d81ce30965233",
+      "statement": "AbstractTLRControllerTest provisions its Redis container in a static @BeforeAll inherited by all four subclasses, so each concrete controller test class starts and never explicitly stops its own redis:7.0-alpine container and repoints the JVM-wide spring.data.redis.* system properties at it (the commented-out @Container/@ServiceConnection alternative in the base class is unused); RedisAccessorTest, in contrast, stops its container in @AfterAll and additionally registers the host/port via @DynamicPropertySource.",
+      "evidence": [
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L54-L83",
+          "version": "repo-lines-v1:sha256:9f46241b8969a8d089e82bf76c24ce4a23b4612cab6b213723ad7e72340e06c1:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlmZGNmZWNjYzM0NTY1MzNjMTFjYTZhYjk0ZTliNGFhOWE4Zjc5MDg0N2MxNzUwYWM0NzZjN2JkYTU5ZTI1NzciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA0Y2EwNGU3MTM4Njk0ZDQ5MzgxZDUzNzQzZTZkMDM3OTcyZTk4OTA5NjUzNGEyODc2MWMxMWViODg3ZGEwNGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5Y2QxM2IxNTQzZThkNTQyMDA4NDI3YTk5ZjVkYjhlODM4ZTU1OTk0YjBmYTA3N2MyNWI3MGM2ZTk0YTA1ZDMifQ"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessorTest.java#L39-L58",
+          "version": "repo-lines-v1:sha256:7abaf499705df64ddc09bb8ace541083ad9553613d584a0b508d406bac0f2a19:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUxNzE5NmY2ODM1NWIyOTI1OTEwNjY1ZjU4OGY4YzQ5NjJhMDYwMjJiNmU1YjEyN2JhMWMzZjMzNWU2MDBhOGIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIyOGE5NmZhNjIyYWFjODU2YTQ4MTIyN2Y4YmU5ZDM5YjFjNDllNTc4NzZhN2YyNWQ5MTJlZjY5NWI0NzdlZTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJlZDdlNTkxMTIzNDZkZTAyYTk2NjJkMWFlZjgwZTczNDgwZDQyODQwYjQ5MTBjMWE3NDFkODRjOWY5OTBjZWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYyN2NmNWRkMDkwNWQ4NTA5OGRlZDQ1MTU0ZjNmNzc2NGFiZjQzMDIzMDJjODk5ZTBkYzRmN2ZmOGNjMzMzZDQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_cfb89dfe19414cc2ba3fb76fc468e448",
+      "statement": "testUtil.TestUtils contains two currently-unused helpers — testStartPipeline_new and the parameterless setUpRequestParamToStartPipelineBBB() — with no callers in the test tree; each controller test subclass instead builds requests through its own private setUpRequestParamToStartPipelineBBB overload, so the TestUtils request-building helper is dead code.",
+      "evidence": [
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArCoTLControllerTest.java#L74-L91",
+          "version": "repo-lines-v1:sha256:10142a56a50b0a3686a7c48384e8e794f05d2b97d6680d0d83e4b9bd8a640ae7:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE1NDg1MjBhNThkOTBiMTQ4NjM5Y2MwMjgyM2Q3M2I2NmUwZGE5MDg2ZGM0NmIxMTBjMTZiYjhhNjQ4YjI0MDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyNjM0NDM5YTBkZTE4YzE0MDNjNDM3NDk1M2U4Mzg0YmE1MzhkMGFkOTBlYTgxYjUyNjYxMTk0Y2I4ZGExYmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQxYzZkYTg0MjZjYWNhZWU1OGRhNjRkZDhjYmM0NDU4MDNiYTY3MDJjZDc4YjM5YWY1ZDA5Y2I5YjM4YzA5M2MiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3OTRkMDJhODEyMTk0NGQxNzZkMjY1ZTliYjljYzU5ZjZhYjg5MGJjYWRmOGFlZmRlYmRiYmI0ZjJlYTg0NDQifQ"
+        },
+        {
+          "resource": "repo://src/test/java/testUtil/TestUtils.java#L26-L48",
+          "version": "repo-lines-v1:sha256:0bf8e18ef188226c00fe3bb1d90e16fd791c676bf25dd42f63d4a0418db73924:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhYzJhZGVjZmQ1YTRkYTIxMDljYjhiYmJkY2ZlZjljZjczOGJlZWQ5ZWY1OGY4NmM5ZmM1ZTYzYWEwMWY1N2MiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU2ZTY0ZTg4ZGZjNjk3NDgwNDlhYzUyYTI2ZDYyNTU1ZDQ4ZTZhZjQ5YzMwYTg0ZWRkMmZiNzQ4NjQxZGFmNWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVmODg1MTI0NDE0YThhZjUyYzhhNDViOTVlMjhkNzlmOTgyYjU4ZTc2NWVmOTNmMzYzN2MxZWQ1NGY1MDgyMzYifQ"
+        },
+        {
+          "resource": "repo://src/test/java/testUtil/TestUtils.java#L76-L96",
+          "version": "repo-lines-v1:sha256:561fd0e27997474a92af8c84c6afde3894285231cbb0094e6894d301f8aa4097:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdkODdhYjFlMWEzZjliOTg3YjQ1M2Q4MWQxZmQ5ZWVlNWNiNGJiNzhiOTc0YmQ4OTdlNDJjMDk2MGYwZTlkNTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlmNGIyMTdkMTFlMTMwMWUwMWMxYTRkMWYyYTEwNTZmOWYwNTBiYTQ1MTUwM2YxZGQ0ZmU0YTE1MzZkOTVlODIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA5NjY4ODg1NDhkMmVhYWNhNGE5ZWEwMzYwMzlhYzNjNGFhNzc2ODc2NzhkMGZlMjNmYjY2Y2ZiOTA5YjRlNjMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU1MDZmZTI3ZDk1MjhhYjZkOTAyMDcxYzM4ZjM3NzkzYTRlMWVhNzFmZjg4YmVmYzBiZjMxNDNkMzY0MTYyMTMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8758575ef16e4a88baa4bcd0436aa57a",
+      "statement": "FileConverterTest additionally verifies the multipart-to-file round trip: convertMultipartFileToFile writes the upload into a file named after the original filename (created under the system temporary directory by FileConverter) and preserves the content, exercised for both text/plain and PNG payloads; this is the conversion that creates the temporary files the pipeline later consumes and deletes.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java#L61-L79",
+          "version": "repo-lines-v1:sha256:e7f3b17696e5b4e834c03fa66ce93c52a9e7e26f4f5c164178fcd48d0237e1a9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ1MDIxZjc4NzJlZDdhM2Q3NGQ2MjNhOTU1MjhlYjA1YmFkNDRmMWVlYzQyZjg4NjkxMmMxM2JlZGQ1ZTRmOTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ5NGY1ODgyYjE1NGI1Mjk5OGMwYTc2MzA2ZDEyOWU4MDBiNGYzNzhhNzA0YTE5ZGJmODMzZmM4MjQwNmQzZGIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE2OWUyYzU0NDA1YzQ1OWU5ZWY5NWViNjgyNTk0NTkxM2RhY2QxMDM2ZmI4OTdjYzUzZjMzZGY0OTc4NjJjZGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUxY2IxY2UxMTFkMWMwNWE1M2VlMDM1NjYzM2Y2ZmRiMmZlMzRlMjc2NTQ2ZmI0NWEzYWQ1ZmUwNTEwMTljNTIifQ"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/util/FileConverterTest.java#L62-L108",
+          "version": "repo-lines-v1:sha256:530b39332cee33ac2afe02a2ae4bed5dd75ab06214b408fc8eb83c49a377e536:eyJzZWxlY3RlZExpbmVDb3VudCI6NDcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI3MmU2NjI3YjQwMTYwOTQ4ZDlhMGU5YTM0Zjk5NjY1NzIzMDk1MDhjZGMyYmYyMmYzODYyYjcyZmM1MjMyZDUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIyNmQ3YTZiY2Y4YmVhMTQ5ZDMzMDQ3MGY3ODAzM2I3Njg3OTUxMjYxOGMwYjU0YWM4MGJlNmMzZDY3N2I2MDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFiZjNmMjMwMmI4OTExMjcyMjMwZGUzMTMyZjRmMTU1ODgzMjAyMmQ5MmVmYjU3NzNiZmZjOTU0Mjg4OTQ4MzcifQ"
+        }
+      ]
     }
   ],
   "verification": {
-    "by": "openwiki/0.7.3",
-    "at": "2026-11-02T14:56:49.573Z"
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-09T15:26:30.664Z"
   }
 }
