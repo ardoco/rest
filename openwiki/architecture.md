@@ -5,8 +5,8 @@ description: Layered controller, service, and repository design of the ArDoCo RE
 tags: [architecture, layering, controller-service-repository, async-execution, redis, request-lifecycle]
 openwiki_generated: true
 verified:
-  - by: openwiki/0.7.2
-    at: 2026-10-26T12:24:12.222Z
+  - by: openwiki/0.9.0
+    at: 2026-11-09T15:26:30.664Z
 sources:
   - id: openwiki-source-aed92bcc8ea721affa9f52be
     resource: repo://architecture_decisions.md
@@ -22,12 +22,18 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCodeController.java
   - id: openwiki-source-8b2a97197949b86658884bf4
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ConfigurationProviderController.java
+  - id: openwiki-source-f6d08ba0f56a1c951c2f706a
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/HealthController.java
+  - id: openwiki-source-332d4cbd0bf8aa0bbfa82f6b
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/HomeController.java
   - id: openwiki-source-c909e387f9efb6c793afd176
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/InconsistencyController.java
   - id: openwiki-source-868d81e0a1f2a13b4e9c338d
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java
   - id: openwiki-source-f5df1fa4999bf0efe9f01e6b
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java
+  - id: openwiki-source-98e8b8003b4c402c08f37fcd
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/ModelFormatTypeConverter.java
   - id: openwiki-source-1c5a7ae3754c990399f4ebd1
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/TraceLinkConverter.java
   - id: openwiki-source-5234cb96d26784ace8285f29
@@ -60,9 +66,11 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ApplicationConfig.java
   - id: openwiki-source-b2cbaede3bd44199cffd04ad
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArDoCoRestApplication.java
+  - id: openwiki-source-bd27e22b24a569b1300c8892
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java
   - id: openwiki-source-ece093ad10b91f3da0b7e34f
     resource: repo://src/main/resources/application.properties
-generated: { by: "openwiki/0.7.2", at: "2026-10-26T12:24:12.222Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-09T15:26:30.664Z" }
 ---
 
 # Architecture
@@ -73,7 +81,7 @@ ArDoCo REST is a layered Spring Boot application built around a consistent contr
 
 `ArDoCoRestApplication` is annotated with `@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })`, `@EnableAsync`, and `@OpenAPIDefinition` metadata ("ARDoCo: Trace Link Recovery"). Excluding `DataSourceAutoConfiguration` means the application starts without any SQL datasource — all durable state lives in Redis (see [Redis persistence integration](integrations/redis.md)). `@EnableAsync` turns on Spring's async infrastructure at the application level, although the pipelines themselves are dispatched with `CompletableFuture.supplyAsync` inside `AbstractRunnerTLRService`, not through `@Async` handler methods.
 
-`ApplicationConfig` declares `@EnableRedisRepositories` and defines the `LettuceConnectionFactory` and `RedisTemplate` beans from the `spring.data.redis.host` and `spring.data.redis.port` properties. `WebConfig` registers `ModelFormatTypeConverter` as a Spring converter so the `inputArchitectureModelFormat` request parameter binds directly to the `ModelFormat` enum; an unknown format name surfaces as an `IllegalArgumentException`.
+`ApplicationConfig` declares `@EnableRedisRepositories` and defines the `LettuceConnectionFactory` and `RedisTemplate` beans from the `spring.data.redis.host` and `spring.data.redis.port` properties. `WebConfig` registers `ModelFormatTypeConverter` as a Spring converter so the required `inputArchitectureModelFormat` request parameter binds directly to the `ModelFormat` enum; an unknown format name surfaces as an `IllegalArgumentException` ("Invalid architecture model type: …") that `GlobalExceptionHandler` maps to 422. Default timings live in `application.properties`: `redis.time-to-live.hours=24` for stored results and `tlr.timeout.seconds=60` for bounded waits.
 
 ## Layering overview
 
@@ -118,7 +126,7 @@ Each ArDoCo runner is represented by one controller with a `/start` and a `/star
 
 ### Retrieval and utility controllers
 
-`ResultController` exposes `/api/get-result/{id}` and `/api/wait-for-result/{id}`. These endpoints are cross-family: because IDs embed the `TraceLinkType` prefix and `TraceLinkType.fromId` matches on that prefix, any family's result can be retrieved through these two endpoints regardless of which start endpoint produced it. `HomeController` redirects `/` to the Swagger UI, `HealthController` serves `/api/health`, and `ConfigurationProviderController` serves `/api/configuration`, where `ConfigurationProviderService` uses reflection over `AbstractConfigurable` subclasses to return ArDoCo's default configuration keys and values — a map clients can feed back as `additionalConfigs`.
+`ResultController` exposes `/api/get-result/{id}` and `/api/wait-for-result/{id}`. These endpoints are cross-family: because IDs embed the `TraceLinkType` prefix and `TraceLinkType.fromId` matches on that prefix, any family's result can be retrieved through these two endpoints regardless of which start endpoint produced it. Three auxiliary controllers complete the HTTP surface: `HomeController` redirects `/` to the Swagger UI, `HealthController` serves `/api/health` (a plain "OK" body, complemented by the actuator health endpoint), and `ConfigurationProviderController` serves `/api/configuration`, where `ConfigurationProviderService` uses reflection over `AbstractConfigurable` subclasses to return ArDoCo's default configuration keys and values — a map clients can feed back as `additionalConfigs`.
 
 ## Service layer
 
@@ -166,7 +174,9 @@ The persistence boundary is split into two parts with different lifetimes:
 
 ## Request lifecycle
 
-```mermaid
+<!-- openwiki: mermaid parse failed and this diagram was converted to a text fence so it does not break rendering. Fix the diagram source and restore the mermaid fence. Parser error: Unsupported color format: "" -->
+```text
+%%{init: {'theme': 'base', 'themeVariables': { 'background': 'var(--background)', 'foreground': 'var(--foreground)', 'primaryColor': 'var(--background)', 'primaryTextColor': 'var(--foreground)', 'primaryBorderColor': 'var(--foreground)', 'lineColor': 'var(--foreground)', 'curveStyle': 'basis', 'fontFamily': 'monospace', 'fontSize': '14px' }}}%%
 flowchart TD
     REQ["POST start or start-and-wait with multipart form"] --> CONV["Controller converts uploads to temp files in java.io.tmpdir"]
     CONV --> CFG["parseAdditionalConfigs reads optional JSON into a sorted map"]

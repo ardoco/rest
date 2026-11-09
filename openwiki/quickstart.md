@@ -2,9 +2,13 @@
 type: "Reference"
 title: "OpenWiki quickstart"
 openwiki_generated: true
-description: "Entry point for coding agents: one-paragraph system summary, task-routing map into the wiki hierarchy, and the key conventions (request-ID hashing, Redis persistence, async execution) needed before touching code."
+description: "Entry point for coding agents: one-paragraph system summary, task-routing map into the wiki hierarchy, the key conventions (request-ID hashing, Redis persistence, async execution), and the generated-wiki maintenance note needed before touching code."
 tags: [quickstart, overview, ardoco-rest, task-routing]
 sources:
+  - id: openwiki-source-6d3ac2bdfb0e76882a670989
+    resource: repo://.github/workflows/openwiki.yml
+  - id: openwiki-source-8037e2358a2c4f9b2c722a11
+    resource: repo://AGENTS.md
   - id: openwiki-source-17e67da21bbb452f6e1b70e3
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java
   - id: openwiki-source-a420f4179889786e59957253
@@ -29,6 +33,10 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/TransArCController.java
   - id: openwiki-source-f5df1fa4999bf0efe9f01e6b
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java
+  - id: openwiki-source-5234cb96d26784ace8285f29
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java
+  - id: openwiki-source-e88bcc81194c6ad9e9618bc0
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/messages/ResultMessages.java
   - id: openwiki-source-ce24a3eb91eb8aac24e67f44
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/CurrentlyRunningRequestsRepository.java
   - id: openwiki-source-3f48285a778da70bb8812331
@@ -49,21 +57,22 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArDoCoRestApplication.java
   - id: openwiki-source-ece093ad10b91f3da0b7e34f
     resource: repo://src/main/resources/application.properties
-generated: { by: "openwiki/0.7.3", at: "2026-11-02T14:56:49.573Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-09T15:26:30.664Z" }
 verified:
-  - by: openwiki/0.7.3
-    at: 2026-11-02T14:56:49.573Z
+  - by: openwiki/0.9.0
+    at: 2026-11-09T15:26:30.664Z
 ---
 
 # OpenWiki quickstart
 
 ArDoCo REST is a Spring Boot application — entrypoint
 `edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication`, annotated with `@EnableAsync` and
-`@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)` — that exposes the ArDoCo
-trace-link recovery pipelines over HTTP. It offers four runner endpoint families, each with its own
-controller under `/api` (ArDoCode/sad-code at `/api/ardocode`, ArCoTL/sam-code at `/api/arcotl`,
-SWATTR/sad-sam at `/api/swattr`, TransArC/sad-sam-code at `/api/transarc`) plus an
-inconsistency-detection workflow at `/api/find-inconsistencies` and a shared `ResultController`
+`@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })` — that exposes the ArDoCo
+trace-link recovery and inconsistency-detection pipelines over HTTP. It offers four TLR runner
+families, each with its own controller under `/api` (ArDoCode/sad-code at `/api/ardocode`,
+ArCoTL/sam-code at `/api/arcotl`, SWATTR/sad-sam at `/api/swattr`, TransArC/sad-sam-code at
+`/api/transarc`), an inconsistency-detection workflow at `/api/find-inconsistencies`, and a shared
+`ResultController`
 (`src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java`)
 for `/api/get-result/{id}` and `/api/wait-for-result/{id}`. Each start endpoint accepts multipart
 uploads, converts them to temporary files, derives a content-hash request ID, and hands a pre-built
@@ -74,18 +83,22 @@ and retrieved later through the shared result endpoints with 200/202 semantics.
 
 ## What this repository does
 
-The application provides REST access to several ArDoCo trace-link recovery workflows:
+The application provides REST access to several ArDoCo trace-link recovery and
+inconsistency-detection workflows:
 
 - **ArDoCode / sad-code** (`SAD_CODE`, prefix `ardocodeResult`): textual documentation + code
 - **ArCoTL / sam-code** (`SAM_CODE`, prefix `arcotlResult`): architecture model + code
 - **SWATTR / sad-sam** (`SAD_SAM`, prefix `swattrResult`): textual documentation + architecture model
 - **TransArC / sad-sam-code** (`SAD_SAM_CODE`, prefix `transarcResult`): combined architecture, documentation, and code workflow
+- **Inconsistency detection** (reuses `SAD_SAM`; derived ID prefix `swattrResultInconsistency`): sad-sam trace-link recovery plus inconsistency detection, returning a richer payload with a populated `inconsistencies` array
 
-The prefixes live in the `TraceLinkType` enum (`src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java`)
-and double as Redis key prefixes. Auxiliary endpoints: `/api/configuration` (reflection-derived
-ArDoCo default configuration), `/api/health`, and `/` which redirects to the Swagger UI at
-`http://localhost:8080/swagger-ui/index.html`; actuator health is exposed at
-`http://localhost:8080/actuator/health`.
+The prefixes live in the `TraceLinkType` enum
+(`src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java`) and double
+as Redis key prefixes; the inconsistency workflow derives its prefix by overriding ID generation in
+its controller, keeping its results keyed separately from plain SWATTR results. Auxiliary endpoints:
+`/api/configuration` (reflection-derived ArDoCo default configuration), `/api/health`, and `/` which
+redirects to the Swagger UI at `http://localhost:8080/swagger-ui/index.html`; actuator health is
+exposed at `http://localhost:8080/actuator/health`.
 
 ## Repository shape
 
@@ -116,7 +129,9 @@ Most endpoints follow the same pattern:
 6. Return either an in-progress response, a ready result, or an accepted/timed-out response depending on the endpoint.
 
 Result data is stored in Redis with a time-to-live configured in the application environment
-(`redis.time-to-live.hours`, 24 by default).
+(`redis.time-to-live.hours`, 24 by default). Multipart uploads are capped at 200 MB
+(`spring.servlet.multipart.max-file-size`), and Spring Boot actuator health is the only exposed
+management endpoint.
 
 ## Important conventions
 
@@ -137,17 +152,29 @@ Result data is stored in Redis with a time-to-live configured in the application
 - **Two response schemas and a 202 convention.** Start endpoints return an
   `ArdocoResultResponse` envelope (`requestId`/`status`/`message`/`traceLinkType`/`result`);
   retrieval returns 200 with results, 202 while pending or after the `tlr.timeout.seconds` (60 s)
-  wait window expires, and errors surface via the centralized `GlobalExceptionHandler`.
+  wait window expires, and errors surface via the centralized `GlobalExceptionHandler`
+  (422 for bad input, 500 for pipeline errors, 408 for timeouts).
 - **Temporary files are created during request handling and cleaned up after pipeline execution.**
+
+## Wiki maintenance
+
+This wiki (the `openwiki/` directory) is generated documentation, not hand-written prose. Per
+[AGENTS.md](../AGENTS.md), the repository's documented maintenance process refreshes generated pages
+after source changes — automated weekly by `.github/workflows/openwiki.yml` — so prefer updating
+source code or docs and letting OpenWiki regenerate rather than hand-editing these pages. Two
+practical consequences for agents working here:
+
+- Treat source code and tests as authoritative when they disagree with a wiki page; a stale page is a verification gap, not ground truth.
+- When pages move or are added, keep this quickstart's routing map and change-guide links pointing at every committed page.
 
 ## Task-routing map
 
 Start here if you need to understand the repository quickly:
 
 - [Architecture](architecture.md) — layered design, controller/service inheritance hierarchies, and the split between in-flight tracking and durable Redis storage
-- [Runner domains and API surface](domains.md) — the four trace-link families, endpoints per family, required multipart inputs, and the model-format parameter
+- [Runner domains and API surface](domains.md) — the trace-link families plus the inconsistency workflow, endpoints per family, required multipart inputs, and the model-format parameter
 - [Workflow: pipeline execution](workflows/pipeline-execution.md) — end-to-end control flow of starting a pipeline, dedup, async run, and the error path
-- [Workflow: result retrieval and waiting](workflows/result-retrieval.md) — the four retrieval modes, timeout behavior, and the 202 convention
+- [Workflow: result retrieval and waiting](workflows/result-retrieval.md) — the retrieval modes, timeout behavior, and the 202 convention
 - [Request IDs and result caching](concepts/request-ids-and-caching.md) — how IDs are constructed, why configs are not hashed, TTL, and dedup consequences
 - [Response and error model](concepts/response-and-error-model.md) — both response schemas and the exception-to-HTTP-status mapping
 - [ArDoCo runner integration](integrations/ardoco-runners.md) — how the REST layer binds to the external ArDoCo runner classes and configurations
@@ -167,16 +194,23 @@ Use the docs above as the map, then verify changes in the relevant layer:
 - Layering/structure invariants: [Architecture](architecture.md), enforced partly by `ArchitectureTest`
 - Operations changes (build, Docker, CI): update [Operations](operations.md) and `HELP.md` if run instructions change
 - Tests: see [Testing](testing.md) for the relevant suites
+- Wiki pages: they are generated — see [Wiki maintenance](#wiki-maintenance) before editing anything under `openwiki/`
 
 ## Source references
 
+- `AGENTS.md`
 - `pom.xml`
+- `src/main/resources/application.properties`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArDoCoRestApplication.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCodeController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArCoTLController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/InconsistencyController.java`
+- `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java`
+- `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ResultService.java`
+- `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessor.java`
+- `.github/workflows/openwiki.yml`
 - `src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArchitectureTest.java`

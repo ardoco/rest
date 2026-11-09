@@ -5,8 +5,8 @@ description: "How to build, run, deploy, and observe ArDoCo REST: Maven builds o
 tags: [operations, build, maven, spring-boot, docker-compose, dockerfile, spring-profiles, ci, github-actions, redis, redisinsight, endpoints, actuator]
 openwiki_generated: true
 verified:
-  - by: openwiki/0.7.3
-    at: 2026-11-02T14:56:49.573Z
+  - by: openwiki/0.9.0
+    at: 2026-11-09T15:26:30.664Z
 sources:
   - id: openwiki-source-79b37831c9c81206da1d88ec
     resource: repo://.github/dependabot.yml

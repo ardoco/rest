@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:d6798fad9a760564f98dfd84a1b1e8e01ab607316eaf7e4413aa3f6e827b12e9",
+  "pageVersion": "sha256:a9809bb35d25a6d9873f8319a6a286dde0cb3ffd6e72a4b207fda22a938a45eb",
   "claims": [
     {
       "id": "claim_7e93b455b92a42f9be6230fa99851960",
@@ -173,10 +173,72 @@
           "version": "repo-lines-v1:sha256:2a941f270c016283d690d6e34b654fe352e92786fadecf3dfce6b5be66fdc0b0:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1Y2RkOWJjZmM5ZDQ3ZDY2ZjUzMDhhMTJhODQ0MzYxODBjOGIzOGJmZTU0ZjQzOThiZThhY2ExNGE3ZGQ3ZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRlNDgzZTcyZGNkOTc1MGFkMDg3ZDliYWE4YmI4M2UxYjE5MTAzY2U5MTZlMmE3OTkwMzVlMzEwNmJiNGU2MDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUxMDEyNmQwMmMyN2RjOGUyYzBmYmYyYTgzMmRhMTJkNDdkYmM2MmIxZTg0OTlhMDZjZGZkMmU5ZDcwMzdmZTcifQ"
         }
       ]
+    },
+    {
+      "id": "claim_57022f7284d344d09b708feee36fb51e",
+      "statement": "The centralized GlobalExceptionHandler (@ControllerAdvice) maps exceptions to HTTP statuses and ErrorResponse bodies: FileNotFoundException and FileConversionException to 422 Unprocessable Content, ArdocoException to 500 Internal Server Error, IllegalArgumentException to 422, the custom TimeoutException to 408 Request Timeout, and any other Exception to a generic 500 handler.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java#L52-L107",
+          "version": "repo-lines-v1:sha256:4a18ef56fe395005213957b9a18a1e002441e904f764b3114611aa986b5b8ac1:eyJzZWxlY3RlZExpbmVDb3VudCI6NTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNjMDQ3YzY0ZjY2Yzk2ZjMxNGMxZTkwOWRkMmFkMmRhZmQzM2U4NGFlY2QyODhlMTQyNmFmOTE4NmZjMzIwM2IiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM5Y2JiYzY1NDY5ZGIxY2EyODQyZWZkOTdkZjdlZTJjZTZjYzE1NzE0ODJkMDFhMThiNzkwYTEwYzdjNTEwZjMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVlMmI5ZTIxZmRjODZmYzJjMmVlNDQ3MjE4NWQ2NzY0NjdiZGQxY2JmMmUyNGI0ZGM2NDRhYjFhYmIzMzI1NDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQzYjU0ZjZlNGM1ZDUzOTM3MDkxNGZkNWQ5ZGJlNzcyMDE5ZTQ3NTYzNDIwMjk3ZjNiM2M0Yzc4NGIyMTliZGEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e4098f38d98c4902808d40f857103021",
+      "statement": "Start-and-wait endpoints return 202 Accepted with the REQUEST_TIMED_OUT_START_AND_WAIT message when the underlying wait for an in-flight pipeline expires, in contrast to plain start endpoints, which return 200 immediately with a processing message.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L86-L97",
+          "version": "repo-lines-v1:sha256:a51d25375ec1b73f07e2612401e1a8084ab26a663529e0dda636d139a4fdd1cf:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIwNWFjODgzOTRkMmI3ZTdkNTdlMTkwNjIzNzc3MGY5OTc4Y2I4MmMyNGM0YjFlMGRjNmRmZmRhYjE1MjEzNDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM5Y2JiYzY1NDY5ZGIxY2EyODQyZWZkOTdkZjdlZTJjZTZjYzE1NzE0ODJkMDFhMThiNzkwYTEwYzdjNTEwZjMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJlMjBiNDMyZjM3OTY4NzhhNGQ2MDZjOTY4Mzk5NDk1OTUwYmZhM2IzNDdlNzJhMDllMzVlMDI3MzdlNWQ1ZGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ4ODk5NzkyNWE0ZGNhNmU4YTY0NDU0ZWQzYjI1OWRhYWE5OGVkMjFhMmRiZmY2ZjU3ZTk4ZDE1ZGNkMTM4YTAifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/messages/ResultMessages.java#L13-L14",
+          "version": "repo-lines-v1:sha256:ba0eff788b78826ab1f84c0740add9e841951d14ec17b5e979c04de994eb0bee:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOWJkMWE5MjU1NjQxN2VjMmE2MGM0MGE4ZmRkMmI2NjFiYmIxOTI3YWQwNjk1ZThiNDVlNzM4ZDVkNzZiYzgyMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTAwMGYwOTZkNThiZWUyMWMxMTc3NjhlZmM0YmFiZjg2NjkyZDIxNDEwZjY5NTgyYjVlZGMxMzIzMjIxYTA1OCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODU5YTJkNTBhMTZhOTA2MDIzN2M0N2ZkZGRlNjI0YzlhYTkyMzJkNDQ4ODkwNjdjMDJmYjU4MjBlZjhjYmE0NiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_e3aeeae5740d4bc6907fab46c720176e",
+      "statement": "The inconsistency workflow keeps its results keyed separately from plain SWATTR results by overriding generateRequestId: InconsistencyController builds IDs as TraceLinkType.SAD_SAM.getKeyPrefix() + 'Inconsistency:' + projectName + hash (i.e. swattrResultInconsistency:...) despite sharing the SAD_SAM trace-link type and endpoint binding with SwattrController.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java#L9-L20",
+          "version": "repo-lines-v1:sha256:e2db74fd9edfeac09806fa39db4afba6d6cc20612f73c273562d341be9b12d0f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhMzM4ZGE4MDhjNjNkODQ2ZDNmMDc4N2JhZDQwNTExYmVkM2NhMzlhOTc1YjE2ZjA3MTFkNmU3ZDA0MmQ5NjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhZjBhNjZmZTVkNTU0NDgwNDRjNTI4ZGMxMWQ2ZTUzMDFmYjdlYjdhYzMyODVmZTY3ZjEwYTc0M2Q2ZTJlMjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU4ZjY3MzFhZjA2MjFjMjM3OTg2ZDFlYjIwYjFkNTQ1MDdlZWFlYmQ2NTdiOGY4YzVmNGY4MjY5NGI0YTFiZTYifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/InconsistencyController.java#L143-L148",
+          "version": "repo-lines-v1:sha256:a13e6f0eeeeb06c99560ba3e6bb5c1c50be916604eea7b5f9c6bd33b63d31a29:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWRjMmIzMTFhYmU4NzU3MmU4YTdjYzBkOTk2YTY1ODQ0MDc2ZTUyMzJkMjFiN2E4NTQ3NWY5YjQwNTViNzQ5MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTE3NjE1YzlkNmQyNmQ4ZTYzZmU5NWNjYTdlNmUwYTg5ZGYxZmFiZGE1MTZiNjg0NDFlZTFkNzI3ZjEyM2I0NCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_f1c19aa5b1a64a6ba80a18923e099f2d",
+      "statement": "The openwiki/ directory is generated documentation maintained through the repository's documented maintenance process and a scheduled GitHub Actions workflow (.github/workflows/openwiki.yml, weekly cron Monday 06:00 UTC calling the ardoco/actions openwiki workflow); AGENTS.md instructs contributors to refresh generated pages after source changes rather than hand-edit them, and to treat source code and tests as authoritative.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/openwiki.yml#L1-L17",
+          "version": "repo-lines-v1:sha256:bf077ccef0e2cd34134360b05d6efa4f00b44ee578eb40b00f56b6ed10ae9927:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA2MDI3ODdhZjZkY2MwODM0ZGUxMjFjYmIxY2I5NWY5NDU5YjcyMWVhYjAzNDlmMTA1MDFiOTk2YzFjNzdmZmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1MWYyNDA1MTEwMzEwZGVhMTE4Yzk2Y2QxMGY2MDdlNjE4N2U5ZDFiYzc0MDUyZjI1YjcxMDE2ODBkMWU0ZTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://AGENTS.md#L4-L16",
+          "version": "repo-lines-v1:sha256:0e1c55cac9923f82ef9c68870c10786d6ab29626c07049ad83c7b1b7769928bb:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA5Zjc4NzE0ODkzYWE3Nzk0MmNlYTFjNGEyZTAyMzFkYmI3ZmEyYTQxYTcwYzgxNDYwYTNjNjc1NjJkYTNhYWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU5YjQ4YzFjOTNhZjYzMmQwZDU0ZjM3NWYzNGJlNjNiZmUwODRkYTIxZGJmOThkODlmMmM1MTc0ZjRmNTY2ZWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1a410d16eadd4aa1b205176aeb2c08d5",
+      "statement": "application.properties fixes the operational request envelope: multipart uploads are enabled and capped at 200MB via spring.servlet.multipart.max-file-size, and Spring Boot actuator exposes only the health endpoint (management.endpoints.web.exposure.include=health, with management.endpoint.health.show-details=always).",
+      "evidence": [
+        {
+          "resource": "repo://src/main/resources/application.properties#L14-L18",
+          "version": "repo-lines-v1:sha256:bf69743d054f0599fe174dbeb7345f05fb19147ac649ca7eff5a90105facbd86:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDVkZTU0NTM5ZDhjYmU3N2ZjMGVjYjY4M2IwMjk0M2E0NDY4YTUyZDNlNmYwMWM2OWY1YjFlYmNiODI2Y2Q1MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGVjZTg2OTk0MzY5NjFjNGFhMWM4YjIyYjYyMmE3ZjcxNzNiMTE1MTY0YWFlMGRkMDdkODM5NDYyNThhNDUwOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTg0ZWMzNmY2YmE4NjUwYmVkNjk2YWFmNjAxMzljMjNkNmMzMmQ3YjRjY2YxNzRlZGViNTU5OWNkY2YzOTVhYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNmU4ZWRmNzgwZjk2NTg5YzExODljZDdjYjZjY2UyYmVmZGY4MmUyYTdkNDM2NjQyZGE2N2MzMDE1ZTQ0ZDIzNiJ9"
+        }
+      ]
     }
   ],
   "verification": {
-    "by": "openwiki/0.7.3",
-    "at": "2026-11-02T14:56:49.573Z"
+    "by": "openwiki/0.9.0",
+    "at": "2026-11-09T15:26:30.664Z"
   }
 }
