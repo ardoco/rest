@@ -1,18 +1,16 @@
-/* Licensed under MIT 2025. */
+/* Licensed under MIT 2025-2026. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter;
 
 import org.eclipse.collections.api.list.ImmutableList;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.kit.kastel.mcse.ardoco.core.api.entity.ArchitectureEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.entity.ModelEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.text.SentenceEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.TraceLink;
 import edu.kit.kastel.mcse.ardoco.core.api.tracelink.TransitiveTraceLink;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 /**
  * Utility class for converting ArDoCo trace links into JSON string representations.
@@ -29,11 +27,9 @@ public final class TraceLinkConverter {
      *
      * @param sadCodeTraceLinks the list of {@link TraceLink} objects to convert
      * @return a JSON string representation of the list of {@link TraceLink} objects
-     * @throws JsonProcessingException if the conversion to JSON fails
      */
-    public static String convertListOfSadCodeTraceLinksToJsonString(ImmutableList<TraceLink<SentenceEntity, ? extends ModelEntity>> sadCodeTraceLinks)
-            throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static String convertListOfSadCodeTraceLinksToJsonString(ImmutableList<TraceLink<SentenceEntity, ? extends ModelEntity>> sadCodeTraceLinks) {
+        JsonMapper objectMapper = JsonMapper.shared();
         ArrayNode arrayNode = objectMapper.createArrayNode();
 
         for (TraceLink<SentenceEntity, ? extends ModelEntity> traceLink : sadCodeTraceLinks) {
@@ -67,11 +63,10 @@ public final class TraceLinkConverter {
      *
      * @param samCodeTraceLinks the list of {@link TraceLink} objects to convert
      * @return a JSON string representation of the list of {@link TraceLink} objects
-     * @throws JsonProcessingException if the conversion to JSON fails
      */
     public static String convertListOfSamCodeTraceLinksToJsonString(
-            ImmutableList<TraceLink<? extends ArchitectureEntity, ? extends ModelEntity>> samCodeTraceLinks) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
+            ImmutableList<TraceLink<? extends ArchitectureEntity, ? extends ModelEntity>> samCodeTraceLinks) {
+        JsonMapper objectMapper = JsonMapper.shared();
         ArrayNode arrayNode = objectMapper.createArrayNode();
 
         for (TraceLink<? extends ArchitectureEntity, ? extends ModelEntity> traceLink : samCodeTraceLinks) {
@@ -97,11 +92,9 @@ public final class TraceLinkConverter {
      *
      * @param sadSamTraceLinks the list of {@link TraceLink} objects to convert
      * @return a JSON string representation of the list of {@link TraceLink} objects
-     * @throws JsonProcessingException if the conversion to JSON fails
      */
-    public static String convertListOfSadSamTraceLinksToJsonString(ImmutableList<TraceLink<SentenceEntity, ModelEntity>> sadSamTraceLinks)
-            throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static String convertListOfSadSamTraceLinksToJsonString(ImmutableList<TraceLink<SentenceEntity, ModelEntity>> sadSamTraceLinks) {
+        JsonMapper objectMapper = JsonMapper.shared();
         ArrayNode arrayNode = objectMapper.createArrayNode();
 
         for (TraceLink<SentenceEntity, ModelEntity> traceLink : sadSamTraceLinks) {

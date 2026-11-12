@@ -1,4 +1,4 @@
-/* Licensed under MIT 2025. */
+/* Licensed under MIT 2025-2026. */
 package testUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,15 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ErrorResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.messages.ResultMessages;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.json.JsonMapper;
 
 public final class TestUtils {
 
@@ -41,9 +39,9 @@ public final class TestUtils {
         return new HttpEntity<>(parameters, headers);
     }
 
-    public static ArdocoResultResponse parseResponseEntityToArdocoResponse(ResponseEntity<String> responseEntity) throws JsonProcessingException {
+    public static ArdocoResultResponse parseResponseEntityToArdocoResponse(ResponseEntity<String> responseEntity) {
         // Parse the response body into a JsonNode
-        ObjectMapper objectMapper = new ObjectMapper();
+        JsonMapper objectMapper = JsonMapper.shared();
         JsonNode rootNode = objectMapper.readTree(responseEntity.getBody());
         JsonNode result = rootNode.get("result");
         JsonNode traceLinkNode = (result != null && result.has("traceLinks")) ? result.get("traceLinks") : null;

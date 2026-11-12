@@ -4,8 +4,6 @@ package edu.kit.kastel.mcse.ardoco.tlr.rest.api.service;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import edu.kit.kastel.mcse.ardoco.core.api.entity.ModelEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.output.ArdocoResult;
 import edu.kit.kastel.mcse.ardoco.core.api.text.SentenceEntity;
@@ -30,7 +28,7 @@ public class TransArCService extends AbstractRunnerTLRService {
     }
 
     @Override
-    protected ArDoCoApiResult convertResultToJsonString(ArdocoResult result) throws JsonProcessingException {
+    protected ArDoCoApiResult convertResultToJsonString(ArdocoResult result) {
         ImmutableList<TraceLink<SentenceEntity, ? extends ModelEntity>> traceLinks = result.getSadCodeTraceLinks();
         String traceLinksJson = TraceLinkConverter.convertListOfSadCodeTraceLinksToJsonString(traceLinks);
         return new ArDoCoApiResult(traceLinksJson);

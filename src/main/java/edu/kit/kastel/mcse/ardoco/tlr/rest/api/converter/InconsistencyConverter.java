@@ -3,14 +3,12 @@ package edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter;
 
 import org.eclipse.collections.api.list.ImmutableList;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import edu.kit.kastel.mcse.ardoco.core.api.stage.inconsistency.Inconsistency;
 import edu.kit.kastel.mcse.ardoco.id.types.ModelEntityAbsentFromTextInconsistency;
 import edu.kit.kastel.mcse.ardoco.id.types.TextEntityAbsentFromModelInconsistency;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 public final class InconsistencyConverter {
 
@@ -18,8 +16,8 @@ public final class InconsistencyConverter {
         // Prevent instantiation
     }
 
-    public static String convertInconsistencyToJsonString(ImmutableList<Inconsistency> inconsistencies) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
+    public static String convertInconsistencyToJsonString(ImmutableList<Inconsistency> inconsistencies) {
+        JsonMapper objectMapper = JsonMapper.shared();
         ArrayNode arrayNode = objectMapper.createArrayNode();
 
         for (Inconsistency inconsistency : inconsistencies) {
