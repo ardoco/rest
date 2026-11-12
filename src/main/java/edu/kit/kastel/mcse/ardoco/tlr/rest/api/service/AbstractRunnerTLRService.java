@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import edu.kit.kastel.mcse.ardoco.core.api.output.ArdocoResult;
 import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArdocoRunner;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
@@ -68,9 +66,8 @@ public abstract class AbstractRunnerTLRService extends AbstractService {
      *
      * @param result the ArDoCo result containing trace links
      * @return JSON representation of trace links
-     * @throws JsonProcessingException if there is an error during conversion
      */
-    abstract protected ArDoCoApiResult convertResultToJsonString(ArdocoResult result) throws JsonProcessingException;
+    abstract protected ArDoCoApiResult convertResultToJsonString(ArdocoResult result);
 
     /**
      * Starts a new pipeline asynchronously, if the result is not already available or in progress.

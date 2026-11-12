@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.github.ardoco</groupId>
     <artifactId>parent</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>rest</artifactId>
@@ -33,11 +33,6 @@
 
   <dependencies>
 
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
-
     <!-- Latest ArDoCo dependencies using snapshot versions -->
     <dependency>
       <groupId>io.github.ardoco.core</groupId>
@@ -62,6 +57,25 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Explicit JUnit dependencies to ensure Spring Boot 4.0.6's versions are used -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -109,25 +123,6 @@
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers-junit-jupiter</artifactId>
     </dependency>
-    <!-- Explicit JUnit dependencies to ensure Spring Boot 4.0.6's versions are used -->
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
     <!-- Jedis Redis Client  -->
     <dependency>
       <groupId>redis.clients</groupId>
@@ -152,6 +147,17 @@
       </snapshots>
       <id>mavenSnapshot</id>
       <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+    </repository>
+    <repository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <!-- ARDoCo snapshot builds (public, read-only mirror group on gitlab.kit.edu) -->
+      <id>ardocoSnapshots</id>
+      <url>https://gitlab.kit.edu/api/v4/groups/253644/-/packages/maven</url>
     </repository>
   </repositories>
 

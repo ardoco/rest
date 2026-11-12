@@ -2,7 +2,6 @@
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import edu.kit.kastel.mcse.ardoco.core.execution.runner.ArdocoRunner;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
@@ -29,6 +25,9 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.messages.ResultMessages;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.AbstractRunnerTLRService;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.ResultService;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.util.HashGenerator;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * The {@code AbstractController} class provides foundational methods for handling various REST responses
@@ -58,6 +57,9 @@ public abstract class AbstractController {
 
     @Autowired
     private ResultService resultService;
+
+    @Autowired
+    private JsonMapper jsonMapper;
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
 
@@ -144,12 +146,11 @@ public abstract class AbstractController {
     protected SortedMap<String, String> parseAdditionalConfigs(String additionalConfigsJson) {
         SortedMap<String, String> additionalConfigs = new TreeMap<>();
         if (additionalConfigsJson != null && !additionalConfigsJson.isBlank()) {
-            ObjectMapper mapper = new ObjectMapper();
             try {
-                Map<String, String> configMap = mapper.readValue(additionalConfigsJson, new TypeReference<>() {
+                Map<String, String> configMap = jsonMapper.readValue(additionalConfigsJson, new TypeReference<>() {
                 });
                 additionalConfigs.putAll(configMap);
-            } catch (IOException e) {
+            } catch (JacksonException e) {
                 throw new FileConversionException("Invalid JSON format in 'additionalConfigs' parameter", e);
             }
         }

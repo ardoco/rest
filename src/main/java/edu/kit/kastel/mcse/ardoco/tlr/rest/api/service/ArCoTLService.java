@@ -4,8 +4,6 @@ package edu.kit.kastel.mcse.ardoco.tlr.rest.api.service;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import edu.kit.kastel.mcse.ardoco.core.api.entity.ArchitectureEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.entity.ModelEntity;
 import edu.kit.kastel.mcse.ardoco.core.api.output.ArdocoResult;
@@ -30,7 +28,7 @@ public class ArCoTLService extends AbstractRunnerTLRService {
     }
 
     @Override
-    protected ArDoCoApiResult convertResultToJsonString(ArdocoResult result) throws JsonProcessingException {
+    protected ArDoCoApiResult convertResultToJsonString(ArdocoResult result) {
         ImmutableList<TraceLink<? extends ArchitectureEntity, ? extends ModelEntity>> traceLinks = result.getSamCodeTraceLinks();
         String traceLinkJson = TraceLinkConverter.convertListOfSamCodeTraceLinksToJsonString(traceLinks);
         return new ArDoCoApiResult(traceLinkJson);
