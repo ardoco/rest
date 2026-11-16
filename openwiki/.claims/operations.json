@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:7778eca2dc824ba6cd0ad89a6bd9dd7ebafad36a15a098a2b47ce4bebf56ef09",
+  "pageVersion": "sha256:dfe45e79c33c68d0e2f694593d5b41465fab986ea63ac499ff67322cc956f910",
   "claims": [
     {
       "id": "claim_e41c29edde844c368f6843e280c71bb1",
-      "statement": "ArDoCo REST builds as io.github.ardoco:rest:2.1.0-SNAPSHOT on the io.github.ardoco:parent:2.1.0 parent POM; Spring Boot is managed by importing the spring-boot-dependencies 4.1.2 BOM into dependencyManagement, and the spring-boot-maven-plugin repackages the executable jar with main class edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication while the Failsafe plugin binds integration-test and verify to the integration-test phase.",
+      "statement": "ArDoCo REST builds as io.github.ardoco:rest:2.1.0-SNAPSHOT on the io.github.ardoco:parent:2.2.0-SNAPSHOT parent POM; Spring Boot is managed by importing the spring-boot-dependencies 4.1.2 BOM into dependencyManagement, and the spring-boot-maven-plugin repackages the executable jar with main class edu.kit.kastel.mcse.ardoco.tlr.rest.ArDoCoRestApplication while the Failsafe plugin binds integration-test and verify to the integration-test phase.",
       "evidence": [
         {
-          "resource": "repo://pom.xml#L158-L212",
-          "version": "repo-lines-v1:sha256:4cfb2191c4230a7ae41f49463e7bd18271dd68700edf74e364ad9ce08644e345:eyJzZWxlY3RlZExpbmVDb3VudCI6NTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFiZjlkNmFmMmVmOTY1Y2ZiNGI0ZmMwZmU2Mzg3NmMwOTVjYzgzYzljYmZmZTlhMTk5ODgzNDM2OTViMzQ4N2IiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI2ZTMyYTMwZjNmMjBiYmM4MmY1YzUzZDQ4MDg4M2RhODk0OWQwYWJhYTllZGQwNWFkMzJjZDdhYzRlMjc5ZTciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVlOGYwYWUzNjMzMzFiZTQzNjgwMjU4MzkwMGY3OWRkNzQ5OGFmMTAyMDVhNjJhMjg3ZTAzMzkxNzAzOTg4M2EiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+          "resource": "repo://pom.xml#L164-L196",
+          "version": "repo-lines-v1:sha256:c4a6529644d39c240e796b7011533d485f75c28ee2e2c8e0ea2f9811628eb4f2:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFiZjlkNmFmMmVmOTY1Y2ZiNGI0ZmMwZmU2Mzg3NmMwOTVjYzgzYzljYmZmZTlhMTk5ODgzNDM2OTViMzQ4N2IiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdkY2NiODBiMjYyOTIzYWZhOWQyMTE1NDZlZjRlMzI5ZDliMjEzNTFmYzgwN2IyNWU5YWVjZDExMjVhOWUxNGMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVlOGYwYWUzNjMzMzFiZTQzNjgwMjU4MzkwMGY3OWRkNzQ5OGFmMTAyMDVhNjJhMjg3ZTAzMzkxNzAzOTg4M2EiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRmNDM5NjJjOTJkMjlhNzE1YTc1MDkwNzA1NmU2N2I2MWVmNDIwZDQ5Yzc2NjE3ZmRkYzIzNGNjYWYwODBkMGMifQ"
         },
         {
           "resource": "repo://pom.xml#L22-L32",
@@ -16,7 +16,7 @@
         },
         {
           "resource": "repo://pom.xml#L5-L12",
-          "version": "repo-lines-v1:sha256:5d499ab266ced73af4b7c7182f6df83472f0a66f13ffd21b1bbd9cf2f6e933cd:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTRhNDE0YWE2YmE1MDYyMTA2M2Y2YzhhOTQ1M2Q4MjgxMDk4MjUzNzk5YjVlMGE5ZDYxNmU5YTQ0MzgwOGVlOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZGI4MjQ3M2Y0NTk0YjljMzI0M2RjYzg5Zjg1OGFmYjEzMjUzZmJlYzYwOTcxODlkYTk2YTQ4MjRlNjE5MzIyZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjkwNWY1NGU2M2U4ODJjNDA1NmMxNDk4YTdmZDQ3Y2U5OGUzYmY2ZjBkOWEzNmRhODBhNzBmZjZiOWMxNWRjMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmNjYjljN2EzOTJmMjU3YjRjNjA2MjQxYjNjZWQ3ZjRiYjNiYTI3YjYwZGZhNWE1NzVjYjc3NTZlOTI5ZWE4ZSJ9"
+          "version": "repo-lines-v1:sha256:74835b192cba3e925bd497941c14e5862b25111afb5ae1b6678acf9bd1fe34b6:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTRhNDE0YWE2YmE1MDYyMTA2M2Y2YzhhOTQ1M2Q4MjgxMDk4MjUzNzk5YjVlMGE5ZDYxNmU5YTQ0MzgwOGVlOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZGI4MjQ3M2Y0NTk0YjljMzI0M2RjYzg5Zjg1OGFmYjEzMjUzZmJlYzYwOTcxODlkYTk2YTQ4MjRlNjE5MzIyZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjkwNWY1NGU2M2U4ODJjNDA1NmMxNDk4YTdmZDQ3Y2U5OGUzYmY2ZjBkOWEzNmRhODBhNzBmZjZiOWMxNWRjMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmNjYjljN2EzOTJmMjU3YjRjNjA2MjQxYjNjZWQ3ZjRiYjNiYTI3YjYwZGZhNWE1NzVjYjc3NTZlOTI5ZWE4ZSJ9"
         }
       ]
     },
@@ -29,7 +29,7 @@
           "version": "repo-lines-v1:sha256:dafeab21c2be60d0fdbfc6b97e1cbdc2cf869570d1ec98136cb30b647ce328a9:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjJmNDY5NDYwN2VmNzQxYzk0YzFlZGMzMjlmYmM1OGIyNDRiYzJhYTJhMzA3NzRlODE0NjhjMzFiNmRmY2MxZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTczYzE0NDBjMzlkMzZkMTkwYTRkYzQ2ZjVmMTU1ZjRiMjY2N2U1OWEzMThkZDRjOTExNWM1ZDE5MTE1ODA4MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzgwNWJjODMxYTYzNjM5OGQwZjcxNzY1YmEzNjNhZjc1YWE0ZjBhY2I3ZmNmOGZiNzJiNDMzZDc5ZDQ5MTVmNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWViMDYyNWE0ZmI4YzMxNDNlMjI3YTVkYjNmZjAzYzI0ZGY5NGU5ZTc1OGM5NmQwZjk3NDY3OWZiMjhiOTE5ZCJ9"
         },
         {
-          "resource": "repo://pom.xml#L112-L130",
+          "resource": "repo://pom.xml#L62-L80",
           "version": "repo-lines-v1:sha256:9e5975c01f39dbb8ddd58eb26e757337c8b675fdb74ec2838e24eedd6251a48d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJkZDM1NzJlZTM3NTYxNzY5MzA2ODE0MzJmZWYyNzYwZjg0YjhhYzFmZjMyM2Y4NGQ1OWEzNGU3Y2Q5NzkyYjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc5ZjcyNmM4MzRjYzE0OGM2YjM3Y2JkM2NlMjk3NjQ0MjAxZjEwM2M2Y2MzMzY5YzgyMDY2N2QxZDM5YWM5OTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFhZjNiYzcyOWMwYzU0OTg1Zjg1YzBhNDY4ZjY0NmQ1NzFmMjE1Mzc0MzM1MmNjMGNmOTU0MDE1ZDQ0NTUxNTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRmNGRlNDE0ZDQ5OWY0NmQ2MmE1MzM5ODdiMzAwMGVlMGU2MjA0MjQ4YTAxZjM0ZWZhZmE3YmUxN2RmZTZmZTkifQ"
         },
         {
@@ -40,15 +40,15 @@
     },
     {
       "id": "claim_f32faf670fec40c9bb63030af8e155f1",
-      "statement": "The four ArDoCo libraries (io.github.ardoco.core:common, io.github.ardoco.id:pipeline-id, io.github.ardoco.tlr:pipeline-tlr, io.github.ardoco.tlr:text-preprocessing) resolve at the inherited ${ardoco.version} snapshot property from the parent POM, so the pom enables the Sonatype maven-snapshots repository (snapshots enabled, releases disabled) alongside Maven Central.",
+      "statement": "The four ArDoCo libraries (io.github.ardoco.core:common, io.github.ardoco.id:pipeline-id, io.github.ardoco.tlr:pipeline-tlr, io.github.ardoco.tlr:text-preprocessing) resolve at the inherited ${ardoco.version} snapshot property from the parent POM; to make those snapshots resolvable, the pom declares Maven Central plus two snapshot-only repositories (releases disabled): the Sonatype maven-snapshots repository and ardocoSnapshots, the public read-only ARDoCo GitLab group packages mirror on gitlab.kit.edu that enables resolving the ARDoCo 2.2.0-SNAPSHOT builds from the Jackson 3 migration.",
       "evidence": [
         {
-          "resource": "repo://pom.xml#L140-L156",
-          "version": "repo-lines-v1:sha256:590e26a8853c82e26f7c62a4008773781473fe92ff4f54a8488c05ea05a8a0a8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0ZGM3NTljMTQxYWY4YTRhYTI4NzFmNmE2YWU5MjZjNGMyYmI0YjYzOTM0YTRlMzc4NTM4MTkyYzc1MjJjMTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0MWY0OWY2Y2Q4ZDg5ODBlNzY2MzgxNWYyOWIzODY0ZDJmYjJhZDg3YzQwZjljMjM0OWNjMTdlOTI5MTA2ZGMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYwY2M2MjYyYTdkZjRiOGJjM2YwNTY5ODhjNWRkM2RlYTIzYmE3OTJkYWRmYTVjOWU5NTUzNzhmZWNjNDFiYzUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjcyNTJlMzQ0NTQ5MmE1YWI1NTNiMzZlM2IxNjg5NWIyNWJiYjllOTc0YWIxYTA0MmY0ZDY4MjIyMWQyMGQ3NGQifQ"
+          "resource": "repo://pom.xml#L136-L162",
+          "version": "repo-lines-v1:sha256:ad8b6c15221d08612a9f9edb6ce43fa735f5590fcc64dff26d60ec4a33ece1f6:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU5OTAzYTQzNDVlMTY1NTRmMGYyMzM5ZTQ1ZmRiMmZiZWY0ZmIxMjA4MzBmOTJjMDlhMjJhNjkwMzEzNDQ3ZDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0MWY0OWY2Y2Q4ZDg5ODBlNzY2MzgxNWYyOWIzODY0ZDJmYjJhZDg3YzQwZjljMjM0OWNjMTdlOTI5MTA2ZGMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFkODE3YTYyMDVhZWI4MTc4OTNmMDZlODExYTgzZDBlNGRlYWYzMjk3MzVhY2RhMWFlOTc2YzgwOTQ4MTg1YWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjcyNTJlMzQ0NTQ5MmE1YWI1NTNiMzZlM2IxNjg5NWIyNWJiYjllOTc0YWIxYTA0MmY0ZDY4MjIyMWQyMGQ3NGQifQ"
         },
         {
-          "resource": "repo://pom.xml#L40-L61",
-          "version": "repo-lines-v1:sha256:bcf895855a6aa035bf529fb1c903c3d8b48e79ea505617b27b67207be7c1a9a8:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc5ZjcyNmM4MzRjYzE0OGM2YjM3Y2JkM2NlMjk3NjQ0MjAxZjEwM2M2Y2MzMzY5YzgyMDY2N2QxZDM5YWM5OTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRkNDQ3MGI5NmJkN2M4MTA1NGVmNGU3NDdjOWQ5YjdlNWU0OWQ2YzkxNzY0NzAwOWNhZGM1YTM3OTM0NGM4NjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc3Y2NmMmZlNjQ4OGE0MTdjNWEyZTRlMzFmZjAzODJhYTdkN2RkZmVkM2IzOThmMTRiNzNmYjViODkwOGNkMjQifQ"
+          "resource": "repo://pom.xml#L36-L56",
+          "version": "repo-lines-v1:sha256:74534ea6cb7f5970505b6d158f5e035b58fb3c4268f5c5b5159a5d07083e9f56:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzZTBhNmFkODYyNTI5OTNkZjliMjJiOTc2NDk1ODE5NjY3MTdlYTJjMTJmYmZkYTM0MGM0ODM2YzMzZDQ5ZDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc5ZjcyNmM4MzRjYzE0OGM2YjM3Y2JkM2NlMjk3NjQ0MjAxZjEwM2M2Y2MzMzY5YzgyMDY2N2QxZDM5YWM5OTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI2N2U2ZmYzMWFhMzAyM2E2ZWQ5OTRhNmZkZWM2ODJkNmZhOWRkOGIwZGU1NzJlYTg1YWQ0NDAwODliNDExZDAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc3Y2NmMmZlNjQ4OGE0MTdjNWEyZTRlMzFmZjAzODJhYTdkN2RkZmVkM2IzOThmMTRiNzNmYjViODkwOGNkMjQifQ"
         }
       ]
     },
@@ -133,7 +133,7 @@
           "version": "repo-lines-v1:sha256:9c37591ab3f05c7bb51831adc153a913e394a5263e3d56aea3dadcf5dea21109:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhiZjc4ZDViNTgzZDE4MzhmMmMzYjc0YjRmNjk3Njc2MDYzOTFjYjhmMzZmNzcwZDJkODNmMTUzYmUzNmEyODkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM2ZTdjN2I1ZjYzMzQyMTM3MmNiOWI2OWVlZTAwMmJjYTVlZjU5YjI3YWI0ZTE3ZmY1Zjk0ZGViNDc0NzgyZTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         },
         {
-          "resource": "repo://pom.xml#L174-L188",
+          "resource": "repo://pom.xml#L180-L194",
           "version": "repo-lines-v1:sha256:93379301826e8ed5ac2a7955412df33b6083c267ffd997c5ab775d6036814bae:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZkMTc3OTJlMDZhNWQwYjQ5YmJlN2NjMTU5MGM4ZjZmMjZmZGQwNGJjN2U0OTZiNmE5MmVhZTI4ZGU1OWJjNmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRlMTJmYjc2YjQyZjUyNjdhNTQ3ZmIwYTBhYTIyOTA4NTc3OTViNzMwMTk4MDMyZmNmNGViMGNlOTBjOTgxNzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyOTUyMjE5MTU0OTBlMTg2Y2JlOWJhMzYxY2ZlM2IzYTA4NjhlOGYyZDVjZTZiZjA3ZDk3OGY4NjNjZDZlNTQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBhMGM5ZTc3MDc1OWUzNDgxNmRiMWQ1MmM1YmE3MjM4NjVhNjU4MzU2MzNiY2Q2OWYyM2IyNjQyZmU1Yzg5NTAifQ"
         }
       ]
@@ -243,7 +243,7 @@
       "statement": "At runtime /start answers HTTP 200 immediately with either a cached result or the requestId and a being-processed message; /start-and-wait and /api/wait-for-result/{id} block up to tlr.timeout.seconds (60s) and return 200 with the result or 202 when the wait times out; /api/get-result/{id} returns 202 while the pipeline is in flight; results expire from Redis after redis.time-to-live.hours (24h) so a repeated request re-runs the pipeline; and a failed pipeline stores an \"Error: \"-prefixed message under the request ID with the same TTL so a retry within the window surfaces the cached failure.",
       "evidence": [
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L85-L120",
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L87-L122",
           "version": "repo-lines-v1:sha256:0ce1064759aba171c39e1f1017130f8fedd7119d18efeb00ecb7b43505b69306:eyJzZWxlY3RlZExpbmVDb3VudCI6MzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxZTMwMmM0MTI5N2JkNmM2YmQzNzg5MTVmZjAwMjAyYjdkNWI0ODMzYjVhMGU2NTMyNTIxYjkwYTFhYTNhZTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ2MjlhMTM1NmZmYTVmMDhkYjY2M2IxNzc0NmJlMGE0MjJiMGYyNjRjYzUzMzAyMDBlMTBjNzIxM2ZlZDA3NzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc1YWJkNmIyY2M4OTE2YTllMjdlY2U0YTRhZWI5NjBjMTY4OGY1ZWU0NmNhNzIwZGU0M2JlZmUxOGQxYjcxMGEifQ"
         },
         {
@@ -251,7 +251,7 @@
           "version": "repo-lines-v1:sha256:d74c1f4624f09c58b894f1e112d6b63a1452335963afa4d362e9b3b36d801552:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg1NjM1YTZiNjVhMTQ3MmYyY2M5ODJiODJhM2RhMmFiYzA0ZTBjMmE2ZjU4N2NhYzFlMjRmZTgzODUyNzFkYjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdlZTI4NGJhYzZiNzllMTZmMWE1MWYwZTIxNmYwOGFhZWNhY2Q3YjgxOTE4MTQwZjJhN2I4YjYxM2ZmZjU1ZGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
         },
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L83-L126",
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L80-L123",
           "version": "repo-lines-v1:sha256:8970a414690414eaebc7a829bb88000ee3c01a3e32a4a40ca9a3ffdc0c655735:eyJzZWxlY3RlZExpbmVDb3VudCI6NDQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ1ODRhNzc4MjlkNDhlNzQzNDRkYjBjMzhjMGVmMDRiNjRkYWQ5MDY4NmVhM2FjZjc0ZmMxZmJmYzAxM2E3MDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjEwODY4ODVlMGNmODMzNTA5NzczNjE4OTJjZTk4NGI0NzU0NjQzMDNhNGYwYjA3M2UzYThiMjE4OTAzMDM4Y2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwNGY4OWZjMGVjOThjOTgyNDE4M2U3OTVkM2VkZDE5ZTkzMGY3YmM0NzFmOTAxMmFhM2Q1MDNiZTJmODk3NGIifQ"
         },
         {
@@ -275,7 +275,7 @@
       "statement": "The pom adds two test-scope Spring Boot artifacts — spring-boot-restclient and spring-boot-resttestclient — alongside spring-boot-starter-test, and the controller integration tests use them: AbstractTLRControllerTest imports TestRestTemplate from org.springframework.boot.resttestclient and drives its HTTP calls with it.",
       "evidence": [
         {
-          "resource": "repo://pom.xml#L83-L92",
+          "resource": "repo://pom.xml#L97-L106",
           "version": "repo-lines-v1:sha256:f736590ab2e195556e58b6bff04e669710b693bedee37bab1b8a0a92554ca4c6:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI2NjRjMGZjMWFkZWMzMzFiNTEyYTM5ZmQyODYyOTllMzQ4Mjc2ZGQwYWNlMjkwNWVmMDg0MjNmMDRiMjVlNjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA3ZmEyZDFhNDJhNjYyMzI3MTkyOTk5YWQwYWQwOGUzNWNkN2Q2MjhhNzMyYTk5MjI1NzM4Njc3NTM4MDQxNDYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRlMDhkYTNmZjEzZjNhYjU4ZjRiN2Y1ZTk3MjQwYTNiMzBmZDRlY2Q2NDVkZGEzMjI1ODAyYjc4MTUxMjZmYzciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg5MDczNDZiYTExZjhiMzIxYzllYTNkM2VjYmJhNjgyZmY4NjMxMDY2MTM0OTBkNTIzZmE2ZjNiZmIzNzFkZWEifQ"
         },
         {
@@ -289,7 +289,7 @@
       "statement": "The pom declares the Jedis client (redis.clients:jedis, compile scope, currently 8.0.2), but no Java source or test references it — the runtime Redis path is Spring Data Redis over Lettuce via the LettuceConnectionFactory and RedisTemplate beans in ApplicationConfig. The declaration is dead weight and must not be mistaken for the active persistence client.",
       "evidence": [
         {
-          "resource": "repo://pom.xml#L131-L136",
+          "resource": "repo://pom.xml#L126-L131",
           "version": "repo-lines-v1:sha256:7c6d344062a460671f746365e89c3560412a4df4612b01ec845786a1c19a52ac:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmZmZmUxZTQyMzAxNGUwMTc5OTNlZmM5NjYyODAyZWEyZTZiNjI4MGE4NzUzYWY5NGE0ZTI5ZDU1NWEzN2FkNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzlmNzI2YzgzNGNjMTQ4YzZiMzdjYmQzY2UyOTc2NDQyMDFmMTAzYzZjYzMzNjljODIwNjY3ZDFkMzlhYzk5MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjljMWM1YmFiMTcyYzQxZWVkZmI0YzViYmFhMDNlNmFlOGMxOGE5NDExNWMwMzgyM2Y4MGE0YzlmOTU4N2JiYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjBjYzYyNjJhN2RmNGI4YmMzZjA1Njk4OGM1ZGQzZGVhMjNiYTc5MmRhZGZhNWM5ZTk1NTM3OGZlY2M0MWJjNSJ9"
         },
         {
@@ -297,10 +297,24 @@
           "version": "repo-lines-v1:sha256:08dbd694aab8ec51ab3ea74eedfe757aa048fb87d931dde5321e9712fb6c78f4:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFmMWE4YmFhZTBjNmRjYjUwNmUyNmM4ZDFhYjZiZDg2ZDZmMGUxYTc3NTZlNmZkODdhOWRhMDNkN2FhNGFlZTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyOTBmYTU0ZTcwOTQxMzBhOGRlYTYwZWQ0Mzc3MGM4ZmRhNjQyMjEyM2QzNTBmZThhY2QzYjdhM2EwYzkyNzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         }
       ]
+    },
+    {
+      "id": "claim_f95a5a70e15a4705b6d4102731805514",
+      "statement": "Dependabot's docker ecosystem ignores eclipse-temurin and maven base-image updates with versions >= 26 and < 29 as well as semver-major updates, because ARDoCo only uses Java LTS versions (25 today, next 29); upgrading the JDK line to a new LTS is therefore a deliberate manual change, while the Maven ecosystem's separate ignore of org.junit.jupiter:* (manual JUnit alignment) is unchanged.",
+      "evidence": [
+        {
+          "resource": "repo://.github/dependabot.yml#L12-L14",
+          "version": "repo-lines-v1:sha256:dafeab21c2be60d0fdbfc6b97e1cbdc2cf869570d1ec98136cb30b647ce328a9:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjJmNDY5NDYwN2VmNzQxYzk0YzFlZGMzMjlmYmM1OGIyNDRiYzJhYTJhMzA3NzRlODE0NjhjMzFiNmRmY2MxZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTczYzE0NDBjMzlkMzZkMTkwYTRkYzQ2ZjVmMTU1ZjRiMjY2N2U1OWEzMThkZDRjOTExNWM1ZDE5MTE1ODA4MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzgwNWJjODMxYTYzNjM5OGQwZjcxNzY1YmEzNjNhZjc1YWE0ZjBhY2I3ZmNmOGZiNzJiNDMzZDc5ZDQ5MTVmNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWViMDYyNWE0ZmI4YzMxNDNlMjI3YTVkYjNmZjAzYzI0ZGY5NGU5ZTc1OGM5NmQwZjk3NDY3OWZiMjhiOTE5ZCJ9"
+        },
+        {
+          "resource": "repo://.github/dependabot.yml#L24-L33",
+          "version": "repo-lines-v1:sha256:6f1b66109c128d1cd130214a70478a578128439f3f9e70e1d53c32225688863d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg2MTBiOTkzYTg5ZmQxYWUyNTAzYzQ4M2E0ZjE3MmRiODczNWZjM2Y3YzhlNjVlYmMyNmY2ODM3Njg0NTU4MjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI2MTAxYzkwZGRlNTY5MDIxMjY1ODZjNmYxNDQxNTU0MzI5Y2E4OGEwOGY5MGViNTc5NjQwNGM4ZTdhNTE3MjciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc4MDViYzgzMWE2MzYzOThkMGY3MTc2NWJhMzYzYWY3NWFhNGYwYWNiN2ZjZjhmYjcyYjQzM2Q3OWQ0OTE1ZjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-09T15:26:30.664Z"
+    "at": "2026-11-16T15:01:30.713Z"
   }
 }

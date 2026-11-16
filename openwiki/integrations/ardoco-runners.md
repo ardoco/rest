@@ -5,12 +5,14 @@ description: How the REST layer binds to the external ArDoCo libraries (pipeline
 tags: [ardoco-runners, integration, pipeline-tlr, pipeline-id, text-preprocessing, configuration, model-format, reflection]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-09T15:26:30.664Z
+    at: 2026-11-16T15:01:30.713Z
 sources:
   - id: openwiki-source-aed92bcc8ea721affa9f52be
     resource: repo://architecture_decisions.md
   - id: openwiki-source-2355f81d7cf522f8dbdaabd4
     resource: repo://pom.xml
+  - id: openwiki-source-17e67da21bbb452f6e1b70e3
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java
   - id: openwiki-source-a420f4179889786e59957253
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java
   - id: openwiki-source-3fd9f130687bd87d75f9c8c3
@@ -45,7 +47,7 @@ sources:
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamCodeControllerTest.java
   - id: openwiki-source-042c8e5e0935e0174006d660
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamTLRControllerTest.java
-generated: { by: "openwiki/0.9.0", at: "2026-11-09T15:26:30.664Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
 ---
 
 # ArDoCo runner integration
@@ -63,7 +65,19 @@ The REST layer pulls in the external ArDoCo libraries as Maven dependencies (`po
 | `io.github.ardoco.tlr:pipeline-tlr` | The trace-link recovery pipelines (the `Ardocode`, `Arcotl`, `Swattr`, `Transarc` runners) |
 | `io.github.ardoco.tlr:text-preprocessing` | Text preprocessing support used by the TLR pipelines |
 
-All four are resolved at the ArDoCo snapshot version `${ardoco.version}` from the Sonatype snapshot repository, so the REST layer tracks the ArDoCo codebase it sits on top of. This is the boundary in the other direction too: the REST layer does not import any ArDoCo *stage* implementations — every analysis happens inside `runner.run()` on the external libraries.
+All four are resolved at the ArDoCo snapshot version `${ardoco.version}`. The REST artifact itself (`io.github.ardoco:rest`, `2.1.0-SNAPSHOT`) does not define that property: it is a child of the ArDoCo parent POM `io.github.ardoco:parent:2.2.0-SNAPSHOT` and inherits `ardoco.version` (2.2.0-SNAPSHOT) from it, so the REST layer tracks the ArDoCo codebase it sits on top of, one snapshot bump at a time.
+
+`${ardoco.version}` resolves through three repositories declared in `pom.xml`:
+
+| Repository id | URL | Used for |
+| --- | --- | --- |
+| `mavenCentral` | `https://repo1.maven.org/maven2/` | releases |
+| `mavenSnapshot` | `https://central.sonatype.com/repository/maven-snapshots/` | snapshots only |
+| `ardocoSnapshots` | `https://gitlab.kit.edu/api/v4/groups/253644/-/packages/maven` | snapshots only |
+
+The `ardocoSnapshots` repository is the newest of the three: a public, read-only Maven package mirror group of the ArDoCo project on `gitlab.kit.edu`, added as part of the migration to ARDoCo 2.2.0-SNAPSHOT with Jackson 3, so the snapshot builds carrying the current runner APIs resolve even when they are not yet available on the Sonatype snapshots repository.
+
+This is the boundary in the other direction too: the REST layer does not import any ArDoCo *stage* implementations — every analysis happens inside `runner.run()` on the external libraries.
 
 ## Runner classes and their setup signatures
 
@@ -135,7 +149,7 @@ The input files are also temporary: `FileConverter.convertMultipartFileToFile` w
 
 ## Passing additionalConfigs to the runner
 
-The optional `additionalConfigs` request parameter is a JSON string that `AbstractController.parseAdditionalConfigs` parses into a `TreeMap<String, String>`; invalid JSON raises `FileConversionException` (422). Each controller then wraps it with `SortedMaps.immutable.withSortedMap(...)` into an `ImmutableSortedMap<String, String>` and passes it directly to the runner's `setUp` — the ArDoCo libraries themselves interpret the configuration keys, so the REST layer has no schema for them. The config keys and values a client can use are exactly what `/api/configuration` returns (see [The /api/configuration endpoint](#the-apiconfiguration-endpoint)); a client can fetch that map and feed any subset of it back as `additionalConfigs`.
+The optional `additionalConfigs` request parameter is a JSON string that `AbstractController.parseAdditionalConfigs` parses with the Spring-managed Jackson 3 `JsonMapper` bean (`jsonMapper.readValue(additionalConfigsJson, new TypeReference<Map<String, String>>() {})`) into a `TreeMap<String, String>`. A `null` or blank parameter yields an empty map, and any parse failure raises `tools.jackson.core.JacksonException`, which the method rethrows as `FileConversionException("Invalid JSON format in 'additionalConfigs' parameter")` — a 422 via the `GlobalExceptionHandler`. Each of the five controllers then wraps the map with `SortedMaps.immutable.withSortedMap(...)` into an `ImmutableSortedMap<String, String>` and passes it directly to the runner's `setUp` — the ArDoCo libraries themselves interpret the configuration keys, so the REST layer has no schema for them. The config keys and values a client can use are exactly what `/api/configuration` returns (see [The /api/configuration endpoint](#the-apiconfiguration-endpoint)); a client can fetch that map and feed any subset of it back as `additionalConfigs`.
 
 Note that `additionalConfigs` is deliberately not part of the request-ID hash — two requests that differ only in configuration collide on the same ID and reuse the cached result (see [Request IDs and result caching](../concepts/request-ids-and-caching.md)).
 
@@ -151,6 +165,8 @@ Note that `additionalConfigs` is deliberately not part of the request-ID hash �
 6. **Assemble** — results are accumulated in a `TreeMap`, so the response is a sorted map. A duplicate key logs a warning and overwrites the earlier entry (last wins).
 
 The endpoint is a *discovery* mechanism: the returned map is exactly the set of `additionalConfigs` keys the ArDoCo libraries accept, so a client can fetch it and feed any subset of it back as `additionalConfigs` on a pipeline-start request. Because the scan is reflection-based, the endpoint automatically tracks new ArDoCo versions — any new `AbstractConfigurable` subclass with `@Configurable` fields appears in the response without a REST-layer change. The cost is that the scan is expensive: it instantiates every configurable class in the ArDoCo codebase on every request, so the endpoint is not a high-frequency polling target.
+
+One deviation from the shared request scheme: `InconsistencyController` overrides `generateRequestId` and builds its IDs as `SAD_SAM` key prefix + `"Inconsistency:"` + projectName + hash — for example `swattrResultInconsistency:bigbluebutton<hash>`, since `TraceLinkType.SAD_SAM`'s key prefix is `swattrResult`. This keeps inconsistency runs in their own request-ID/cache namespace and prevents collisions with SWATTR runs (`swattrResult:projectName<hash>`), even though both controllers share `TraceLinkType.SAD_SAM`.
 
 The result-conversion side of the integration — how the `ArdocoResult` produced by `runner.run()` is turned into the per-family JSON payload — is covered in [Architecture](../architecture.md) and [Response and error model](../concepts/response-and-error-model.md). In brief: each runner family has its own concrete `AbstractRunnerTLRService` subclass whose `convertResultToJsonString` converts the runner-specific trace links (and, for inconsistency detection, also the inconsistencies) via `TraceLinkConverter`/`InconsistencyConverter`, then stores the raw JSON in Redis under the request ID.
 

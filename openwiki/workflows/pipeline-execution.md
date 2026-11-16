@@ -4,7 +4,7 @@ title: "Workflow: pipeline execution"
 openwiki_generated: true
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-09T15:26:30.664Z
+    at: 2026-11-16T15:01:30.713Z
 sources:
   - id: openwiki-source-aed92bcc8ea721affa9f52be
     resource: repo://architecture_decisions.md
@@ -28,13 +28,15 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java
   - id: openwiki-source-dcb821af11b2c9f3ac31b92e
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ResultService.java
+  - id: openwiki-source-61ecae979de37af2235b7f98
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/util/HashGenerator.java
   - id: openwiki-source-b2cbaede3bd44199cffd04ad
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArDoCoRestApplication.java
   - id: openwiki-source-ece093ad10b91f3da0b7e34f
     resource: repo://src/main/resources/application.properties
   - id: openwiki-source-0ead47b845f38f77026ad2b9
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java
-generated: { by: "openwiki/0.7.2", at: "2026-10-26T12:24:12.222Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
 ---
 
 
@@ -49,8 +51,8 @@ Two stores cooperate in this flow with different lifetimes: the in-flight regist
 Each family controller (`ArDoCodeController` is the example; the shape is identical in `ArCoTLController`, `SwattrController`, `TransArCController`, and `InconsistencyController`) performs four steps in its `runPipeline` and `runPipelineAndWaitForResult` methods:
 
 1. **Convert the multipart uploads to local temp files.** `FileConverter.convertMultipartFileToFile` writes each upload to `System.getProperty("java.io.tmpdir")` under its original filename and rejects `null` or empty uploads (`FileNotFoundException`/`FileConversionException`, both mapped to 422). The resulting `File` objects form the `inputFiles` list that travels through the whole flow and is deleted in the cleanup phase.
-2. **Parse the optional `additionalConfigs` JSON** with `AbstractController.parseAdditionalConfigs` into a `TreeMap<String, String>`; invalid JSON raises `FileConversionException` (422).
-3. **Generate the content-based request ID** with `AbstractController.generateRequestId`: `traceLinkType.getKeyPrefix() + ":" + projectName + <hash>`, where the hash comes from `HashGenerator.getMD5HashFromFiles` over the concatenated bytes of all input files. `InconsistencyController` overrides this to insert an `Inconsistency` segment after the prefix. Details and client consequences: [Request IDs and result caching](../concepts/request-ids-and-caching.md).
+2. **Parse the optional `additionalConfigs` JSON** with `AbstractController.parseAdditionalConfigs` into a `TreeMap<String, String>`; the blank-safe parse uses the injected Jackson 3 `JsonMapper` (`jsonMapper.readValue` with a `TypeReference`), and a `tools.jackson.core.JacksonException` is rethrown as `FileConversionException("Invalid JSON format in 'additionalConfigs' parameter", e)` (422).
+3. **Generate the content-based request ID** with `AbstractController.generateRequestId`: `traceLinkType.getKeyPrefix() + ":" + projectName + <hash>`, where the hash comes from `HashGenerator.getMD5HashFromFiles`, which produces an MD5-based name UUID via `UUID.nameUUIDFromBytes` over the concatenated bytes of all input files (`FileConverter.convertFilesToByte`). `InconsistencyController` overrides this to insert an `Inconsistency` segment after the prefix. Details and client consequences: [Request IDs and result caching](../concepts/request-ids-and-caching.md).
 4. **Instantiate and configure the runner** — e.g. `new Ardocode(projectName)` plus `runner.setUp(..., Files.createTempDirectory("ardoco-sad-code").toFile())`. The required output directory is a throwaway per-request temp directory; the per-family `setUp` signatures are documented in [ArDoCo runner integration](../integrations/ardoco-runners.md).
 
 All of this runs in the request thread, by design: "only the direct interaction with ardoco is asynchronous. Handling the input file (including conversion and checking whether its file type is correct) is done before, since like this the user can get quicker feedback that something went wrong" (`architecture_decisions.md`). Every failure in this phase therefore surfaces as a 422 error response before any ArDoCo work starts.

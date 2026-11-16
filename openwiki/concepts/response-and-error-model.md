@@ -5,7 +5,7 @@ description: The two response schemas of the ArDoCo REST API — the ArdocoResul
 tags: [rest-api, response-schema, error-handling, json, jackson, exception-handling, api-contract]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-09T15:26:30.664Z
+    at: 2026-11-16T15:01:30.713Z
 sources:
   - id: openwiki-source-176362edb7d4360cef66ced2
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java
@@ -21,8 +21,6 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java
   - id: openwiki-source-f5df1fa4999bf0efe9f01e6b
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java
-  - id: openwiki-source-f87cef149b8ee233b9ee8a19
-    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/InconsistencyConverter.java
   - id: openwiki-source-98e8b8003b4c402c08f37fcd
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/ModelFormatTypeConverter.java
   - id: openwiki-source-1c5a7ae3754c990399f4ebd1
@@ -55,7 +53,7 @@ sources:
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/util/TraceLinkConverterTest.java
   - id: openwiki-source-6fc097e625e36feff88bdf6a
     resource: repo://src/test/java/testUtil/TestUtils.java
-generated: { by: "openwiki/0.7.2", at: "2026-10-26T12:24:12.222Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
 ---
 
 # Response and error model
@@ -94,6 +92,8 @@ private final String inconsistencies;
 ```
 
 `@JsonRawValue` makes Jackson embed the string verbatim into the response instead of quoting it, so `result.traceLinks` appears to the client as a real JSON array. This is deliberate: the trace links are converted to JSON once, right after the pipeline finishes, and are never re-serialized.
+
+The serialization stack spans the Jackson 3 migration boundary. All JSON building and parsing uses the **tools.jackson** databind: the converters construct payloads with `tools.jackson.databind.json.JsonMapper.shared()` and `ObjectNode`/`ArrayNode` nodes, `AbstractService` re-parses stored results through an injected `tools.jackson` `JsonMapper`, and `AbstractController.parseAdditionalConfigs` catches `tools.jackson.core.JacksonException` when the `additionalConfigs` JSON is invalid. The response DTOs, by contrast, keep their `com.fasterxml.jackson.annotation` annotations: `@JsonRawValue` on `ArDoCoApiResult`, `@JsonProperty("status")`/`@JsonIgnore` on `ArdocoResultResponse`, and `@JsonFormat` on `ErrorResponse`.
 
 Two invariants follow from this design:
 
@@ -250,8 +250,8 @@ Error (invalid or expired result ID):
 The response model is pinned by integration tests that run against a live Redis container:
 
 - `testUtil.TestUtils` asserts the exact status/message/result combinations of the matrix above for every flow (fresh start, cached start, not-ready get, timed-out and ready waits), so changing a message constant or a status pairing breaks the build.
-- `AbstractTLRControllerTest.testRetrievingResultForInvalidId` exercises the unknown-ID path end to end and asserts `UNPROCESSABLE_CONTENT` for both retrieval endpoints; `testHandleEmptyFile` asserts the same status plus a present `timestamp` for empty uploads on both start endpoints.
-- `TraceLinkConverterTest` pins that an empty trace-link list serializes to `"[]"`, which is the minimum shape the `@JsonRawValue` contract relies on.
+- `AbstractTLRControllerTest.testRetrievingResultForInvalidId` exercises the unknown-ID path end to end against the live Redis container and asserts `UNPROCESSABLE_CONTENT` for both retrieval endpoints; `testHandleEmptyFile` asserts the same status plus a present `timestamp` for empty uploads on both the `/start` and `/start-and-wait` endpoints of every TLR family.
+- `TraceLinkConverterTest` pins that an empty trace-link list passed to `convertListOfSadCodeTraceLinksToJsonString` serializes to `"[]"`, which is the minimum shape the `@JsonRawValue` contract relies on.
 
 ## Related pages
 

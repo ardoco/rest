@@ -3,10 +3,9 @@ type: "Reference"
 title: "Operations"
 description: "How to build, run, deploy, and observe ArDoCo REST: Maven builds on the ardoco parent POM with the Spring Boot BOM and JUnit overrides, the README local run flow, the docker-compose redis/redisinsight/app topology, the multi-stage Dockerfile and Spring profiles, and the GitHub Actions CI, docker-publish, OpenWiki, and Dependabot automations."
 tags: [operations, build, maven, spring-boot, docker-compose, dockerfile, spring-profiles, ci, github-actions, redis, redisinsight, endpoints, actuator]
-openwiki_generated: true
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-09T15:26:30.664Z
+    at: 2026-11-16T15:01:30.713Z
 sources:
   - id: openwiki-source-79b37831c9c81206da1d88ec
     resource: repo://.github/dependabot.yml
@@ -68,7 +67,7 @@ sources:
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java
   - id: openwiki-source-6a5bbd855283885f6ff02dc6
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessorTest.java
-generated: { by: "openwiki/0.7.3", at: "2026-11-02T14:56:49.573Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
 ---
 
 # Operations
@@ -77,7 +76,7 @@ ArDoCo REST is a Spring Boot web service built with Maven against the shared `io
 
 ## Build with Maven
 
-The artifact is `io.github.ardoco:rest:2.1.0-SNAPSHOT` (name `ArDoCo-REST`). The parent is `io.github.ardoco:parent:2.1.0`, and a Maven wrapper (`mvnw`, `mvnw.cmd`) is checked in. The build commands used in practice:
+The artifact is `io.github.ardoco:rest:2.1.0-SNAPSHOT` (name `ArDoCo-REST`). The parent is `io.github.ardoco:parent:2.2.0-SNAPSHOT`, and a Maven wrapper (`mvnw`, `mvnw.cmd`) is checked in. The build commands used in practice:
 
 - `mvn verify` — the CI command; runs unit and integration tests (the Maven Failsafe plugin is bound to `integration-test` and `verify` in the `integration-test` phase).
 - `mvn -DskipTests clean package` — the command the Docker build stage runs.
@@ -87,13 +86,14 @@ Other build wiring: Spotless formatting (repo-root config in `formatter.xml`, `s
 
 ### Dependency management quirks
 
-Five quirks matter when changing dependencies:
+Six quirks matter when changing dependencies:
 
 1. **Spring Boot BOM import.** `pom.xml` does not use Spring Boot as its parent; instead it imports `org.springframework.boot:spring-boot-dependencies:4.1.2` into `dependencyManagement` with `scope=import`, on top of the ArDoCo parent POM.
 2. **JUnit version override.** `<junit.version>` is pinned to `6.0.3` with the stated intent of overriding the JUnit version inherited from the parent POM by the Spring Boot-managed one. For the override to take effect, `pom.xml` additionally declares explicit `junit-jupiter-api`, `junit-jupiter-engine`, and `junit-jupiter-params` dependencies pinned to `${junit.version}`, while the `junit-jupiter` aggregate stays unversioned so the BOM manages it. Dependabot's config confirms the alignment is deliberate and manual: it ignores `org.junit.jupiter:*` with the comment "JUnit is aligned manually with the version managed by Spring Boot (junit.version in pom.xml)". (The inline comment still names "Spring Boot 4.0.6" although the imported BOM is 4.1.2.)
-3. **`ardoco.version` snapshot property.** The four ArDoCo libraries (`common`, `pipeline-id`, `pipeline-tlr`, `text-preprocessing`) use the inherited `${ardoco.version}` property from the parent POM, which tracks ArDoCo snapshot builds. The pom therefore enables the Sonatype snapshot repository (`https://central.sonatype.com/repository/maven-snapshots/`, snapshots enabled, releases disabled) next to Maven Central. The REST layer's dependency on these runners is covered in [ArDoCo runner integration](integrations/ardoco-runners.md).
+3. **`ardoco.version` snapshot repositories.** The four ArDoCo libraries (`common`, `pipeline-id`, `pipeline-tlr`, `text-preprocessing`) use the inherited `${ardoco.version}` property from the parent POM, which tracks ArDoCo snapshot builds. To make those resolvable, `pom.xml` declares three repositories next to Maven Central: the Sonatype snapshot repository (`https://central.sonatype.com/repository/maven-snapshots/`, snapshots enabled, releases disabled) and `ardocoSnapshots` — the public, read-only ARDoCo GitLab group packages mirror on `gitlab.kit.edu` (`https://gitlab.kit.edu/api/v4/groups/253644/-/packages/maven`, snapshots only) — which is what enables resolving the ARDoCo 2.2.0-SNAPSHOT builds from the Jackson 3 migration. The REST layer's dependency on these runners is covered in [ArDoCo runner integration](integrations/ardoco-runners.md).
 4. **New test-scope Spring Boot starters.** The pom declares `spring-boot-restclient` and `spring-boot-resttestclient` (both `test` scope) next to the usual `spring-boot-starter-test`; the controller tests import `TestRestTemplate` from `org.springframework.boot.resttestclient`, so these two dependencies are what make the integration tests compile under Spring Boot 4.
 5. **`redis.clients:jedis` is declared but unused.** The pom lists `jedis` at compile scope (no version-property indirection, currently `8.0.2`), but no Java source or test references Jedis — the runtime Redis path is Spring Data Redis over Lettuce (`LettuceConnectionFactory` in `ApplicationConfig` plus `RedisTemplate`, see [Redis persistence integration](integrations/redis.md)). Treat the declaration as dead weight to remove (or wire up deliberately) rather than as the active Redis client.
+6. **Dependabot skips non-LTS JDK images.** The `docker` ecosystem's ignore list blocks `eclipse-temurin` and `maven` updates with versions `>= 26, < 29` and any semver-major update, because ARDoCo only uses Java LTS versions (25 today, next 29). If you intentionally move the JDK line — for example to the next LTS 29 — Dependabot will stay silent about the intermediate non-LTS majors; the change is manual by design. The `maven` ecosystem's ignore of `org.junit.jupiter:*` is unchanged and independent; see quirk 2.
 
 Note the Java version split: verification (CI) runs on Temurin **Java 21**, while the container image builds and runs on **Java 25** (`maven:3-eclipse-temurin-25-alpine` build stage, `eclipse-temurin:25-jre-alpine` runtime).
 
@@ -202,6 +202,8 @@ What clients observe at runtime:
 - Failed pipelines cache an `"Error: "`-prefixed message under the request ID with the same TTL, so retrying within the window surfaces the cached failure instead of re-running.
 - Error responses come from the global exception handler: `FileNotFoundException` and `FileConversionException` and `IllegalArgumentException` map to 422, `TimeoutException` to 408, and `ArdocoException` (pipeline failures, cached error values) to 500.
 
+The README points to `ArchitectureDecisions.md` for the architectural decisions and API-response details; that file is not present in the current checkout, so treat the link as historical.
+
 ## CI and repository automation
 
 ```mermaid
@@ -227,18 +229,18 @@ flowchart TD
 - **`.github/workflows/ci.yml`** ("CI Build") runs on pushes and pull requests to `main` plus manual dispatch. The `Maven Build` job runs on `ubuntu-latest` with `SPRING_PROFILES_ACTIVE=docker`, checks out with `actions/checkout@v3`, sets up Temurin Java 21 with a Maven cache via `actions/setup-java@v3`, and runs `mvn verify`. The job also declares a `redis` service container published on 6379; the Redis-backed tests themselves provision their own Redis through Testcontainers with dynamic `spring.data.redis.host`/`port` overrides (e.g. `RedisAccessorTest`), so they do not depend on that service container. See [Testing](testing.md) for the suites.
 - **`.github/workflows/docker.yml`** ("Docker Push") — described above under image publishing.
 - **`.github/workflows/openwiki.yml`** ("OpenWiki Update") refreshes this wiki. It triggers on `workflow_dispatch` and a weekly schedule (`cron: "0 6 * * 1"`, Monday 06:00 UTC), grants `contents: write` and `pull-requests: write`, and delegates to the reusable workflow `ardoco/actions/.github/workflows/openwiki.yml@main`, passing the `OPENROUTER_API_KEY` secret. The update logic lives in the reusable workflow, not inline.
-- **Dependabot** (`.github/dependabot.yml`) updates the Maven and Docker ecosystems monthly at 11:00 Europe/Berlin with the commit prefix `Dependency`, except `org.junit.jupiter:*`, which is ignored because of the manual JUnit alignment described above.
+- **Dependabot** (`.github/dependabot.yml`) updates the Maven and Docker ecosystems monthly at 11:00 Europe/Berlin with the commit prefix `Dependency`. The Maven ecosystem ignores `org.junit.jupiter:*` because of the manual JUnit alignment described above, and the Docker ecosystem ignores non-LTS JDK image updates — `eclipse-temurin` and `maven` versions `>= 26, < 29` plus semver-major updates — matching the Java-25 LTS baseline.
 
 ## Watch-outs
 
 - Redis TTL, timeout, and upload limits are properties (`redis.time-to-live.hours`, `tlr.timeout.seconds`, `spring.servlet.multipart.max-file-size`); if their semantics change, update `RedisAccessor`/`ResultService` and the operational docs together.
 - Ports and endpoint paths appear in README, HELP, the compose template, and this wiki; keep them in sync when the API or port layout changes.
 - The app is Redis-backed by design (`DataSourceAutoConfiguration` is excluded); if the service starts persisting elsewhere, the operational story changes and these docs must follow.
-- The JUnit alignment is manual: bumping `junit.version` means updating the pinned `junit-jupiter-*` declarations, and Dependabot will not do it for you.
+- The JUnit alignment is manual: bumping `junit.version` means updating the pinned `junit-jupiter-*` declarations, and Dependabot will not do it for you. The JDK line is similarly manual: Dependabot will not offer non-LTS `eclipse-temurin`/`maven` majors, so moving to the next LTS (29) is a deliberate, hand-made change.
 
 ## Source references
 
-- `README.md`, `HELP.md`
+- `README.md`, `HELP.md` (README links to `architecture_decisions.md` at the repo root for architecture and API-response details)
 - `pom.xml`
 - `src/main/resources/application.properties`, `application-docker.properties`, `application-local.properties`
 - `redis/redis_template.env`

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:b46eedde4de7bccb09c7acb54d9051686ea80b39ac51af8923a9266e34ead3d0",
+  "pageVersion": "sha256:556102e6360a2a483063944880a25105495ed7529cc4c405f8c29ec71cf25c45",
   "claims": [
     {
       "id": "claim_ffd3d9ab2aae4a69bb3b187e020ba2fd",
@@ -69,12 +69,12 @@
       "statement": "testUtil.TestUtils asserts the exact status, message, and traceLinkType pairing of every response flow via the ResultMessages constants (fresh start RESULT_IS_BEING_PROCESSED, cached start RESULT_IS_READY, not-ready get RESULT_NOT_READY, ready get and ready wait RESULT_IS_READY, timed-out wait REQUEST_TIMED_OUT, start-and-wait timeout REQUEST_TIMED_OUT_START_AND_WAIT), so changing a message constant, a status pairing, or the traceLinkType derivation breaks the controller tests.",
       "evidence": [
         {
-          "resource": "repo://src/test/java/testUtil/TestUtils.java#L44-L77",
-          "version": "repo-lines-v1:sha256:853f83dbf09029b6494f8c9f4c717e7e310bb0cbee250b22123224db4a6aaaee:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA5NmZiNTQzNTBmNmJhOTljNjE2MmJiMjNiOWZjYWFhNjgyNWI5OTY1ZGQ1MTBlMTBiMjM0NTM0YzBmNzE3NjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQxYzZkYTg0MjZjYWNhZWU1OGRhNjRkZDhjYmM0NDU4MDNiYTY3MDJjZDc4YjM5YWY1ZDA5Y2I5YjM4YzA5M2MiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVkNTVjY2RkODVkYzUwM2ZlM2FlYWE1NDZhYWRhYzEyNDQ5ZTE1NmRkMzk5OTdlMWI1NDFjZTgyYWQ5NmJhOWMifQ"
+          "resource": "repo://src/test/java/testUtil/TestUtils.java#L43-L174",
+          "version": "repo-lines-v1:sha256:0700555f8b763af56f105f667718c3475ccca5ab6049b11b53421ca264642450:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMyLCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI4MTUxYWJlMzRjMTNlMTVkY2QzYTBkZTliNmI2OGNiMDZiY2E3MWI0ODc0MmVmZGZmYzY1ZTc1MmMzZDM1OWYzIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiI0MTJjYTM0NWNjZjc1YmY5YzA4MDZiY2U2OTViZThkZTgwOGI3OTk4NDI1MWE3YTU0ZDIwMmNmNjEwMWRkNDUxIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIwOThlYjc1OWQ5ZmU1NTIyNDI3MDY3Yjg3NWNmYmRlNTJhMGUwNzEyNDMyOGNlY2EwYTMyNGUyOWVjMGY1MTBiIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MCwiZm9sbG93aW5nQ29udGV4dEhhc2giOiJlM2IwYzQ0Mjk4ZmMxYzE0OWFmYmY0Yzg5OTZmYjkyNDI3YWU0MWU0NjQ5YjkzNGNhNDk1OTkxYjc4NTJiODU1In0"
         },
         {
-          "resource": "repo://src/test/java/testUtil/TestUtils.java#L82-L159",
-          "version": "repo-lines-v1:sha256:69033c65f8c7f3af2215facd6d5e1f44ad9347b1ce4c9bce1969f02d0b46a041:eyJzZWxlY3RlZExpbmVDb3VudCI6NzgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRiMDJiOGY5NzZjNTY4NWQ2MmYxMjU3MWU0NjUwMzkxZWExMmY5YTkzYmYzM2VjZWE5NzEyZGQxMmM4NTk1OTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRhZGE0M2UyODE5MTBjOGIxYjNmOTI5MmZiMjY3NTI2YjA1OTA1NGRlMTc4NzFmNDBjMzFiNDIyZDE4ODNhMGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjZlZmJjOTFkY2U2M2U0OGEyOTBkZGZkYTJjOWNlMmUzZTRjM2M1Y2Q5MTJiOTRhMWUzZmMzY2NiYmU3ODE2MTUifQ"
+          "resource": "repo://src/test/java/testUtil/TestUtils.java#L80-L161",
+          "version": "repo-lines-v1:sha256:bee990559b059eab9afb7aa1a6bb02cb5d757c13313285f6dff5a2ad6b875f19:eyJzZWxlY3RlZExpbmVDb3VudCI6ODIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRiMDJiOGY5NzZjNTY4NWQ2MmYxMjU3MWU0NjUwMzkxZWExMmY5YTkzYmYzM2VjZWE5NzEyZGQxMmM4NTk1OTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU4MTllMTA4MzZjMzgzZDA2OWE2NmRhNDFiNTk0YWNhMzM2YTNhN2U0MGQwNGI0MTY4YmI2MmEzN2M5ODVlMzciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRhZGE0M2UyODE5MTBjOGIxYjNmOTI5MmZiMjY3NTI2YjA1OTA1NGRlMTc4NzFmNDBjMzFiNDIyZDE4ODNhMGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjliOWVlMWNiM2RmOTFlMGJjOGVmZDdjZTBkZTRkMDA4YmI5OTAzOGU4MDk5OTgwMmZhY2Y1ZTM4MTM3ZGRhYWQifQ"
         }
       ]
     },
@@ -95,7 +95,7 @@
           "version": "repo-lines-v1:sha256:89b09de4b2c9c861e2281674af8077e3ce9d4f2bbba907754472cbe947ce89fd:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVkYzJiMzExYWJlODc1NzJlOGE3Y2MwZDk5NmE2NTg0NDA3NmU1MjMyZDIxYjdhODU0NzVmOWI0MDU1Yjc0OTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJlNzBhOTM5NTYyMDE3YTVmNWZiMzhiNGU0NDFjY2M5NjE0NGU3OTJjMWFiNzU1YjZjOWQzM2FhNWQ2YjA5MjMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg1NGNlMDA0M2YwODRhYjM5ODI0ODRkM2YzMWZhNWU3OTc3NDI0YmE1ZDBmYjQzMGVjNTNlNTA3MzcxMTJiYjAifQ"
         },
         {
-          "resource": "repo://src/test/java/testUtil/TestUtils.java#L161-L174",
+          "resource": "repo://src/test/java/testUtil/TestUtils.java#L159-L172",
           "version": "repo-lines-v1:sha256:24bd9d3ca869bab1d9070b5f2a05b4bd90e0d586b208f6ea6ba79f0a82c91f88:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIyMzNhOTVjZTExZDZhMjA5ZjdhNDgwOTA1ZTNlNzYwYWZkMWQ2MmYwNjNhOWYxNjBiN2U4ZGIwMDhlMzk3NWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBkMmMwNDg4MjFjODkzZWI4MWQwYTg4ZTE1MzFhZjM2OGZmNzE5M2Y0YTc4MmM2YWJiODYwMTliMWYwYTlhYmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjgwNGY4OWZjMGVjOThjOTgyNDE4M2U3OTVkM2VkZDE5ZTkzMGY3YmM0NzFmOTAxMmFhM2Q1MDNiZTJmODk3NGIifQ"
         }
       ]
@@ -126,7 +126,7 @@
     },
     {
       "id": "claim_15ac616ef5f34cfea1e7c38351a6e0bf",
-      "statement": "The utility tests pin the conversions between the HTTP layer and the runner/Redis: FileConverterTest verifies byte-concatenation of input files in list order, the empty-list and empty-upload FileNotFoundException messages, and FileConversionException on transferTo failure; HashGeneratorTest verifies that identical content hashes identically, different content hashes differently, multi-file hashing differs from single-file hashing, and that empty lists and unreadable files raise FileNotFoundException/FileConversionException; TraceLinkConverterTest pins that an empty trace-link list serializes to [].",
+      "statement": "The utility tests pin the conversions between the HTTP layer and the runner/Redis: FileConverterTest verifies byte-concatenation of input files in list order, the empty-list and empty-upload FileNotFoundException messages, and FileConversionException on transferTo failure; HashGeneratorTest verifies that identical content hashes identically, different content hashes differently, multi-file hashing differs from single-file hashing, and that empty lists and unreadable files raise FileNotFoundException/FileConversionException; TraceLinkConverterTest is a single test asserting that an empty trace-link ImmutableList serializes to [].",
       "evidence": [
         {
           "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/util/FileConverterTest.java#L57-L159",
@@ -137,8 +137,8 @@
           "version": "repo-lines-v1:sha256:a396b468a06101d6b6919cf0f3d47bc3a5bfb880cecd909c6b5aca648e5ac566:eyJzZWxlY3RlZExpbmVDb3VudCI6NTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRjZjA5ZWIwYzU3NDRmYjk3MzMxYjk4ZmYzZmJmMDVhNjAyYmEzZjdmNjdlNWRhNWJlOTA5NTAzM2Y2MjU4MjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk5OWJkZWZlZWFjYTYzNDBlMDI5MGRjODZlODg5Yzg5ZDVlMTg5YWE1YmE0NGI1ODViM2I3MDczNGY0YTYyZDgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
         },
         {
-          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/util/TraceLinkConverterTest.java#L19-L31",
-          "version": "repo-lines-v1:sha256:b4b5c1fd49a290f9969f34fbce4548ba0f648cdd468cf1dabf83e5cb4298e011:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRjZjA5ZWIwYzU3NDRmYjk3MzMxYjk4ZmYzZmJmMDVhNjAyYmEzZjdmNjdlNWRhNWJlOTA5NTAzM2Y2MjU4MjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJiMzEzYjU2ZTBlYWNlYTdlMDc0OWRlM2UyMWNjNmQ4MDRkYWEwYjNmYzhiNjRmZGY2NDIyMDRiOTAwMGQwYzkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/util/TraceLinkConverterTest.java#L18-L30",
+          "version": "repo-lines-v1:sha256:fd587ad79596497692463df0758f0f3be16747c5ce504b9beea6ef6bd6fe1350:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQzZmFmMjIxMDlmMTQ0M2I0Y2IwMWYzMjVhZWMzNTU0NTYzODc3Yzk1M2U4ZWNjYjQ0YTk5NDI4NDRlMWZjNDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImExN2E0NGI1ZDhjMTYxMDhjNTZmNDI4YzI0ZmM4Y2ZmYjkyOWQ2MWQ4ODAxNGE4ZDViNjcxZTdiNmRlNzkzM2YiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         }
       ]
     },
@@ -161,7 +161,7 @@
           "version": "repo-lines-v1:sha256:ec4a7bfc67ca35cbe12c4f4790e00eb4b81e9c3c0c1249a730e7633df5d4fc39:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlkZjNiODAyZTI5ZmNhYTNkZGFjYmFmYjZiZTk5ZTU4N2FiZDEwMzczZDE4ZjRhNzBhYjYzMDUwNzgzYmU2ZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxM2RhZDdjMmI5YzkwMWRiYzQ1NDEzNDdjNDc5ZjQ5OTY1MjdkZTYwNzRhZjY3ZGZmYjRmMGY0YjUzYmFmMGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         },
         {
-          "resource": "repo://pom.xml#L161-L173",
+          "resource": "repo://pom.xml#L167-L179",
           "version": "repo-lines-v1:sha256:6d3cc95e14e22578aad45e6582607e7f82acff70d93cd5972e6e2c009c8ace02:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkZDcwNTBhMWE1ZTk5OTdkMWRiOTAzMzBiNWQ1NTgzMDE4OWFjYzQwNzNmNDhmYmIyOTU5YTllMzg1YjE0MGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRlMTJmYjc2YjQyZjUyNjdhNTQ3ZmIwYTBhYTIyOTA4NTc3OTViNzMwMTk4MDMyZmNmNGViMGNlOTBjOTgxNzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ3YWU1OGU3NzNjMmE1MmNiZWZmZDBjMjg4YjkzZmY1NzEzY2QzZmQ5OTAzYjk0ZGRlYTQ5M2FjNTcyZTBkNWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM0NGI1ZjA2NzYzNjY1M2Q5NzI4YWY5YTMyMmNkNWY1YzY2ZTdlYTExOGQ2YmRhZjYxM2E3YTIxYzNiNjk5MTQifQ"
         }
       ]
@@ -207,7 +207,7 @@
       "statement": "AbstractRunnerTLRService.runPipelineAsync removes the in-flight registry entry and deletes all temporary input files in a finally block on both success and failure paths; no test directly asserts this deletion — the controller integration tests exercise the temp-file path end to end and FileConverterTest pins the multipart-to-file conversion that creates the files.",
       "evidence": [
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L114-L124",
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L111-L121",
           "version": "repo-lines-v1:sha256:e7ebfd3fd85b475ae1831a8ecfd2406ed9796abd78f549474eb99c2d2e304a81:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhNjJhMmIwNjY4NmFiYWRiNzMzMmY4NTQ5NzFkM2FmOGNmZDllOWZhNWNmZmEwNTlhMjk0MDJhMWFjNDkxNmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBhZDQ1YTU3YjBhMGQ2NzkwMDIzNWZmNGYwZTE1NzBkMjJkMjUxZTMwNzRlYzA4ZmM3NGYyZGEyNmQwNzRhNTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjZjNzMyZDYzMzM3NTc3N2U1NzgyYzY0OWQ1YjEwYzQxNDNmYmE5NjRmNzY0NDY2NjE3NzY1MDkxYzJhMjFlYWQifQ"
         },
         {
@@ -225,12 +225,12 @@
       "statement": "The ArchUnit dependency is not declared in the module POM; it is inherited through the io.github.ardoco:parent dependency chain. The test stack otherwise declared in the module POM comprises spring-boot-resttestclient and spring-boot-restclient (both test scope, providing TestRestTemplate for the controller tests), JUnit Jupiter pinned to 6.0.3 via a junit.version property plus explicit junit-jupiter-api/engine/params declarations overriding the parent POM, spring-boot-starter-test, and the testcontainers/testcontainers-junit-jupiter pair.",
       "evidence": [
         {
-          "resource": "repo://pom.xml#L34-L138",
-          "version": "repo-lines-v1:sha256:75aa0955bc1648dfb07f636170f545313b309ddf95885147df6e7cedac0afadb:eyJzZWxlY3RlZExpbmVDb3VudCI6MTA1LCJmaXJzdFNlbGVjdGVkTGluZUhhc2giOiI3YjE3YTBjMmQyMTYwNTFkMDgwZWE2MDNhMmZlYzYzMzAzYmIyNTUxYTBhZTU1ZTM4M2E5Mzc0NjEzOTIwZDhjIiwibGFzdFNlbGVjdGVkTGluZUhhc2giOiJmNDVmMDQzNWRhYjBjOWQ3YmZhYzY1YjVlNzIyZWY3MGI5NTY4NzMyN2Q2MTE2NzUwNGQ0OGFkNDE0NThjMTIwIiwicHJlY2VkaW5nQ29udGV4dExpbmVDb3VudCI6MywicHJlY2VkaW5nQ29udGV4dEhhc2giOiIwNzZmNGI1NDA2MjE1NmY0YzUzNDZjN2MzMTkyNWVlMzE0YThjNjQ1NGFiMzcyYzI4MTg1OTIyYWNiMDk5MTgxIiwiZm9sbG93aW5nQ29udGV4dExpbmVDb3VudCI6MywiZm9sbG93aW5nQ29udGV4dEhhc2giOiJjMDkzOTk0NzczMDgyM2MzNDZmOTg1OTAzOWQwYzQ2NWQ5NWU5N2Y2NmJiNGIzZWNmZmEzMTJlM2EyMjc1ZjdjIn0"
+          "resource": "repo://pom.xml#L17-L114",
+          "version": "repo-lines-v1:sha256:aad4f3381e8ecbdbb37bb8a139c70ba2b41bf4d5e1848527299dae5d79b77632:eyJzZWxlY3RlZExpbmVDb3VudCI6OTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIwMWQ0MjkxZTNjZWFhNjVmMzhmNzdlOWYyNmRiNzc4NGFhNjI4OGNiN2RhNTE0YjlmYzU2NDVkMzg5YTBkZjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI2NjRjMGZjMWFkZWMzMzFiNTEyYTM5ZmQyODYyOTllMzQ4Mjc2ZGQwYWNlMjkwNWVmMDg0MjNmMDRiMjVlNjIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNhNDdlZTE1NjBlODczNDE3YzlkMzI4OTY1NjhkZjIwZDQ4OGFmMmRiZDYwMDJhNmU4Njc0MDEyNmExNjMyZGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUwM2IzZWU3MzUzNmJhN2JkOTExNTc4Mjc0Yzc4Yjk0MjdjYWVkODEzMmIzNzJmNGIyMWVhYmZmYjc2OTcxNzUifQ"
         },
         {
           "resource": "repo://pom.xml#L5-L9",
-          "version": "repo-lines-v1:sha256:3d727fa8e0a2bdae9e67d80615c3d178863ea2ced9ce2152a76a660f3d334d6d:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTRhNDE0YWE2YmE1MDYyMTA2M2Y2YzhhOTQ1M2Q4MjgxMDk4MjUzNzk5YjVlMGE5ZDYxNmU5YTQ0MzgwOGVlOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGU2ZmRlYzY2ODA3YTUzODdlMDQ2ODQwNDhiY2NkNGVhY2NkYmJiOGZmNjgwZDNjOTc2ZWM4YWNkMzFjOGFhNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjkwNWY1NGU2M2U4ODJjNDA1NmMxNDk4YTdmZDQ3Y2U5OGUzYmY2ZjBkOWEzNmRhODBhNzBmZjZiOWMxNWRjMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzg1MTgxYTIxNThmODE5Mzc3NTI0YzljOTk1Mzc5ZmU3Y2VjMmRkZDI2NWVkODJjMTMzZDdjYzMwNTRkOTUyMSJ9"
+          "version": "repo-lines-v1:sha256:ee3ad975cb2ea44cbbc8aab908afea6c2689c5fa46acb6314f84266031eaf17c:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTRhNDE0YWE2YmE1MDYyMTA2M2Y2YzhhOTQ1M2Q4MjgxMDk4MjUzNzk5YjVlMGE5ZDYxNmU5YTQ0MzgwOGVlOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGU2ZmRlYzY2ODA3YTUzODdlMDQ2ODQwNDhiY2NkNGVhY2NkYmJiOGZmNjgwZDNjOTc2ZWM4YWNkMzFjOGFhNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjkwNWY1NGU2M2U4ODJjNDA1NmMxNDk4YTdmZDQ3Y2U5OGUzYmY2ZjBkOWEzNmRhODBhNzBmZjZiOWMxNWRjMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzg1MTgxYTIxNThmODE5Mzc3NTI0YzljOTk1Mzc5ZmU3Y2VjMmRkZDI2NWVkODJjMTMzZDdjYzMwNTRkOTUyMSJ9"
         }
       ]
     },
@@ -239,7 +239,7 @@
       "statement": "The controller tests drive the running application through org.springframework.boot.resttestclient.TestRestTemplate, which comes from the spring-boot-resttestclient test dependency declared in the module POM (spring-boot-restclient is also test-scoped there), instead of the older spring-boot-starter-test TestRestTemplate.",
       "evidence": [
         {
-          "resource": "repo://pom.xml#L74-L81",
+          "resource": "repo://pom.xml#L88-L95",
           "version": "repo-lines-v1:sha256:7d27fa395171ffbfa97608f9343147d0d6d492f0196b411f4858f9458570e39a:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDdmYTJkMWE0MmE2NjIzMjcxOTI5OTlhZDBhZDA4ZTM1Y2Q3ZDYyOGE3MzJhOTkyMjU3Mzg2Nzc1MzgwNDE0NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTQ5N2NhYzBiNjg4MTg4NzQxYzk3NmQzYjYxODk1MzFhZDQyYTYwYWE3ZDUxZmM1MmJlMjBhOWNiODRlNjY1MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjEwMzRiYjg0ZjA1ZWEzM2E2NjMxYTNkZTdlZWUwODYwNDk5MjU2MTU5ZjQyYTcwMmYwOTY2NGU4MjkwMzRjNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiN2M5Y2Q1YTBjOTYyZWY1ZDUxYWI0MDZjZjk5YTdjNDZlOTY5YWQwNmM0NTFkNThkYWRjYzU2MzI5ZDlhNjI0NSJ9"
         },
         {
@@ -253,12 +253,12 @@
       "statement": "JUnit Jupiter is pinned to version 6.0.3 in the module POM via a junit.version property (with a comment noting it overrides the parent POM's JUnit version with Spring Boot 4.0.6's version) and explicit junit-jupiter-api, junit-jupiter-engine, and junit-jupiter-params test-scope declarations, alongside the version-managed junit-jupiter aggregate artifact.",
       "evidence": [
         {
-          "resource": "repo://pom.xml#L110-L129",
-          "version": "repo-lines-v1:sha256:4b1fff6c85cb0678e242851d77cd761bc7947d331e9be857192875494d8bef58:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRkNzAyMjhjODhkZWE4MDJiMmJjYTI5MmI0OTI2MWYyZmM4ZDMxZTYxMDUzMWQ3OGJlZjgwZjVhNDA1ZWQzNWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0OTdjYWMwYjY4ODE4ODc0MWM5NzZkM2I2MTg5NTMxYWQ0MmE2MGFhN2Q1MWZjNTJiZTIwYTljYjg0ZTY2NTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM4MzAyNWZhM2E3Y2NiZjk0ZTNkZmMyYmJiM2QxNzZmZmI5NDQwMzIyZjBhNWM2MmQ3MDE4ZDQxNGVjYjQ3ZWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU2ZDgxMTNjNmMwY2FhZGU1ZDhmNTJjZTdlOWUwYzNiZjBmMTRhNDMyMDg5N2YzMzgzMGI0YTBiNzRjOGJmMWYifQ"
+          "resource": "repo://pom.xml#L17-L73",
+          "version": "repo-lines-v1:sha256:0f14840657dda3c941c7ad53ea49ccad0f73df39ae8970bf2a181330c34ec9b8:eyJzZWxlY3RlZExpbmVDb3VudCI6NTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIwMWQ0MjkxZTNjZWFhNjVmMzhmNzdlOWYyNmRiNzc4NGFhNjI4OGNiN2RhNTE0YjlmYzU2NDVkMzg5YTBkZjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU0OTdjYWMwYjY4ODE4ODc0MWM5NzZkM2I2MTg5NTMxYWQ0MmE2MGFhN2Q1MWZjNTJiZTIwYTljYjg0ZTY2NTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNhNDdlZTE1NjBlODczNDE3YzlkMzI4OTY1NjhkZjIwZDQ4OGFmMmRiZDYwMDJhNmU4Njc0MDEyNmExNjMyZGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE1Y2E1OTgwYTU1OGQ4NTU5ODM0OGM5ZjZmNzY3YTk4OWUwMjk1NGExMDI4YTU2MjdiNzU1OTU2ZWRiYzMxZWIifQ"
         },
         {
-          "resource": "repo://pom.xml#L16-L20",
-          "version": "repo-lines-v1:sha256:4a5f5852b93a10fb1521bdef4057d99c862f45308080ef79222b0513fc255b7a:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZDA4ZTI4OTE5NGM2ZmUxMjhjNmZhZGEzMzllYWZmNThjMjJiOTc2ZTkyZjExODJhOTg3MDgzNmVlYTU2MTJlYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmNjYjljN2EzOTJmMjU3YjRjNjA2MjQxYjNjZWQ3ZjRiYjNiYTI3YjYwZGZhNWE1NzVjYjc3NTZlOTI5ZWE4ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDNjZGRlZGQxNWIxM2MyMjU5OWE3YmM5Yjc5NmQxMWUyODQxY2RjZGJhMDNhOGZlY2E5ZTMwZjI3ODNkNzE1NCJ9"
+          "resource": "repo://pom.xml#L5-L9",
+          "version": "repo-lines-v1:sha256:ee3ad975cb2ea44cbbc8aab908afea6c2689c5fa46acb6314f84266031eaf17c:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTRhNDE0YWE2YmE1MDYyMTA2M2Y2YzhhOTQ1M2Q4MjgxMDk4MjUzNzk5YjVlMGE5ZDYxNmU5YTQ0MzgwOGVlOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGU2ZmRlYzY2ODA3YTUzODdlMDQ2ODQwNDhiY2NkNGVhY2NkYmJiOGZmNjgwZDNjOTc2ZWM4YWNkMzFjOGFhNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjkwNWY1NGU2M2U4ODJjNDA1NmMxNDk4YTdmZDQ3Y2U5OGUzYmY2ZjBkOWEzNmRhODBhNzBmZjZiOWMxNWRjMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzg1MTgxYTIxNThmODE5Mzc3NTI0YzljOTk1Mzc5ZmU3Y2VjMmRkZDI2NWVkODJjMTMzZDdjYzMwNTRkOTUyMSJ9"
         }
       ]
     },
@@ -285,12 +285,12 @@
           "version": "repo-lines-v1:sha256:10142a56a50b0a3686a7c48384e8e794f05d2b97d6680d0d83e4b9bd8a640ae7:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE1NDg1MjBhNThkOTBiMTQ4NjM5Y2MwMjgyM2Q3M2I2NmUwZGE5MDg2ZGM0NmIxMTBjMTZiYjhhNjQ4YjI0MDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyNjM0NDM5YTBkZTE4YzE0MDNjNDM3NDk1M2U4Mzg0YmE1MzhkMGFkOTBlYTgxYjUyNjYxMTk0Y2I4ZGExYmQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQxYzZkYTg0MjZjYWNhZWU1OGRhNjRkZDhjYmM0NDU4MDNiYTY3MDJjZDc4YjM5YWY1ZDA5Y2I5YjM4YzA5M2MiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3OTRkMDJhODEyMTk0NGQxNzZkMjY1ZTliYjljYzU5ZjZhYjg5MGJjYWRmOGFlZmRlYmRiYmI0ZjJlYTg0NDQifQ"
         },
         {
-          "resource": "repo://src/test/java/testUtil/TestUtils.java#L26-L48",
-          "version": "repo-lines-v1:sha256:0bf8e18ef188226c00fe3bb1d90e16fd791c676bf25dd42f63d4a0418db73924:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhYzJhZGVjZmQ1YTRkYTIxMDljYjhiYmJkY2ZlZjljZjczOGJlZWQ5ZWY1OGY4NmM5ZmM1ZTYzYWEwMWY1N2MiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU2ZTY0ZTg4ZGZjNjk3NDgwNDlhYzUyYTI2ZDYyNTU1ZDQ4ZTZhZjQ5YzMwYTg0ZWRkMmZiNzQ4NjQxZGFmNWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVmODg1MTI0NDE0YThhZjUyYzhhNDViOTVlMjhkNzlmOTgyYjU4ZTc2NWVmOTNmMzYzN2MxZWQ1NGY1MDgyMzYifQ"
+          "resource": "repo://src/test/java/testUtil/TestUtils.java#L30-L41",
+          "version": "repo-lines-v1:sha256:97a0f4435da683348aff5209df97cd79204057409f3c8140f990fa1c71ec59d3:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkyZjNiMWVhM2ZlYjFhZmU3Y2RiNjJlMTUxY2NiMTc0ZWMxYWFiYzdhYTQ3OTkwOTAwMzM3YjEyMzhiY2YyODIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk2MzJmNzdmZmQ3YzdkZDYxMjE2YWQwODg1NTE4NTY3YmM0ODdmZmEwODFkNzYxYmEwOWU3Y2NmZjRlZmQxOTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE4MmJjM2QwNmZhZWQ4OTRiMTFkZjM4OWVmNmQ4MzU3N2MxMDIxNjI3ODgyMWIwMDQ1YTdlNGJlNDZkNjZkMmYifQ"
         },
         {
-          "resource": "repo://src/test/java/testUtil/TestUtils.java#L76-L96",
-          "version": "repo-lines-v1:sha256:561fd0e27997474a92af8c84c6afde3894285231cbb0094e6894d301f8aa4097:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdkODdhYjFlMWEzZjliOTg3YjQ1M2Q4MWQxZmQ5ZWVlNWNiNGJiNzhiOTc0YmQ4OTdlNDJjMDk2MGYwZTlkNTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlmNGIyMTdkMTFlMTMwMWUwMWMxYTRkMWYyYTEwNTZmOWYwNTBiYTQ1MTUwM2YxZGQ0ZmU0YTE1MzZkOTVlODIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA5NjY4ODg1NDhkMmVhYWNhNGE5ZWEwMzYwMzlhYzNjNGFhNzc2ODc2NzhkMGZlMjNmYjY2Y2ZiOTA5YjRlNjMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU1MDZmZTI3ZDk1MjhhYjZkOTAyMDcxYzM4ZjM3NzkzYTRlMWVhNzFmZjg4YmVmYzBiZjMxNDNkMzY0MTYyMTMifQ"
+          "resource": "repo://src/test/java/testUtil/TestUtils.java#L80-L89",
+          "version": "repo-lines-v1:sha256:8f57bd36d19d806d8b9df990e0775eca5cc5ea31ad9a3d4b98a7fde693537e76:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRiMDJiOGY5NzZjNTY4NWQ2MmYxMjU3MWU0NjUwMzkxZWExMmY5YTkzYmYzM2VjZWE5NzEyZGQxMmM4NTk1OTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmODU2NDkwN2M0OWM4ZGFiZGUzZTI0Y2FkMjdiMjE4OTJlN2M5NGE3ZmYxZmU2NzBjMDlhMWVmNzllNmNjZjYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRhZGE0M2UyODE5MTBjOGIxYjNmOTI5MmZiMjY3NTI2YjA1OTA1NGRlMTc4NzFmNDBjMzFiNDIyZDE4ODNhMGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImIyMTU2Njc5ZDA3NGY2OTcyNTE1MjRkNjZlM2QzZTc4YmFjNzQxMTUwMmNiNDgwZjBmMzU4ZjEzMDkwYTViMDYifQ"
         }
       ]
     },
@@ -307,10 +307,24 @@
           "version": "repo-lines-v1:sha256:530b39332cee33ac2afe02a2ae4bed5dd75ab06214b408fc8eb83c49a377e536:eyJzZWxlY3RlZExpbmVDb3VudCI6NDcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI3MmU2NjI3YjQwMTYwOTQ4ZDlhMGU5YTM0Zjk5NjY1NzIzMDk1MDhjZGMyYmYyMmYzODYyYjcyZmM1MjMyZDUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIyNmQ3YTZiY2Y4YmVhMTQ5ZDMzMDQ3MGY3ODAzM2I3Njg3OTUxMjYxOGMwYjU0YWM4MGJlNmMzZDY3N2I2MDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFiZjNmMjMwMmI4OTExMjcyMjMwZGUzMTMyZjRmMTU1ODgzMjAyMmQ5MmVmYjU3NzNiZmZjOTU0Mjg4OTQ4MzcifQ"
         }
       ]
+    },
+    {
+      "id": "claim_b1bfacb70dca48639edfedf419b327c4",
+      "statement": "TestUtils.parseResponseEntityToArdocoResponse parses response bodies with Jackson 3 (tools.jackson.databind.json.JsonMapper.shared()) rather than the legacy com.fasterxml ObjectMapper: it reads requestId, message, status, and traceLinkType from the top-level JSON object and copies the traceLinks/inconsistencies nodes out of the nested result object as raw JSON strings (defaulting to [] when absent), reconstructing an ArdocoResultResponse whose ArDoCoApiResult carries the raw JSON payloads.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java#L1-L14",
+          "version": "repo-lines-v1:sha256:08e8833844ebfd9ce3959be922332fa95dfa738ef622ae2cd159b834d0c52341:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImExNTNlODMzYWY1ZTliZjdiMTI3YmQ1NTUyN2I3YTVlYmM1MTNkYTVkZGE5YThlMDY2ZDIwMjMwYWFkYzJjM2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFjMDZjNzMzNjg3YWE2OGFhMGRmZmU3YzQwM2Q2YWQzZjMxNWQ4MTcyMzM4ODg3ZjE2NjM0Mjg5Y2E5MzZjN2YiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjMxMzM4YmQ5OTg1NDQ5NjcxZjkyNWViYTczNGJjNjRjN2RkZWZiNjVhZTc0NTUzOTdhYWFlOTVkYWMzZTBlMzkifQ"
+        },
+        {
+          "resource": "repo://src/test/java/testUtil/TestUtils.java#L43-L76",
+          "version": "repo-lines-v1:sha256:973429a898f14d8fabf914ee64b0ad658efc6c4fa16b69105ecf755579cf5205:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgxNTFhYmUzNGMxM2UxNWRjZDNhMGRlOWI2YjY4Y2IwNmJjYTcxYjQ4NzQyZWZkZmZjNjVlNzUyYzNkMzU5ZjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA5OGViNzU5ZDlmZTU1MjI0MjcwNjdiODc1Y2ZiZGU1MmEwZTA3MTI0MzI4Y2VjYTBhMzI0ZTI5ZWMwZjUxMGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRhZGE0M2UyODE5MTBjOGIxYjNmOTI5MmZiMjY3NTI2YjA1OTA1NGRlMTc4NzFmNDBjMzFiNDIyZDE4ODNhMGIifQ"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-09T15:26:30.664Z"
+    "at": "2026-11-16T15:01:30.713Z"
   }
 }

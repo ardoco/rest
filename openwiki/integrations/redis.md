@@ -5,7 +5,7 @@ description: The persistence boundary of ArDoCo REST — the DatabaseAccessor in
 tags: [redis, persistence, database-accessor, ttl, lettuce, spring-profiles, docker-compose, redisinsight, testcontainers]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-09T15:26:30.664Z
+    at: 2026-11-16T15:01:30.713Z
 sources:
   - id: openwiki-source-164e2da859b5277df81c7d94
     resource: repo://.github/workflows/ci.yml
@@ -49,7 +49,7 @@ sources:
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/RedisRealConnectionTest.java
   - id: openwiki-source-6a5bbd855283885f6ff02dc6
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessorTest.java
-generated: { by: "openwiki/0.7.2", at: "2026-10-26T12:24:12.222Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
 ---
 
 # Redis persistence integration
@@ -65,7 +65,7 @@ ArDoCo REST has no relational store. Its only persistence layer is a Redis-backe
 - `keyExistsInDatabase(String key)` — existence check.
 - `deleteResult(String id)` — removal; returns `false` when the key does not exist.
 
-Its Javadoc states the intent explicitly: "allowing for easy database switching". Both service-layer base classes depend only on the interface — `AbstractService` autowires a private `DatabaseAccessor`, and `AbstractRunnerTLRService` a protected one — so services never see Redis types. `RedisAccessor` is annotated `@Primary`, which makes it the implementation Spring injects everywhere; a different backing store can be swapped in by providing another `DatabaseAccessor` implementation without touching service code.
+Its Javadoc states the intent explicitly: "allowing for easy database switching". Both service-layer base classes depend only on the interface — `AbstractService` autowires a private `DatabaseAccessor` (plus a `JsonMapper` for parsing stored payloads), and `AbstractRunnerTLRService` a protected one — so services never see Redis types. `RedisAccessor` is annotated `@Primary`, which makes it the implementation Spring injects everywhere; a different backing store can be swapped in by providing another `DatabaseAccessor` implementation without touching service code.
 
 ```mermaid
 flowchart TD
@@ -86,8 +86,8 @@ flowchart TD
 
 Two properties of the value format matter:
 
-1. **Values are plain strings, not structured Redis objects.** A successful run stores the raw JSON payload built by `ArDoCoApiResult.buildJsonString()` (`{"traceLinks":...,"inconsistencies":...}`); `AbstractService.getResultFromDatabase` later parses the `traceLinks` and `inconsistencies` fields out of that string with Jackson.
-2. **Failed runs cache their error message like a result.** `AbstractRunnerTLRService.runPipelineAsync` catches any pipeline failure and stores `"Error: " + message` under the ID with the same 24h TTL. On the read side, `getResultFromDatabase` throws an `ArdocoException` when the value is `null` or starts with the `Error: ` prefix — so within the TTL window, a cached failure surfaces as an exception rather than triggering a re-run. (When the key is absent entirely, `getResultFromDatabase` throws `IllegalArgumentException` with "No result with key %s found." before reading.)
+1. **Values are plain strings, not structured Redis objects.** A successful run stores the raw JSON payload built by `ArDoCoApiResult.buildJsonString()` (`{"traceLinks":...,"inconsistencies":...}`). On the read side, `AbstractService.getResultFromDatabase` re-parses that string with its autowired Jackson 3 `JsonMapper` (`jsonMapper.readTree(result)`), extracts the `traceLinks` and `inconsistencies` fields as raw JSON strings, and rebuilds an `ArDoCoApiResult` from them — the JSON payload is never deserialized into a typed DTO, only round-tripped as text.
+2. **Failed runs cache their error message like a result.** `AbstractRunnerTLRService.runPipelineAsync` catches any pipeline failure and stores `"Error: " + message` under the ID with the same 24h TTL. On the read side, `getResultFromDatabase` throws an `ArdocoException` when the value is `null` or starts with the `Error: ` prefix (`AbstractService.ERROR_PREFIX`), carrying the stored message — so within the TTL window, a cached failure surfaces as an exception rather than triggering a re-run. (When the key is absent entirely, `getResultFromDatabase` throws `IllegalArgumentException` with "No result with key %s found." before reading.)
 
 The details of this read path and its consequences for API clients are documented in [Request IDs and result caching](../concepts/request-ids-and-caching.md).
 
