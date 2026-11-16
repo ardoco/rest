@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:c11c6dc6ca20d697163357159e9d9b29f359a6c81c52b98be66331ed3c5332ae",
+  "pageVersion": "sha256:989cbca01da312089386c8df6185be3a56cd85f6435b4e7e6b59c89067b202b0",
   "claims": [
     {
       "id": "claim_a1bb159451324940b6b84357a8f5a670",
@@ -73,7 +73,7 @@
       "statement": "Required multipart inputs differ per family: ArDoCode requires projectName, inputText, and inputCode; ArCoTL requires projectName, inputArchitectureModel, inputArchitectureModelFormat (a ModelFormat enum bound via ModelFormatTypeConverter), and inputCode; SWATTR and the inconsistency workflow require projectName, inputText, inputArchitectureModel, and inputArchitectureModelFormat; TransArC requires all four plus inputCode. All families optionally accept additionalConfigs JSON, parsed by AbstractController.parseAdditionalConfigs (invalid JSON raises FileConversionException). The REST layer only validates that uploaded files are non-empty; deeper format checks are left to ArDoCo.",
       "evidence": [
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L43-L48",
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L42-L47",
           "version": "repo-lines-v1:sha256:4448193e58cc77509286bd0b2b67eb1408da7c9980d93a1edb3b6c6b9c821808:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWRjN2M5MmNjZWQxNTc4MTU3NWMzYTJjNTE5ZjI4MzIwY2JmMzY0Y2I2ZTlmMzAzNDJjNGNmY2MzNTA1OTc5MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMjc1OTlkZTJkM2ZlODgxZTliNWY3YTI4ZmZkNzBlYTExYjJlZGUzYzQzMmY1Y2UxNWRhOTEzYWQ5ZTNiN2RkMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOGU5OWFjZmE2MmQ5MTIzZGE4Mzc3YWY1MDA4ZGIyNTc4MzU4ZGIwYjczODI5NTM2ZTUyNTZiOWRmMzI4ZmZhNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjMxMDRjMzgzZTg2NDdlMWI4YjNlNDFlNTg1NjlkODg3YzZjZWE5ZTBlZTVjZDlkZjcyMDczZjczMjM3NDJhNyJ9"
         },
         {
@@ -107,7 +107,7 @@
       "statement": "InconsistencyController reuses the SAD_SAM trace-link type but overrides generateRequestId to produce IDs with the prefix swattrResultInconsistency (TraceLinkType.SAD_SAM.getKeyPrefix() + \"Inconsistency:\" + projectName + hash), so inconsistency results are keyed separately from plain SWATTR results even though both share the same TraceLinkType, prefix family, and input set.",
       "evidence": [
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L131-L135",
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L133-L137",
           "version": "repo-lines-v1:sha256:78d9b6a73f688485eab23b162556e28436c234b264e7f4ee0808bc3f74dd5f80:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZGU5OGI5YzU4MGEzMDBkMmZlMjc1ZTJlN2E5MjA2YzliYjYxNzM5MTFiMDFjMGJiN2YyOWVhMzZiYTBiZGJiNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODEyMjYxYzk0MmU2NTJjNTdiODg5Y2MwNGU4NTBmODMyY2UyOGY2OGE5MjJjY2VjOWFkZGM2ZDE1OGJhYTg2MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDBmZWQ2YmU2NTk5YTg0Mjc4YzJiNjUzMjgwZWQ1OTJkNGI4YjU3ZmZjN2UxOTBhYTAyZDY3MzhiZGIxMjc3MyJ9"
         },
         {
@@ -136,35 +136,35 @@
     },
     {
       "id": "claim_c18e987eced5404eb9e8feace7a83898",
-      "statement": "Only InconsistencyService returns a populated inconsistencies array: it converts both the sad-sam trace links and result.getAllInconsistencies() via InconsistencyConverter and uses the two-argument ArDoCoApiResult constructor. The four recovery services (ArDoCodeService, ArCoTLService, SwattrService, TransArCService) use the single-argument constructor, which sets inconsistencies to the literal \"[]\". Inconsistency entries carry type and reason, plus sentenceNumber for TextEntityAbsentFromModel and modelElementId for ModelEntityAbsentFromText.",
+      "statement": "Only InconsistencyService returns a populated inconsistencies array: it converts result.getArchitectureTraceLinks() (TraceLink<SentenceEntity, ModelEntity>) via the sad-sam converter and result.getAllInconsistencies() via InconsistencyConverter, returning the two-argument ArDoCoApiResult. The four recovery services (ArDoCodeService, ArCoTLService, SwattrService, TransArCService) convert their family's trace links and use the single-argument constructor, which sets inconsistencies to the literal \"[]\". Inconsistency entries carry type and reason, plus sentenceNumber for TextEntityAbsentFromModel and modelElementId (from getModelInstanceUid()) for ModelEntityAbsentFromText.",
       "evidence": [
         {
           "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java#L23-L36",
           "version": "repo-lines-v1:sha256:c2a9e1b7dec0999b2eefe3357416781ec1fd5a401d5b75519ddcac252d44bc2e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI2ZmFiMDE5MDNiNTEzMzE2ODkxNWQ4NDNiYjZiZjAxMDg4YjdmMDYwYzlhOTEwNmNkZDZmYzM3NWIxODAzZTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ3MWJmNzg4ODAxNWVkMDJjODQxMGJjMzRhZmM2MjQ3NTlhYmNiZGI0NmNmYTcwZjI0YzQ1OTMzMjI0NTFjNjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYwOTU3MjE0YjliNWE5ZDk4ZTg0NjNlZWQ2MDU3NTMxODE2MmMzMjhmMWI2ZTYyNjIwMzFlMWFmNGQ3NTYxYzkifQ"
         },
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/InconsistencyConverter.java#L21-L39",
-          "version": "repo-lines-v1:sha256:4352fe5518e83f0c32928d267358c27ff01782cc971f4d3b96e02e2d4fb49d61:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE4OWU1NjNjODFlMGE1NDA4MmY5NmJhZjE2YzQ0M2VhMjMxM2YzZWNkNDJiMzU0M2Y3NjE1ODQ3MTE1ZWI3MWQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRjOTJiYjJhMGFiNjQyMzZjMDkyNjRiNTk5NGJlYWU5Y2Q1NDc3Y2MzYjM3NzNjNGM1YmJmMjg5YmYxMTJkNWUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/InconsistencyConverter.java#L18-L37",
+          "version": "repo-lines-v1:sha256:054e3f13c828987527fb379d7d4913f8935174c554a481f7b7f64efa8a9b8ac0:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdiMWJlNjZmODRmMzE3ZTEwZDNjYzU1ZTkzZDA0MDQxNjlmNTVlYWJjYzgyYzc1NzIyY2RiM2U0ZTY4Y2JiNGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
         },
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ArCoTLService.java#L32-L37",
-          "version": "repo-lines-v1:sha256:94c0d853365c58e0a902f0817252ae152c498a6acfabd8f31c3d36286eedc1b1:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWRjMmIzMTFhYmU4NzU3MmU4YTdjYzBkOTk2YTY1ODQ0MDc2ZTUyMzJkMjFiN2E4NTQ3NWY5YjQwNTViNzQ5MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTkxM2RiNDg0MDc1MGY4NDZkODY5NGMzNTk1N2RhNjFhMjhjNTRmMWJkODU1Mjk5Njc4NGRjOTg5MjYzYWY1MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ArCoTLService.java#L29-L35",
+          "version": "repo-lines-v1:sha256:58f6b27c4ccfa0db650b75a353ad988cf363097af32bfbe86c0c730662d329ba:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGNlMzYzMWUzMTVkZGEzNTVmMjg4MDI1MzZmZWQyNzZmODVkNWEyYmMyODVlMDJiNzMwNmUwOGZjNzVjZWMwMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
         },
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ArDoCodeService.java#L32-L37",
-          "version": "repo-lines-v1:sha256:dddfc447ce3d6206bee58a2e7f7a12c070894020bfe4cb6471ceb0f34ac3e15c:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWRjMmIzMTFhYmU4NzU3MmU4YTdjYzBkOTk2YTY1ODQ0MDc2ZTUyMzJkMjFiN2E4NTQ3NWY5YjQwNTViNzQ5MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDY3MjgxNDI4MTZlNDA0NjU4MDc1Yjk5OTU2NTc2OTJkMTRhMTcwZjkwMGRmOGUxNjNhZjFmYmIwNTFkZmJkYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ArDoCodeService.java#L29-L35",
+          "version": "repo-lines-v1:sha256:97694e841f15c9bc177c076328cd3bc3a7811b0df92c9deccc4f5059f5bda9fd:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiN2U4MTNhYzJkODhmYzk2ZTNiMGNjMWM4Y2MzYmFhNTA0Y2Y1ZTA5ZjEyYzIwYWY5OGMwNDA4MGJmZjFlOTkyNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
         },
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/InconsistencyService.java#L19-L37",
-          "version": "repo-lines-v1:sha256:85773dae2a7edef548fbe279274d47546168cea3caaeebb8d6de43d5a09ea8e3:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4NDE3NzkyYzY4OTk5NTYzNDkxMTkxNDg4MWU5MjlkOTI4NDgwM2YxOGYyYTJjNzEzODBlYzM5MjhmZTliMjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBiZTg2ZGQ3MmZhZjkzMTViZGQ5ZDY2OTM4MGFkMDMwNzQ3YmM2ZjBhNDVhYjgyOTY2NjA2ZjQ5NGU2NzAwMDAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/InconsistencyService.java#L17-L35",
+          "version": "repo-lines-v1:sha256:9e7c0560fa8eab0118c87e43faf013a4c044c1fb4265008fcfc389005e9693fc:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4NDE3NzkyYzY4OTk5NTYzNDkxMTkxNDg4MWU5MjlkOTI4NDgwM2YxOGYyYTJjNzEzODBlYzM5MjhmZTliMjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBiZTg2ZGQ3MmZhZjkzMTViZGQ5ZDY2OTM4MGFkMDMwNzQ3YmM2ZjBhNDVhYjgyOTY2NjA2ZjQ5NGU2NzAwMDAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
         },
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/SwattrService.java#L32-L37",
-          "version": "repo-lines-v1:sha256:d121b98a5a11b79486bb4f12418742542b4674b845a04388ced9bda75c818e0b:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWRjMmIzMTFhYmU4NzU3MmU4YTdjYzBkOTk2YTY1ODQ0MDc2ZTUyMzJkMjFiN2E4NTQ3NWY5YjQwNTViNzQ5MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjM1NTVlNmFlYzE3ZWNmNmU1ODk2NjAwMTZjZWRlNjFkMTdiZTc5Nzc1MmZjMTM3ZDU2NmFjYWZkZjkzMGRhZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/SwattrService.java#L29-L35",
+          "version": "repo-lines-v1:sha256:5f12fc5a3fb4b1951b9e805453a487a47cd7fb00d1874d55f4d709740aa1f0e0:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiY2E1MDk0NmMxZWZlNjFlM2M5ZjdhMjc1MzA2NjZhNDYyNTUyYjQyNjJjNGY5YTViOWJiMWU0NjEyY2NkNGZiNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
         },
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/TransArCService.java#L32-L37",
-          "version": "repo-lines-v1:sha256:dddfc447ce3d6206bee58a2e7f7a12c070894020bfe4cb6471ceb0f34ac3e15c:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWRjMmIzMTFhYmU4NzU3MmU4YTdjYzBkOTk2YTY1ODQ0MDc2ZTUyMzJkMjFiN2E4NTQ3NWY5YjQwNTViNzQ5MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGZjYzM0YWM1ZTdkMTNmMjdkODQyYzY3MjJkZDU4NDM1NDkwYjJhZmE4Yzc2YjUwOTNmOGJhMTAzNTdmYTY4OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/TransArCService.java#L29-L35",
+          "version": "repo-lines-v1:sha256:97694e841f15c9bc177c076328cd3bc3a7811b0df92c9deccc4f5059f5bda9fd:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDFhOWNkZWNhYmYyYTU1ZDA2OGQ4YmJiNDgwN2E5Njc3YWM4OTg1NjgxNWJiNDgwZmYwZjdhMzlhZDFhNDRhNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
         }
       ]
     },
@@ -173,12 +173,12 @@
       "statement": "Each family's service fixes its payload shape through TraceLinkConverter: ArDoCodeService emits sentenceNumber/codeElementId/codeElementName (plus modelElementId/modelElementName on TransitiveTraceLink entries); ArCoTLService emits modelElementId/modelElementName/codeElementId/codeElementName; SwattrService and InconsistencyService emit sentenceNumber/modelElementName/modelElementId; and TransArCService calls result.getSadCodeTraceLinks() with the sad-code converter, so SAD_SAM_CODE responses use the same shape as SAD_CODE ones and changing that converter silently affects both families.",
       "evidence": [
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/TraceLinkConverter.java#L34-L119",
-          "version": "repo-lines-v1:sha256:3629bc9e4b535a72c6f6d89f5419c8015a98b85e2ae83e582b3fe925a8a477b7:eyJzZWxlY3RlZExpbmVDb3VudCI6ODYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY3ZjIzMDBmMmI5YmNmZGRiZmYyM2M1NDJiMTk3OWVmZTk5NGI0YjZhYzZiMDNhM2NhNzRkODRhYjYzODcyMzYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQyNDI2OWQ2MGI1NTZkYmM4YmI1NmRiMTQ4ZTU2ZTYwOTU2MTgwNGI1ZDg4N2ExYzUwYzZhNTc2ZThiNDcwMzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/TraceLinkConverter.java#L31-L113",
+          "version": "repo-lines-v1:sha256:a174b73301345c649ac46552d39ada2561233ac152a511c1ec3ce1367258becc:eyJzZWxlY3RlZExpbmVDb3VudCI6ODMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYwNThjMzI1OGIyNjk2NmEwYTUyOTg4MGEyYTk2YWJhZDc0MGM3Y2ZiYzMwZDU4NzUwMzI2NTE3MmZjYTdjYmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjUwNGQyZmM4MGU3NDEwNmYwOTY5Y2Y5YmZiNzVhODNmM2ZlNTFlYzE4YjRlZGQxMjNiNmIxZjdlOWE0MGY5ZWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
         },
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/TransArCService.java#L33-L36",
-          "version": "repo-lines-v1:sha256:165fe0c0d30cdab639c7157a40e47c10f4db9ba0e225ef4036c006e784344d03:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTA4Nzc0MjhjMDNjZjUwMTUyMTk5OTAyMDdhNzEzNzFhNGYxMmQyMDU5ZmQ1NTBhNDAyYWQwNGJjMzIyOGNjNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDMwYWY0ODRjNGUyY2IwNWUxOTQzOThjYzViODFjMWJkOWI3NTdiNDEwMTk3OTNmNjE0NDNmMDVjN2FjZTBiZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzY5NDZlMTAxZTVlNzhkOTBhNTEwYzY5ZjI2NmVmNzY1NDBkMzA5YjFiODIyNjk1YjUzMTcyZWQyY2FhMDI1OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzc5NGQwMmE4MTIxOTQ0ZDE3NmQyNjVlOWJiOWNjNTlmNmFiODkwYmNhZGY4YWVmZGViZGJiYjRmMmVhODQ0NCJ9"
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/TransArCService.java#L29-L35",
+          "version": "repo-lines-v1:sha256:97694e841f15c9bc177c076328cd3bc3a7811b0df92c9deccc4f5059f5bda9fd:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDFhOWNkZWNhYmYyYTU1ZDA2OGQ4YmJiNDgwN2E5Njc3YWM4OTg1NjgxNWJiNDgwZmYwZjdhMzlhZDFhNDRhNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
         }
       ]
     },
@@ -191,11 +191,11 @@
           "version": "repo-lines-v1:sha256:0c7d4b623c2a2ed672a861bd3c8661eb4a423655a9656d8fd9106c3d1660500c:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGI4NjliYTE5NTIyZWUyMjVjOTZlMDc3NWRmODdhZmNiZDA1ZTkxYTYxZGY5Yjk1MjZjYmRjMzNmODhmODIxMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzViMTg4MGVmMmU1MGJkZWM3N2Y3NmRkMmY2ZTA0OGIwZjc0MGU0YzUxYjliY2JiOGYwYTA4MWUxMzFmMGMxNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDYwZGE1M2RkYmI1ZjM2NDI2OWQzOTI2ODAwNzRmODc3ZjNmMmIyNzhiM2Q5MzNmYjQwYWJmYTVjMjc1NDY4OCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWMzNDZiYjZjYWQxNjA4MDdhZWMyOTRhOGE0MWYwZjg2ZTg5NDFmODA2NDk1OGNkZmU5MmZjN2I4MzViYTI5NSJ9"
         },
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ArDoCodeService.java#L22-L22",
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ArDoCodeService.java#L20-L20",
           "version": "repo-lines-v1:sha256:cb383a723347a2e0383963a53e9d65f435b4fad83735b6d1e1bec14bcd9570e7:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2IzODNhNzIzMzQ3YTJlMDM4Mzk2M2E1M2U5ZDY1ZjQzNWI0ZmFkODM3MzViNmQxZTFiZWMxNGJjZDk1NzBlNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2IzODNhNzIzMzQ3YTJlMDM4Mzk2M2E1M2U5ZDY1ZjQzNWI0ZmFkODM3MzViNmQxZTFiZWMxNGJjZDk1NzBlNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiN2E1NTQzZjg5ZGExOGU4MDVjYWE1MDgyMzNmODMzOTMzY2ZkNjkxYjMzYjY1Y2MyZDlmZDE4MzMxZWQ4YzIzYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDk0NDNkYzQ3OTUxYmNjMDBkNGM0MDJiMTc0MDVjOWY3MThjOWFkOTc1OGMxNjY2YTJlYzFlOWVkNzAwOGY0NiJ9"
         },
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/TransArCService.java#L22-L22",
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/TransArCService.java#L20-L20",
           "version": "repo-lines-v1:sha256:dee01acb0551a520793b9565c7ca8d724b1b23e882291666f0fc8d97653ac02a:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZGVlMDFhY2IwNTUxYTUyMDc5M2I5NTY1YzdjYThkNzI0YjFiMjNlODgyMjkxNjY2ZjBmYzhkOTc2NTNhYzAyYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZGVlMDFhY2IwNTUxYTUyMDc5M2I5NTY1YzdjYThkNzI0YjFiMjNlODgyMjkxNjY2ZjBmYzhkOTc2NTNhYzAyYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiN2E1NTQzZjg5ZGExOGU4MDVjYWE1MDgyMzNmODMzOTMzY2ZkNjkxYjMzYjY1Y2MyZDlmZDE4MzMxZWQ4YzIzYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGJiMDI5NTNlNDcyN2FlODUyMTQ2ZTYxZmY2YzdkNmNhMmM4ZmRmYWM5NmRmZjU4NWI2N2FhZDY4MjdmYjI1MyJ9"
         },
         {
@@ -206,21 +206,49 @@
     },
     {
       "id": "claim_ebbb41593f1e49178ef201141624224b",
-      "statement": "Extending the API with a new family requires a new TraceLinkType entry, a controller extending AbstractController with /start and /start-and-wait handlers, an AbstractRunnerTLRService subclass implementing convertResultToJsonString, and a controller test subclassing AbstractTLRControllerTest (which derives endpoint paths from the TraceLinkType endpoint name); the shared dedup, async execution, Redis storage, ID generation, and cross-family retrieval machinery needs no changes.",
+      "statement": "Extending the API with a new family requires a new TraceLinkType entry, a controller extending AbstractController with /start and /start-and-wait handlers, an AbstractRunnerTLRService subclass implementing convertResultToJsonString, and a controller test subclassing AbstractTLRControllerTest (which derives endpoint paths from the TraceLinkType endpoint name); the shared run-or-reuse dispatch, async execution, Redis storage, ID generation, and cross-family retrieval machinery needs no changes.",
       "evidence": [
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L73-L92",
-          "version": "repo-lines-v1:sha256:86614054cc57e8a862ba3c7adc8990acfdee9bbfe369e6dec55da237a281af2a:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE3MmE1NGQxYzA4ZWQ4YTEzZGQ1YjY5YmMwOTY4Yzg4MDRiNzViNjMwOTA1Y2ExNDQxNjQzZjAyOTJmMjExN2IiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJhMjZmMmQ2MThjMGM1ZGEyYWFkNGMyYjMzZjQyNTNmZjNjNmViNTZlZDExMzhjYjMzMWIwNWIxMTU0MjMyZGEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYyMjU2YzE0ZjY3N2I5ODMzZDEzMDZkMjM0MzIxODI2YmJlMmFlOTlkMGQ2MjRjMjQ2YzM1ODgyYTNmNGQ4ODYifQ"
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L80-L92",
+          "version": "repo-lines-v1:sha256:ae6c82fc68f108cdeb147377c363ce98a0cd9f6c771bcd1e1ac6b18cf9d28b0b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ1ODRhNzc4MjlkNDhlNzQzNDRkYjBjMzhjMGVmMDRiNjRkYWQ5MDY4NmVhM2FjZjc0ZmMxZmJmYzAxM2E3MDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZlMjkyNzlkOWEyNTJiY2ZkNmM4ODY0YWQxZTg5Mjk3MTY4NWIyNzVkZmRhM2MyYjIxMDg2ZGE2MTAzYTQ3ZTQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjEwODY4ODVlMGNmODMzNTA5NzczNjE4OTJjZTk4NGI0NzU0NjQzMDNhNGYwYjA3M2UzYThiMjE4OTAzMDM4Y2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY5ODg1NzliYmI5YzZhNDgzMTQ2NTk4OTYzM2FkNGY2NDBkNDc1YmJmMGFkODRhZmRkMzZhOTNiYzdhZWYxMGEifQ"
         },
         {
           "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java#L78-L83",
           "version": "repo-lines-v1:sha256:7620418cf834b4146b2a84e84daba5638e7a6faaaefe6b3af4450e9281b8dd94:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzRkOGQ4OWQ2N2FhMzVjMjA3NGZiZjI2MzdhMmU3NTBiZmZjZGZmYWU4NmNiMGY3ZDdkNzg0Y2E2ZWRjY2RiMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTY3YTc4YzdkMDQ3OWQ2ZTAwYTk5MjA5NTYzMDc5ZGZmOGRiMjJjNmIwNTM4MDk4NDFiZDdlYmRmZTlmZjM2MyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzljZDEzYjE1NDNlOGQ1NDIwMDg0MjdhOTlmNWRiOGU4MzhlNTU5OTRiMGZhMDc3YzI1YjcwYzZlOTRhMDVkMyJ9"
         }
       ]
+    },
+    {
+      "id": "claim_e0285ca91d42419d89dac80d5d1449ca",
+      "statement": "AbstractRunnerTLRService.runPipeline dispatches a new asynchronous run only when the result is neither in Redis (resultIsInDatabase) nor currently executing (resultIsOnItsWay); a cached result is returned directly without a new run and an in-flight result yields Optional.empty(). The dispatch creates the future with CompletableFuture.supplyAsync before registering it under the request ID in CurrentlyRunningRequestsRepository, so the check-then-act sequence is not atomic and concurrent first requests for a brand-new ID can each dispatch a run. The worker's finally block runs on success and failure alike: it removes the request from the in-flight registry and deletes every temp input file, and a pipeline failure first stores an \"Error: \"-prefixed marker in Redis before rethrowing as ArdocoException.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L80-L92",
+          "version": "repo-lines-v1:sha256:ae6c82fc68f108cdeb147377c363ce98a0cd9f6c771bcd1e1ac6b18cf9d28b0b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ1ODRhNzc4MjlkNDhlNzQzNDRkYjBjMzhjMGVmMDRiNjRkYWQ5MDY4NmVhM2FjZjc0ZmMxZmJmYzAxM2E3MDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZlMjkyNzlkOWEyNTJiY2ZkNmM4ODY0YWQxZTg5Mjk3MTY4NWIyNzVkZmRhM2MyYjIxMDg2ZGE2MTAzYTQ3ZTQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjEwODY4ODVlMGNmODMzNTA5NzczNjE4OTJjZTk4NGI0NzU0NjQzMDNhNGYwYjA3M2UzYThiMjE4OTAzMDM4Y2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY5ODg1NzliYmI5YzZhNDgzMTQ2NTk4OTYzM2FkNGY2NDBkNDc1YmJmMGFkODRhZmRkMzZhOTNiYzdhZWYxMGEifQ"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java#L99-L124",
+          "version": "repo-lines-v1:sha256:a8d8a5ed4aceb16bdacf247e591a4b88b2704d99a6f94b6e542cdedb8535600c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmMTZhYWM0ZGFiYzMyYmY4YzlhMzhlZmMwYmRiZTI3NGFhNDBlMjU2MWY1OGQ4MzJkYjdiNzE4Mzk1MzVjOWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU5NzJiMWUyMTE3YTQxZTQyYzA0M2NkMjc1YmExYTE4ODhjNmIwYjJkZjA5MWVlMjI0YTIxYjA4ZGNiZjZmYzgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_70ecbd6c3a8a4302a5351dfd5251922d",
+      "statement": "The TraceLinkConverter payload contract: all three converter methods build their JSON arrays with tools.jackson JsonMapper.shared() over ARDoCo core API entities (TraceLink, SentenceEntity, ArchitectureEntity, ModelEntity from edu.kit.kastel.mcse.ardoco.core.api, resolved at the ArDoCo 2.2.0-SNAPSHOT parent version), and whenever the relevant endpoint entity's getType() is present the emitted modelElementName is the entity name followed by the type in parentheses — on sam-code and sad-sam entries for the model endpoint, and on transitive sad-code entries for the intermediate ArchitectureEntity.",
+      "evidence": [
+        {
+          "resource": "repo://pom.xml#L3-L7",
+          "version": "repo-lines-v1:sha256:b10ec8f5f3ac103ad065393660c9c52a2fc8d7e034c947f1e533c7f521c326ed:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYmZjYzIxODAzMDZlM2ZhM2Q3NWEyMWY1Yzg4YzIzYzQ4MDJiYjJmNTZmM2VlNGI0MTM5NDA1N2E3ZmJlNmY0MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2YyOWE0MWUyOTk1OTc5NGJiNWY5ZDkxNWQ3Yzg5MmM5ZTNiZGViZjU5YTQyNzMzZDk0YTJiMDNlMWZlZWE2OCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNGQ0NjljMDU3NWQ5ZTg5YmY1MDhlY2FmMGNlNmE2Mzk4YjA2NGIyOGU3MTI1ZGFmY2I1MzNmZWZiYWNlNGEzNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOWM1ZWUzN2IzOWZjMzllMzBiMzhkYjlhY2NmNzBmOWNiNWUyZDZmMWZjY2Y5MjM1MTgwY2ZjNjY2Y2RjZjlhOCJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/TraceLinkConverter.java#L31-L113",
+          "version": "repo-lines-v1:sha256:a174b73301345c649ac46552d39ada2561233ac152a511c1ec3ce1367258becc:eyJzZWxlY3RlZExpbmVDb3VudCI6ODMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYwNThjMzI1OGIyNjk2NmEwYTUyOTg4MGEyYTk2YWJhZDc0MGM3Y2ZiYzMwZDU4NzUwMzI2NTE3MmZjYTdjYmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjUwNGQyZmM4MGU3NDEwNmYwOTY5Y2Y5YmZiNzVhODNmM2ZlNTFlYzE4YjRlZGQxMjNiNmIxZjdlOWE0MGY5ZWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-09T15:26:30.664Z"
+    "at": "2026-11-16T15:01:30.713Z"
   }
 }

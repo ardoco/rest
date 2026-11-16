@@ -1,13 +1,15 @@
 ---
 type: "Reference"
 title: "Domains"
-description: "The five trace-link recovery and inconsistency-detection domains of ArDoCo REST: endpoint paths, required multipart inputs, TraceLinkType prefixes, runner classes, and the payload shape each family returns."
+description: "The five trace-link recovery and inconsistency-detection domains of ArDoCo REST: endpoint paths, required multipart inputs, TraceLinkType prefixes, runner classes, the shared run-or-reuse execution machinery, and the payload shape each family returns."
 tags: [domains, trace-link-recovery, runners, api-endpoints, inconsistency-detection, naming]
 openwiki_generated: true
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-09T15:26:30.664Z
+    at: 2026-11-16T15:01:30.713Z
 sources:
+  - id: openwiki-source-2355f81d7cf522f8dbdaabd4
+    resource: repo://pom.xml
   - id: openwiki-source-176362edb7d4360cef66ced2
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java
   - id: openwiki-source-17e67da21bbb452f6e1b70e3
@@ -50,7 +52,7 @@ sources:
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java
   - id: openwiki-source-afbc8fe03b772afdcb77babf
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamCodeControllerTest.java
-generated: { by: "openwiki/0.9.0", at: "2026-11-09T15:26:30.664Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
 ---
 
 # Domains
@@ -82,7 +84,7 @@ The `InconsistencyController` (`/api/find-inconsistencies`) adds a distinct work
 Two properties distinguish this domain from the plain recovery families:
 
 1. **It reuses the `SAD_SAM` trace-link type and its `swattrResult` prefix.** `InconsistencyController` overrides `generateRequestId` so its IDs are `swattrResultInconsistency:<projectName><hash>` instead of `swattrResult:<projectName><hash>`. That extra segment keeps inconsistency results keyed separately from plain SWATTR results even though both families share the same `TraceLinkType`, the same input set, and even the same `SAD_SAM` payload shape for trace links.
-2. **Its response payload is richer.** `InconsistencyService` converts the sad-sam trace links *and* `result.getAllInconsistencies()` (via `InconsistencyConverter`) and returns them with the two-argument `ArDoCoApiResult` constructor — a populated `inconsistencies` array. The four recovery families use the single-argument constructor, which sets `inconsistencies` to the literal `[]`. Inconsistency entries carry `type` and `reason`, plus `sentenceNumber` for `TextEntityAbsentFromModel` and `modelElementId` for `ModelEntityAbsentFromText`.
+2. **Its response payload is richer.** `InconsistencyService` converts the sad-sam trace links *and* `result.getAllInconsistencies()` (via `InconsistencyConverter`) and returns them with the two-argument `ArDoCoApiResult` constructor — a populated `inconsistencies` array. The four recovery families use the single-argument constructor, which sets `inconsistencies` to the literal `[]`. Inconsistency entries carry `type` and `reason`, plus `sentenceNumber` for `TextEntityAbsentFromModel` and `modelElementId` (the value of `Inconsistency.getModelInstanceUid()`) for `ModelEntityAbsentFromText`.
 
 This domain matters not just because of the different response type: it reflects a different runner setup path (`InconsistencyDetection.setUp` takes the text file, the architecture-model file, and the model format directly, rather than `ArchitectureConfiguration`/`CodeConfiguration` objects) and a different request-ID prefix.
 
@@ -96,6 +98,29 @@ The application distinguishes between:
 - waiting for a result later by ID
 
 `ResultController` exposes the shared retrieval endpoints, and they are **cross-family**: `/api/get-result/{id}` and `/api/wait-for-result/{id}` serve any family's result, because IDs are self-describing — `TraceLinkType.fromId(id)` matches the ID prefix regardless of which start endpoint produced it. `ResultService` implements both operations against the two stores (in-flight futures and Redis): `getResult` returns empty while the request is in flight, and `waitForResult` blocks on the registered future rather than polling Redis. Unknown or expired IDs surface as 422 errors; a cached pipeline failure surfaces as a 500. The step-by-step execution and retrieval flows — including the exact wait budget behavior and the `202 Accepted` timeout outcome — are documented in [Pipeline execution](workflows/pipeline-execution.md) and [Result retrieval](workflows/result-retrieval.md); [Request IDs and result caching](concepts/request-ids-and-caching.md) covers the dedup/TTL semantics and [Response and error model](concepts/response-and-error-model.md) the exact status/message pairing.
+
+## Shared execution machinery
+
+All five controllers hand the prepared runner to the same execution path. Each family has exactly one `AbstractRunnerTLRService` subclass, and `runPipeline(runner, id, inputFiles)` makes the run-or-reuse decision in a fixed order:
+
+1. **Durable store first, registry second.** A new run is dispatched only when the result is neither in Redis (`resultIsInDatabase`) nor currently executing (`resultIsOnItsWay`). The dispatch itself creates the future (`CompletableFuture.supplyAsync`) and then registers it under the request ID in `CurrentlyRunningRequestsRepository`; the check-then-act sequence is not atomic, so two concurrent first requests for a brand-new ID can each dispatch a run.
+2. **Cached results short-circuit.** When the result is already stored, `runPipeline` returns the parsed cached payload directly and no run is dispatched — this is what makes re-POSTing a `/start` request cheap, and also why a cached failure is re-served instead of re-run.
+3. **In-flight requests yield empty.** When the result is in flight, the method returns `Optional.empty()`, which the controller turns into the "result is being processed" response.
+
+The async worker (`runPipelineAsync`) runs `runner.run()`, converts the `ArdocoResult` through the family's `convertResultToJsonString`, and stores the JSON string in Redis. Its `finally` block runs on both the success and failure paths and always removes the request from the in-flight registry and deletes the temp input files — so the registry never reports a finished run as running, and dispatched runs never leak temp files. A pipeline failure additionally stores an `"Error: "`-prefixed marker in Redis before rethrowing as `ArdocoException`. The full flow, wait budgets, and failure semantics are documented in [Pipeline execution](workflows/pipeline-execution.md).
+
+```mermaid
+flowchart TD
+    START["runPipeline runner id inputFiles"] --> DB{"Result already in Redis"}
+    DB -->|yes| CACHE["Return the parsed cached result"]
+    DB -->|no| FLIGHT{"Result currently in flight"}
+    FLIGHT -->|yes| EMPTY["Return an empty Optional"]
+    FLIGHT -->|no| ASYNC["Dispatch CompletableFuture.supplyAsync and register the future"]
+    ASYNC --> WORK["Worker runs the pipeline converts the result and saves to Redis"]
+    WORK --> CLEAN["finally removeRequest and delete the temp input files"]
+```
+
+*The run-or-reuse decision in `AbstractRunnerTLRService.runPipeline`; the cleanup runs in the worker's `finally` block on both success and failure.*
 
 ## Input conventions
 
@@ -128,13 +153,15 @@ Each family's service converts the runner output through `TraceLinkConverter` in
 
 | Family | Service | Converter method | Trace-link fields |
 | --- | --- | --- | --- |
-| ArDoCode (`SAD_CODE`) | `ArDoCodeService` | `convertListOfSadCodeTraceLinksToJsonString` | `sentenceNumber`, `codeElementId`, `codeElementName`; plus `modelElementId` and `modelElementName` on transitive links |
+| ArDoCode (`SAD_CODE`) | `ArDoCodeService` | `convertListOfSadCodeTraceLinksToJsonString` | `sentenceNumber`, `codeElementId`, `codeElementName`; plus `modelElementId` and `modelElementName` on `TransitiveTraceLink` entries |
 | ArCoTL (`SAM_CODE`) | `ArCoTLService` | `convertListOfSamCodeTraceLinksToJsonString` | `modelElementId`, `modelElementName`, `codeElementId`, `codeElementName` |
 | SWATTR (`SAD_SAM`) | `SwattrService` | `convertListOfSadSamTraceLinksToJsonString` | `sentenceNumber`, `modelElementName`, `modelElementId` |
 | Inconsistency (`SAD_SAM`) | `InconsistencyService` | `convertListOfSadSamTraceLinksToJsonString` + `InconsistencyConverter` | SWATTR trace-link shape plus a populated `inconsistencies` array |
 | TransArC (`SAD_SAM_CODE`) | `TransArCService` | reuses the sad-code converter | same shape as `SAD_CODE` |
 
-`TransArCService` currently calls `result.getSadCodeTraceLinks()` and the sad-code converter, so `SAD_SAM_CODE` responses are keyed the same way as `SAD_CODE` ones — changing one converter silently changes two families' payloads. Inconsistency entries always carry `type` and `reason`. Full field semantics live in [Response and error model](concepts/response-and-error-model.md#per-family-payload-shapes).
+The converters operate on the ARDoCo 2.2.0 core API types — `TraceLink` over `SentenceEntity`, `ArchitectureEntity`, and `ModelEntity` from `edu.kit.kastel.mcse.ardoco.core.api` — and build the arrays with `tools.jackson` `JsonMapper.shared()`. Wherever an endpoint entity carries a type (`ArchitectureEntity`/`ModelEntity.getType()`), the emitted `modelElementName` is the entity name plus the type in parentheses, e.g. `Name (BasicComponent)`; on transitive sad-code links the same enrichment applies to the intermediate `ArchitectureEntity`. Inconsistency entries always carry `type` and `reason`. Full field semantics live in [Response and error model](concepts/response-and-error-model.md#per-family-payload-shapes).
+
+`TransArCService` currently calls `result.getSadCodeTraceLinks()` and the sad-code converter, so `SAD_SAM_CODE` responses are keyed the same way as `SAD_CODE` ones — changing one converter silently changes two families' payloads.
 
 ## Naming notes
 
@@ -152,7 +179,7 @@ The drift is visible in several places: the TransArC runner class is `Transarc` 
 
 ## How to extend
 
-Adding a new family means: a new `TraceLinkType` entry (label + ID prefix + endpoint name), a new controller extending `AbstractController` with `/start` and `/start-and-wait` handlers, a new `AbstractRunnerTLRService` subclass implementing `convertResultToJsonString`, and a controller test subclassing `AbstractTLRControllerTest` (which derives the endpoint paths from the `TraceLinkType` endpoint name). The shared `AbstractController`/`AbstractRunnerTLRService` machinery — dedup, async execution, Redis storage, ID generation, and the cross-family retrieval endpoints — requires no changes.
+Adding a new family means: a new `TraceLinkType` entry (label + ID prefix + endpoint name), a new controller extending `AbstractController` with `/start` and `/start-and-wait` handlers, a new `AbstractRunnerTLRService` subclass implementing `convertResultToJsonString`, and a controller test subclassing `AbstractTLRControllerTest` (which derives the endpoint paths from the `TraceLinkType` endpoint name). The shared `AbstractController`/`AbstractRunnerTLRService` machinery — the run-or-reuse decision described in [Shared execution machinery](#shared-execution-machinery), async execution, Redis storage, ID generation, and the cross-family retrieval endpoints — requires no changes.
 
 ## Related pages
 
@@ -167,12 +194,14 @@ Adding a new family means: a new `TraceLinkType` entry (label + ID prefix + endp
 ## Source references
 
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java`
+- `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCodeController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArCoTLController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/SwattrController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/TransArCController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/InconsistencyController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java`
+- `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ArDoCodeService.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ArCoTLService.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/SwattrService.java`
@@ -182,3 +211,4 @@ Adding a new family means: a new `TraceLinkType` entry (label + ID prefix + endp
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/TraceLinkConverter.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/InconsistencyConverter.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/ModelFormatTypeConverter.java`
+- `src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java`

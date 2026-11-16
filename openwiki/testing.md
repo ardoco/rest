@@ -9,6 +9,8 @@ sources:
     resource: repo://.github/workflows/ci.yml
   - id: openwiki-source-2355f81d7cf522f8dbdaabd4
     resource: repo://pom.xml
+  - id: openwiki-source-176362edb7d4360cef66ced2
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java
   - id: openwiki-source-f5df1fa4999bf0efe9f01e6b
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java
   - id: openwiki-source-fbe8e79a4110d3bef05db863
@@ -45,10 +47,10 @@ sources:
     resource: repo://src/test/resources/bigBlueButton/bbb.repository
   - id: openwiki-source-fe6ea4bbcfa4165dae50b647
     resource: repo://src/test/resources/bigBlueButton/bigbluebutton.txt
-generated: { by: "openwiki/0.9.0", at: "2026-11-09T15:26:30.664Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-09T15:26:30.664Z
+    at: 2026-11-16T15:01:30.713Z
 ---
 
 # Testing
@@ -148,7 +150,7 @@ Each subclass then supplies its own empty-file fixture: the sad-code test emptie
 `TestUtils` is the assertion backbone of the controller tests. It:
 
 - builds a multipart request for the bigBlueButton text + code fixture;
-- parses a `ResponseEntity<String>` into an `ArdocoResultResponse` (reading `requestId`, `message`, `status`, `traceLinkType`, and the raw `traceLinks`/`inconsistencies` JSON);
+- parses a `ResponseEntity<String>` into an `ArdocoResultResponse` using Jackson 3 (`tools.jackson.databind.json.JsonMapper.shared()`), reading `requestId`, `message`, `status`, and `traceLinkType`, and copying the `traceLinks`/`inconsistencies` nodes out of the nested `result` object as raw JSON strings (defaulting to `"[]"` when absent) to reconstruct the `ArDoCoApiResult` payload;
 - asserts the exact status/message/traceLinkType pairings for every flow using the `ResultMessages` constants: fresh start (`RESULT_IS_BEING_PROCESSED`), cached start (`RESULT_IS_READY`), not-ready get (`RESULT_NOT_READY` on `ACCEPTED`), ready get (`RESULT_IS_READY` on `OK`), timed-out wait (`REQUEST_TIMED_OUT`), ready wait (`RESULT_IS_READY`), and `start-and-wait` timeout (`REQUEST_TIMED_OUT_START_AND_WAIT`).
 
 Because every pairing is asserted explicitly, changing a message constant, a status pairing, or the `traceLinkType` derivation breaks the build — the response model is pinned by these tests. Two helpers in `TestUtils` are currently dead code: `testStartPipeline_new` and the parameterless `setUpRequestParamToStartPipelineBBB()` are defined but never called by any test. The response model itself is documented in [Response and error model](concepts/response-and-error-model.md).
@@ -173,7 +175,7 @@ The three utility tests pin the conversions that sit between the HTTP layer and 
 
 - **`FileConverterTest`** (uses `@TempDir` and `MockMultipartFile`): verifies `convertFilesToByte` concatenates the raw bytes of all files in list order (the byte stream that feeds the request-ID hash); that an empty file list throws `FileNotFoundException` with `"File list is empty"`; that an empty multipart upload throws `FileNotFoundException` with `"The file with name testfile.txt is empty."`; and that a `transferTo` failure throws `FileConversionException` with `"Error occurred while transferring the MultipartFile to File"`. It also verifies `convertMultipartFileToFile` round-trips the upload into a file of the same original name in the temporary directory.
 - **`HashGeneratorTest`**: verifies identical file contents produce identical hashes, that a multi-file hash differs from the single-file hash of the same content, that different content produces different hashes, and that empty file lists (`FileNotFoundException`) and unreadable files (`FileConversionException`) raise the expected exceptions. This is the direct guard for the hash part of request-ID generation; see [Request IDs and result caching](concepts/request-ids-and-caching.md).
-- **`TraceLinkConverterTest`**: pins that an empty trace-link list serializes to `"[]"` — the minimum shape the `@JsonRawValue` contract of `ArDoCoApiResult` relies on. (The converter's per-family payload shapes are documented in [Response and error model](concepts/response-and-error-model.md).)
+- **`TraceLinkConverterTest`**: a single test (`testConvertListOfTraceLinksToJSONString_withEmptyListSamSad`) that converts an empty Eclipse Collections `ImmutableList` through `TraceLinkConverter.convertListOfSadCodeTraceLinksToJsonString` and asserts the output is exactly `"[]"` — the minimum shape the `@JsonRawValue` contract of `ArDoCoApiResult` relies on. (The converter's per-family payload shapes are documented in [Response and error model](concepts/response-and-error-model.md).)
 
 ## Architecture constraints
 

@@ -6,7 +6,7 @@ tags: [architecture, layering, controller-service-repository, async-execution, r
 openwiki_generated: true
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-09T15:26:30.664Z
+    at: 2026-11-16T15:01:30.713Z
 sources:
   - id: openwiki-source-aed92bcc8ea721affa9f52be
     resource: repo://architecture_decisions.md
@@ -70,7 +70,7 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java
   - id: openwiki-source-ece093ad10b91f3da0b7e34f
     resource: repo://src/main/resources/application.properties
-generated: { by: "openwiki/0.9.0", at: "2026-11-09T15:26:30.664Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
 ---
 
 # Architecture
@@ -138,7 +138,7 @@ The services form a three-level inheritance structure: `AbstractService` is the 
 
 - `resultIsInDatabase(id)` — durable-storage existence check via `DatabaseAccessor.keyExistsInDatabase`.
 - `resultIsOnItsWay(id)` — in-flight check via `CurrentlyRunningRequestsRepository.containsRequest`.
-- `getResultFromDatabase(id)` — throws `IllegalArgumentException` ("No result with key … found.") when the key is absent; throws `ArdocoException` when the stored value is `null` or starts with the `ERROR_PREFIX` (`"Error: "`); otherwise re-parses the stored JSON into an `ArDoCoApiResult` by extracting its `traceLinks` and `inconsistencies` fields.
+- `getResultFromDatabase(id)` — throws `IllegalArgumentException` ("No result with key … found.") when the key is absent; throws `ArdocoException` when the stored value is `null` or starts with the `ERROR_PREFIX` (`"Error: "`); otherwise re-parses the stored JSON with the injected Jackson 3 `JsonMapper` (`jsonMapper.readTree`), manually extracting the `traceLinks` and `inconsistencies` fields into a new `ArDoCoApiResult` — a commented-out `readValue` deserialization of the whole DTO remains in the source. A parse failure is surfaced as an `ArdocoException`.
 
 ### AbstractRunnerTLRService
 
@@ -158,7 +158,9 @@ The services form a three-level inheritance structure: `AbstractService` is the 
 
 ### Concrete runner services
 
-`ArDoCodeService`, `ArCoTLService`, `SwattrService`, `TransArCService`, and `InconsistencyService` each implement `convertResultToJsonString`, converting the runner-specific trace links through `TraceLinkConverter` into the JSON payload stored in Redis. All of them store an empty `inconsistencies` array except `InconsistencyService`, which additionally converts `result.getAllInconsistencies()` through `InconsistencyConverter` and stores a populated inconsistencies array. (`TransArCService` converts `getSadCodeTraceLinks()`; the sad-code converter enriches `TransitiveTraceLink` entries with the intermediate architecture model element, which is how TransArC's transitive sad-sam-code links are represented.)
+`ArDoCodeService`, `ArCoTLService`, `SwattrService`, `TransArCService`, and `InconsistencyService` each implement `convertResultToJsonString`, converting the runner-specific trace links through `TraceLinkConverter` into the JSON payload stored in Redis. All of them store an empty `inconsistencies` array except `InconsistencyService`, which additionally converts `result.getAllInconsistencies()` through `InconsistencyConverter` and stores a populated inconsistencies array.
+
+`TransArCService` reuses the sad-code conversion (it reads `result.getSadCodeTraceLinks()`), whose `TransitiveTraceLink` handling embeds the intermediate architecture model element: `TraceLinkConverter.convertListOfSadCodeTraceLinksToJsonString` always writes `sentenceNumber`, `codeElementId`, and `codeElementName`, and adds `modelElementId` and `modelElementName` (name plus type in parentheses when a type is present) only when the link is a `TransitiveTraceLink` whose first trace link's second endpoint is an `ArchitectureEntity` — this is how TransArC's transitive sad-sam-code links are represented. The converters (`TraceLinkConverter`, `InconsistencyConverter`, `FileConverter`, `ModelFormatTypeConverter`) live in the `api/converter` package beneath the controller and service layers; the JSON-conversion rationale is documented in [architecture_decisions.md](../architecture_decisions.md).
 
 ## Repository layer
 
@@ -174,13 +176,11 @@ The persistence boundary is split into two parts with different lifetimes:
 
 ## Request lifecycle
 
-<!-- openwiki: mermaid parse failed and this diagram was converted to a text fence so it does not break rendering. Fix the diagram source and restore the mermaid fence. Parser error: Unsupported color format: "" -->
-```text
-%%{init: {'theme': 'base', 'themeVariables': { 'background': 'var(--background)', 'foreground': 'var(--foreground)', 'primaryColor': 'var(--background)', 'primaryTextColor': 'var(--foreground)', 'primaryBorderColor': 'var(--foreground)', 'lineColor': 'var(--foreground)', 'curveStyle': 'basis', 'fontFamily': 'monospace', 'fontSize': '14px' }}}%%
+```mermaid
 flowchart TD
     REQ["POST start or start-and-wait with multipart form"] --> CONV["Controller converts uploads to temp files in java.io.tmpdir"]
     CONV --> CFG["parseAdditionalConfigs reads optional JSON into a sorted map"]
-    CFG --> ID["generateRequestId builds the keyPrefix plus projectName and file hash"]
+    CFG --> ID["generateRequestId builds keyPrefix plus projectName and file hash"]
     ID --> SETUP["Controller instantiates and sets up the runner with a temp output directory"]
     SETUP --> SVC["AbstractRunnerTLRService.runPipeline checks both stores"]
     SVC --> CACHE{"Result already in Redis"}

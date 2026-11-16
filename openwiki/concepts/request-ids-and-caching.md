@@ -5,7 +5,7 @@ description: How ArDoCo REST builds content-based request IDs (TraceLinkType key
 tags: [request-ids, caching, dedup, hashing, redis, ttl, idempotency]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-09T15:26:30.664Z
+    at: 2026-11-16T15:01:30.713Z
 sources:
   - id: openwiki-source-aed92bcc8ea721affa9f52be
     resource: repo://architecture_decisions.md
@@ -21,6 +21,8 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java
   - id: openwiki-source-f5df1fa4999bf0efe9f01e6b
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java
+  - id: openwiki-source-5234cb96d26784ace8285f29
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java
   - id: openwiki-source-ca8e5b1237675b999fd9af3d
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessor.java
   - id: openwiki-source-fbe8e79a4110d3bef05db863
@@ -39,7 +41,7 @@ sources:
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessorTest.java
   - id: openwiki-source-98c9d25902f6849f198cc616
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/util/HashGeneratorTest.java
-generated: { by: "openwiki/0.9.0", at: "2026-11-09T15:26:30.664Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
 ---
 
 # Request IDs and result caching
@@ -123,7 +125,7 @@ Because every entry expires, the cache is not a permanent store: a **re-request 
 
 The dedup logic lives in `AbstractRunnerTLRService.runPipeline`:
 
-- If the result is **already in Redis**, it is returned directly (`Optional.of(getResultFromDatabase(id))`) — the controller responds with the cached payload and "The result is ready."
+- If the result is **already in Redis**, it is returned directly (`Optional.of(getResultFromDatabase(id))`). `getResultFromDatabase` (`AbstractService`) re-reads the stored raw JSON string and parses it with Jackson 3 (`tools.jackson` `JsonMapper.readTree`), manually extracting the `traceLinks` and `inconsistencies` fields into an `ArDoCoApiResult`; the controller responds with the cached payload and "The result is ready."
 - If the result is **currently in flight** (tracked in `CurrentlyRunningRequestsRepository`, a `ConcurrentHashMap` of `CompletableFuture<ArDoCoApiResult>`), no new run is started; the client gets the same ID and the "being processed" message.
 - Only if neither is true is a new pipeline run dispatched via `CompletableFuture.supplyAsync`, and the future is registered under the ID. After the run completes, the result is stored under the ID with the 24h TTL and the in-flight entry is removed.
 
@@ -131,7 +133,7 @@ Practical consequences for clients:
 
 1. **Retries are cheap and idempotent.** Re-POSTing the same inputs with the same project name to the same endpoint returns the same ID. If the run finished, the result is served from cache; if it is still running, the client just polls again. The controller integration tests (`AbstractTLRControllerTest`) verify this: after a successful run, re-POSTing the same request entity yields a ready response whose request ID is present in the database.
 2. **The check-then-act race is a known gap.** The "cached or in flight?" check is not atomic, so two concurrent first requests for the same brand-new ID can each dispatch a run before either future is registered. The system converges to a single stored result (the later `saveResult` overwrites the earlier one), but one run may be wasted.
-3. **Failed runs cache their error marker.** On pipeline failure, `runPipelineAsync` stores `"Error: " + message` under the ID with the normal 24h TTL instead of leaving the key absent. A re-request within that window therefore hits the cached error and surfaces it as an `ArdocoException` (HTTP 500) rather than re-running the pipeline. To retry a failed run with identical inputs you must wait out the TTL or delete the key.
+3. **Failed runs cache their error marker.** On pipeline failure, `runPipelineAsync` stores `"Error: " + message` (the `ERROR_PREFIX` constant, defined in both `AbstractRunnerTLRService` and `AbstractService`) under the ID with the normal 24h TTL instead of leaving the key absent. A re-request within that window therefore hits the cached error rather than re-running the pipeline: `runPipeline` sees the key in Redis, and `getResultFromDatabase` treats any stored value that starts with the `"Error: "` prefix (or is null) as a failure and throws `new ArdocoException(result)`, which the `GlobalExceptionHandler` maps to HTTP 500 with an `ErrorResponse`. To retry a failed run with identical inputs you must wait out the TTL or delete the key.
 4. **Retrieval is cross-family.** Because the ID is used verbatim as the Redis key and the retrieval path never inspects the prefix, any family's result can be queried through `ResultController`'s `/api/get-result/{id}` and `/api/wait-for-result/{id}` endpoints, regardless of which start endpoint produced it. Waiting is bounded by `tlr.timeout.seconds` (60s); `waitForResult` blocks on the registered future rather than polling Redis.
 5. **Stale IDs after TTL expiry are recoverable.** An ID that was valid once but has expired since the last run re-runs the pipeline on the next request — the client keeps the same handle and behavior is identical to the first run.
 
@@ -139,7 +141,7 @@ Practical consequences for clients:
 
 - `HashGeneratorTest` verifies that identical file contents produce identical hashes, that the concatenation of multiple files differs from the single-file hash, and that empty file lists and unreadable files raise the expected exceptions.
 - `FileConverterTest` covers multipart-to-file conversion and the byte-concatenation used by the hash (including the empty-list error path).
-- `RedisAccessorTest` runs against a real Redis (`redis:7.0-alpine` Testcontainers container) and verifies the save/get/existence/delete semantics of the key-value store, including that saving under an existing key overwrites the value.
+- `RedisAccessorTest` runs against a real Redis (`redis:7.0-alpine` Testcontainers container) and verifies the save/get/existence semantics of the key-value store, including that saving under an existing key overwrites the value and that a null key raises `IllegalArgumentException`.
 - `AbstractTLRControllerTest` and its per-family subclasses exercise the full start → poll → retrieve flow against a live Redis, asserting the dedup behavior and the database state at each stage.
 
 ## Related pages

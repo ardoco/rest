@@ -1,10 +1,12 @@
 ---
 type: "Reference"
 title: "Workflow: result retrieval and waiting"
+description: "How a finished pipeline result is retrieved by request ID: the non-blocking GET /api/get-result/{id}, the bounded-blocking GET /api/wait-for-result/{id}, and the start-and-wait flow, all funnelling through ResultService with a 200 OK / 202 Accepted convention and distinct 422/500 error paths."
+tags: [rest-api, result-retrieval, redis, asynchronous, timeout, http-status-codes]
 openwiki_generated: true
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-09T15:26:30.664Z
+    at: 2026-11-16T15:01:30.713Z
 sources:
   - id: openwiki-source-176362edb7d4360cef66ced2
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java
@@ -28,7 +30,7 @@ sources:
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java
   - id: openwiki-source-6fc097e625e36feff88bdf6a
     resource: repo://src/test/java/testUtil/TestUtils.java
-generated: { by: "openwiki/0.7.2", at: "2026-10-26T12:24:12.222Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
 ---
 
 
@@ -103,11 +105,10 @@ flowchart TD
 1. **Unknown or expired ID.** If `resultIsInDatabase(id)` is false (`DatabaseAccessor.keyExistsInDatabase` — a Redis `EXISTS`), it throws `IllegalArgumentException(String.format("No result with key %s found.", id))`. The `GlobalExceptionHandler` maps `IllegalArgumentException` to **422 Unprocessable Content**. This is the response a client gets for a mistyped ID or one whose 24-hour Redis TTL has expired — and it is distinct from the 202 that a still-running pipeline yields.
 2. **Stored pipeline error.** If the stored value is `null` or starts with `ERROR_PREFIX` (`"Error: "`), it throws `ArdocoException(result)`. The handler maps `ArdocoException` to **500 Internal Server Error**. This is the key failure invariant of the retrieval side: a failed pipeline wrote an error marker into Redis under the request ID (with the normal 24-hour TTL) rather than leaving the key absent, so the failure resurfaces as a 500 on every retrieval until the TTL expires — re-running the same inputs does not clear it (see [Workflow: pipeline execution](pipeline-execution.md#the-failure-path-an-error-marker-not-a-missing-key)).
 
-3. **Deserialization.** Otherwise the stored JSON string is re-parsed and re-hydrated:
+3. **Deserialization.** Otherwise the stored JSON string is re-parsed and re-hydrated. `AbstractService` receives a Spring-injected `JsonMapper` (Jackson 3, `tools.jackson.databind.json.JsonMapper`), not a locally constructed `ObjectMapper`:
 
 ```java
-ObjectMapper mapper = new ObjectMapper();
-JsonNode root = mapper.readTree(result);
+JsonNode root = jsonMapper.readTree(result);
 String traceLinks = root.path("traceLinks").toString();
 String inconsistencies = root.path("inconsistencies").toString();
 return new ArDoCoApiResult(traceLinks, inconsistencies);

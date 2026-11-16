@@ -9,6 +9,10 @@ sources:
     resource: repo://.github/workflows/openwiki.yml
   - id: openwiki-source-8037e2358a2c4f9b2c722a11
     resource: repo://AGENTS.md
+  - id: openwiki-source-2355f81d7cf522f8dbdaabd4
+    resource: repo://pom.xml
+  - id: openwiki-source-db53f3b7825ef9712a7964e1
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArdocoResultResponse.java
   - id: openwiki-source-17e67da21bbb452f6e1b70e3
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java
   - id: openwiki-source-a420f4179889786e59957253
@@ -33,6 +37,8 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/TransArCController.java
   - id: openwiki-source-f5df1fa4999bf0efe9f01e6b
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java
+  - id: openwiki-source-1c5a7ae3754c990399f4ebd1
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/TraceLinkConverter.java
   - id: openwiki-source-5234cb96d26784ace8285f29
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java
   - id: openwiki-source-e88bcc81194c6ad9e9618bc0
@@ -57,10 +63,10 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArDoCoRestApplication.java
   - id: openwiki-source-ece093ad10b91f3da0b7e34f
     resource: repo://src/main/resources/application.properties
-generated: { by: "openwiki/0.9.0", at: "2026-11-09T15:26:30.664Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-09T15:26:30.664Z
+    at: 2026-11-16T15:01:30.713Z
 ---
 
 # OpenWiki quickstart
@@ -154,6 +160,16 @@ management endpoint.
   retrieval returns 200 with results, 202 while pending or after the `tlr.timeout.seconds` (60 s)
   wait window expires, and errors surface via the centralized `GlobalExceptionHandler`
   (422 for bad input, 500 for pipeline errors, 408 for timeouts).
+- **Stored results are re-parsed on retrieval.** `AbstractService.getResultFromDatabase` reads the
+  raw-JSON string back and re-parses it with `JsonMapper.readTree`, manually extracting the
+  `traceLinks` and `inconsistencies` arrays into the `ArDoCoApiResult` DTO, so the payload shape of
+  `ArDoCoApiResult` is defined by the converter-produced JSON, not by bean deserialization.
+- **Jackson 3 with legacy annotations on response DTOs.** JSON handling uses `tools.jackson`
+  (Jackson 3): controllers and services inject `tools.jackson.databind.json.JsonMapper`, converters
+  use `JsonMapper.shared()`, and `AbstractController.parseAdditionalConfigs` catches
+  `tools.jackson.core.JacksonException` when parsing `additionalConfigs`. The response DTOs
+  (`ArdocoResultResponse`, `ArDoCoApiResult`, `ErrorResponse`) still carry
+  `com.fasterxml.jackson.annotation` annotations, which Jackson 3 retains for compatibility.
 - **Temporary files are created during request handling and cleaned up after pipeline execution.**
 
 ## Wiki maintenance
@@ -191,6 +207,7 @@ Use the docs above as the map, then verify changes in the relevant layer:
 - Runner/service changes (async behavior, dedup, cleanup paths): [Workflow: pipeline execution](workflows/pipeline-execution.md), plus [ArDoCo runner integration](integrations/ardoco-runners.md) for runner binding details
 - Retrieval, polling, or timeout behavior: [Workflow: result retrieval and waiting](workflows/result-retrieval.md)
 - Redis or persistence changes: check TTL behavior and the `DatabaseAccessor` abstraction via [Redis persistence integration](integrations/redis.md)
+- JSON handling or response DTO changes: [Response and error model](concepts/response-and-error-model.md) and the stored-result re-parse path in [Workflow: result retrieval](workflows/result-retrieval.md)
 - Layering/structure invariants: [Architecture](architecture.md), enforced partly by `ArchitectureTest`
 - Operations changes (build, Docker, CI): update [Operations](operations.md) and `HELP.md` if run instructions change
 - Tests: see [Testing](testing.md) for the relevant suites
@@ -202,6 +219,7 @@ Use the docs above as the map, then verify changes in the relevant layer:
 - `pom.xml`
 - `src/main/resources/application.properties`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArDoCoRestApplication.java`
+- `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ApplicationConfig.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCodeController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArCoTLController.java`
