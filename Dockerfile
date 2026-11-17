@@ -2,7 +2,7 @@
 FROM maven:3-eclipse-temurin-25-alpine AS build
 WORKDIR /build
 COPY . .
-RUN mvn -DskipTests clean package
+RUN mvn -Daether.remoteRepositoryFilter.prefixes=true -Daether.remoteRepositoryFilter.prefixes.basedir=/build/.mvn/rrf -DskipTests clean package
 
 
 FROM eclipse-temurin:25-jre-alpine
