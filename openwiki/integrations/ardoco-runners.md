@@ -1,11 +1,11 @@
 ---
 type: Integration
 title: ArDoCo runner integration
-description: How the REST layer binds to the external ArDoCo libraries (pipeline-id, pipeline-tlr, text-preprocessing) — the runner classes Ardocode, Arcotl, Swattr, Transarc and InconsistencyDetection, their setUp signatures and configuration objects, ModelFormat conversion, throwaway temp output directories, additionalConfigs handling, and the reflection-based /api/configuration endpoint.
-tags: [ardoco-runners, integration, pipeline-tlr, pipeline-id, text-preprocessing, configuration, model-format, reflection]
+description: How the REST layer binds to the external ArDoCo libraries (pipeline-id, pipeline-tlr, text-preprocessing) — the runner classes Ardocode, Arcotl, Swattr, Transarc and InconsistencyDetection, their setUp signatures and configuration objects, ModelFormat conversion and the WebConfig MVC wiring (converter registration plus CORS for /api/**), throwaway temp output directories, additionalConfigs handling, and the reflection-based /api/configuration endpoint.
+tags: [ardoco-runners, integration, pipeline-tlr, pipeline-id, text-preprocessing, configuration, model-format, reflection, cors, webconfig]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-16T15:01:30.713Z
+    at: 2026-11-23T17:33:36.087Z
 sources:
   - id: openwiki-source-aed92bcc8ea721affa9f52be
     resource: repo://architecture_decisions.md
@@ -31,12 +31,18 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/FileConverter.java
   - id: openwiki-source-98e8b8003b4c402c08f37fcd
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/ModelFormatTypeConverter.java
+  - id: openwiki-source-5234cb96d26784ace8285f29
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java
   - id: openwiki-source-fbe8e79a4110d3bef05db863
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java
   - id: openwiki-source-c7cab41393f5428b55d377f6
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ConfigurationProviderService.java
   - id: openwiki-source-bd27e22b24a569b1300c8892
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java
+  - id: openwiki-source-c8948fffa3abb80f9c097fd5
+    resource: repo://src/main/resources/application-local.properties
+  - id: openwiki-source-ece093ad10b91f3da0b7e34f
+    resource: repo://src/main/resources/application.properties
   - id: openwiki-source-0ead47b845f38f77026ad2b9
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java
   - id: openwiki-source-c71470a540c52c842bbad746
@@ -47,7 +53,9 @@ sources:
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamCodeControllerTest.java
   - id: openwiki-source-042c8e5e0935e0174006d660
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamTLRControllerTest.java
-generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
+  - id: openwiki-source-38d559d093403a874d5a302e
+    resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfigCorsTest.java
+generated: { by: "openwiki/0.9.0", at: "2026-11-23T17:33:36.087Z" }
 ---
 
 # ArDoCo runner integration
@@ -131,7 +139,9 @@ public class ModelFormatTypeConverter implements Converter<String, ModelFormat> 
 }
 ```
 
-`WebConfig` registers the converter as a Spring MVC converter, so the `inputArchitectureModelFormat` request parameter binds directly to the `ModelFormat` enum value. An unknown format name surfaces as `IllegalArgumentException("Invalid architecture model type: ...")`, which the `GlobalExceptionHandler` maps to a 422 error body. The set of valid values is defined by the ArDoCo libraries themselves — the REST layer does not maintain its own list, so a new ArDoCo model format becomes available automatically without a REST-layer change.
+`WebConfig` — the Spring MVC wiring class (`WebMvcConfigurer`) of the REST layer — does two jobs. In `addFormatters` it registers `ModelFormatTypeConverter` as a Spring MVC converter, so the `inputArchitectureModelFormat` request parameter binds directly to the `ModelFormat` enum value. In `addCorsMappings` it applies the CORS policy for the API: the `cors.allowed-origins` property is read as a list (entries trimmed, empty entries dropped) and registered for the `/api/**` mapping with only the `GET` and `POST` methods allowed and credentials not allowed; an empty property value disables CORS entirely, i.e. no CORS headers are emitted at all. The shipped `application.properties` defaults to `cors.allowed-origins=https://ardoco.de` (overridable, e.g. via the `CORS_ALLOWED_ORIGINS` environment variable), and the `local` profile extends the list with `http://localhost:3000` and `http://localhost:8000` for a locally served web frontend.
+
+An unknown format name surfaces as `IllegalArgumentException("Invalid architecture model type: ...")`, which the `GlobalExceptionHandler` maps to a 422 error body. The set of valid values is defined by the ArDoCo libraries themselves — the REST layer does not maintain its own list, so a new ArDoCo model format becomes available automatically without a REST-layer change. The whole MVC wiring — the converter import and the CORS preflight behavior — is pinned by `WebConfigCorsTest`: the test imports `WebConfig` together with `ModelFormatTypeConverter` into a minimal MockMvc context and asserts that a preflight from an allowed origin is answered with the echoed `Access-Control-Allow-Origin` plus `Access-Control-Allow-Methods: GET,POST` and no `Access-Control-Allow-Credentials` header, that a foreign origin and a non-allowed method are rejected with 403, and that with `cors.allowed-origins` empty no CORS headers are emitted.
 
 The REST layer does not perform any file-type validation beyond the empty-file check in `FileConverter`. Whether the uploaded file is actually a model of the requested format is checked by ArDoCo itself when the runner runs the pipeline. This is a documented decision ("So far no file checks have been implemented. This is left to ArDoCo itself"), so the REST layer only rejects empty files (422) and lets ArDoCo surface format errors as pipeline failures (500).
 
@@ -179,6 +189,7 @@ The runner integration is pinned by integration tests that run against a live Re
 - `ArDoCoForSadCodeControllerTest` covers the sad-code runner, whose `setUp` only takes text + code (no `ArchitectureConfiguration`).
 - The inconsistency endpoint (`/api/find-inconsistencies`) has no controller test — of the five runner endpoints, only the four TLR families are pinned this way.
 - `HashGeneratorTest`, `FileConverterTest`, and `TraceLinkConverterTest` pin the file-to-hash, multipart-to-file, and trace-link-to-JSON conversions that sit between the HTTP layer and the runner.
+- `WebConfigCorsTest` pins the MVC wiring itself — the `ModelFormatTypeConverter` import and the CORS preflight behavior of `WebConfig` — in a minimal MockMvc context, without Redis or an ArDoCo pipeline.
 
 Because the controllers call the external runners' `setUp` directly and the integration tests run the real ArDoCo pipelines, the tests double as the compatibility check for the snapshot libraries: an ArDoCo snapshot that changes a runner's `setUp` signature fails the build in the controllers, while a behavioral change in a runner or converter breaks the controller tests.
 

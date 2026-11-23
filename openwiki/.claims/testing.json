@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:556102e6360a2a483063944880a25105495ed7529cc4c405f8c29ec71cf25c45",
+  "pageVersion": "sha256:5c79de9828ecb3215362334b38835427b6075693ea119d8e00534096d87c02c0",
   "claims": [
     {
       "id": "claim_ffd3d9ab2aae4a69bb3b187e020ba2fd",
@@ -321,10 +321,38 @@
           "version": "repo-lines-v1:sha256:973429a898f14d8fabf914ee64b0ad658efc6c4fa16b69105ecf755579cf5205:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgxNTFhYmUzNGMxM2UxNWRjZDNhMGRlOWI2YjY4Y2IwNmJjYTcxYjQ4NzQyZWZkZmZjNjVlNzUyYzNkMzU5ZjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA5OGViNzU5ZDlmZTU1MjI0MjcwNjdiODc1Y2ZiZGU1MmEwZTA3MTI0MzI4Y2VjYTBhMzI0ZTI5ZWMwZjUxMGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRhZGE0M2UyODE5MTBjOGIxYjNmOTI5MmZiMjY3NTI2YjA1OTA1NGRlMTc4NzFmNDBjMzFiNDIyZDE4ODNhMGIifQ"
         }
       ]
+    },
+    {
+      "id": "claim_024aadc2a1164371a166e4b57f51dad8",
+      "statement": "WebConfigCorsTest pins the CORS contract of WebConfig without a Spring Boot server, Redis, or Testcontainers: it builds an AnnotationConfigWebApplicationContext (@EnableWebMvc) that registers the production WebConfig, ModelFormatTypeConverter, and a private DummyController mapped at /api/ardocode/start, applies cors.allowed-origins via TestPropertyValues, and drives MockMvc OPTIONS preflight requests. It asserts: a preflight from the configured origin (https://ardoco.de) returns 200 with Access-Control-Allow-Origin echoing the origin, Access-Control-Allow-Methods: GET,POST, and no Access-Control-Allow-Credentials header; a preflight from a foreign origin is rejected with 403 and no ACAO header; a DELETE preflight from an allowed origin is rejected with 403; and an empty cors.allowed-origins value produces no ACAO header even for an allowed origin. The suite runs in the same mvn verify lifecycle without Docker.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java#L11-L29",
+          "version": "repo-lines-v1:sha256:681b292e0a48d70a94f162fb39358ebd155eac771ac2c554bf126446d0816d0f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZjMTBkODc1YTIxNTU4NmI1OThjMzU0NjY2NzUzNzQ2Y2U5YzM3NmM2ZjFhYzY0NzVkYTY0N2Q2MTYwNjI5ZjkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ2NzkyOGUyMGU2MjE0ZmEyMTY2ZWQyMTczZTNjMzQ2ZDZkMDM4MjY1MDA1OWMzNzNjZTI2ZTY5MDgxYTE4N2UiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ2YjhlM2M4ZWY4YjIyMTRjNjdhZjE3ZGM0MjYxMjFhNmRhOTRjNGFjMGRiMDc1ZGI0ZGM3NDE1ZWZkM2M0ODQifQ"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfigCorsTest.java#L26-L92",
+          "version": "repo-lines-v1:sha256:bd5c2f6a25961f996c20f45348542a04bf64309332654565f1e7024e8796c595:eyJzZWxlY3RlZExpbmVDb3VudCI6NjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkyNjhkNDI2NjIyM2U4ZTM0YmYwZDQ1YjBlNmY1NTFlOWQ5MTg0ZDZhZTViNzIwNzNiODk0ZjM1MDdkMDIwZjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM4YWQyOWYwZmE5NDRmZDg2NTI4MGJkOGMyNTliZTJlN2RhY2Q3YWFkYmVkNDU3ZDNjNjRmZGQzYjIzYjk1ODMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_fd73bed371904396a1091e55f9ebb0d5",
+      "statement": "WebConfig implements the browser-facing CORS policy for /api/** in addCorsMappings: it reads cors.allowed-origins as a comma-separated list (entries trimmed, empty entries dropped) and, when non-empty, registers a single CORS mapping allowing exactly those origins with only the GET and POST methods and allowCredentials(false); an empty list registers no CORS mapping at all, so no CORS headers are emitted. The shipped application.properties default is https://ardoco.de. WebConfig also registers ModelFormatTypeConverter in addFormatters, which is why the CORS test imports the converter to satisfy the WebConfig constructor.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java#L11-L38",
+          "version": "repo-lines-v1:sha256:11790a8af26ed755f0545cddc326732020957e02e99b16887ec0b3c8a4f1552e:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ2NzkyOGUyMGU2MjE0ZmEyMTY2ZWQyMTczZTNjMzQ2ZDZkMDM4MjY1MDA1OWMzNzNjZTI2ZTY5MDgxYTE4N2UiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/main/resources/application.properties#L23-L25",
+          "version": "repo-lines-v1:sha256:95db3c81d1f2f3ccd0cc0e6daa17543e4d9beea35a36a97d8b815b81130165d3:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2EzY2U3NjUzYjBhYjRjMjM5NTUzYTY3YmFjMzNhODViZmYwNWJhMDhhYzAxNmQ4YzFmMWFhOTM3ODU4ZjY2MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjhhNWIyNWY1MzM3MmIyMWMzY2M5NTcyZjRmZDc3NmM4NmUxYzc0ZDU4MTViOTM5ZmMxZGU2NTU4OTE2NGJmNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzU1ODE0NDY3ZjE1MTVhMjdjZDAxZWRkYmI2ZTVhZjYyNjgxMzE5YWRlZDI5ZWNjODYyYzQxMjEyZGNkMWMwZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-16T15:01:30.713Z"
+    "at": "2026-11-23T17:33:36.087Z"
   }
 }
