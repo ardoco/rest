@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:dcad7811723a59ae3fcc92b4afd967906102b27c457bb39ce87929577d5175c2",
+  "pageVersion": "sha256:ff7b3b1f4f8a4ac2ddaa0fa8ec4bc9436cdc03caae9dce410ae3b0490f1409fd",
   "claims": [
     {
       "id": "claim_e1a41bcc193247cc9dd423aed927e77f",
@@ -235,8 +235,8 @@
       "statement": "WebConfig registers ModelFormatTypeConverter as a Spring converter so the required inputArchitectureModelFormat request parameter binds directly to the ModelFormat enum; an unknown format name throws an IllegalArgumentException ('Invalid architecture model type: ...') that GlobalExceptionHandler maps to 422 Unprocessable Content.",
       "evidence": [
         {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java#L12-L21",
-          "version": "repo-lines-v1:sha256:f0ec96e824c2dcef0a9fe7f04a5dda6c73410d0a63aeb595cb331d13202d0ba8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4NzQyYzY5ODFkZjg1ZmY3MzU0MTc2N2IwYjQ0NzgzMWU4NDg2NWI4MGE4NzE0YzUyOGJlZGYwYzFhOWRhZTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZkMDY1YjgzMjU2MzliZGNlMDM5MGE1MTBkNmJiYTI0NGU0MzExMzg0MTgzZjIyMWMyYTcyYzZiMzg0MTQ1OTgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3OTRkMDJhODEyMTk0NGQxNzZkMjY1ZTliYjljYzU5ZjZhYjg5MGJjYWRmOGFlZmRlYmRiYmI0ZjJlYTg0NDQifQ"
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java#L16-L36",
+          "version": "repo-lines-v1:sha256:72a3b4763d27872370118593603697dd5474f64b915bc20ff1d8e4e114638e07:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4NzQyYzY5ODFkZjg1ZmY3MzU0MTc2N2IwYjQ0NzgzMWU4NDg2NWI4MGE4NzE0YzUyOGJlZGYwYzFhOWRhZTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZkMDY1YjgzMjU2MzliZGNlMDM5MGE1MTBkNmJiYTI0NGU0MzExMzg0MTgzZjIyMWMyYTcyYzZiMzg0MTQ1OTgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3OTRkMDJhODEyMTk0NGQxNzZkMjY1ZTliYjljYzU5ZjZhYjg5MGJjYWRmOGFlZmRlYmRiYmI0ZjJlYTg0NDQifQ"
         },
         {
           "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/converter/ModelFormatTypeConverter.java#L15-L23",
@@ -269,10 +269,52 @@
           "version": "repo-lines-v1:sha256:2a941f270c016283d690d6e34b654fe352e92786fadecf3dfce6b5be66fdc0b0:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1Y2RkOWJjZmM5ZDQ3ZDY2ZjUzMDhhMTJhODQ0MzYxODBjOGIzOGJmZTU0ZjQzOThiZThhY2ExNGE3ZGQ3ZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRlNDgzZTcyZGNkOTc1MGFkMDg3ZDliYWE4YmI4M2UxYjE5MTAzY2U5MTZlMmE3OTkwMzVlMzEwNmJiNGU2MDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUxMDEyNmQwMmMyN2RjOGUyYzBmYmYyYTgzMmRhMTJkNDdkYmM2MmIxZTg0OTlhMDZjZGZkMmU5ZDcwMzdmZTcifQ"
         }
       ]
+    },
+    {
+      "id": "claim_b285d32ceb0a48b7a4777df57972d5c2",
+      "statement": "WebConfig registers a CORS mapping for /api/** when the cors.allowed-origins property contains at least one non-empty entry: each entry is trimmed and empties are filtered, allowed methods are exactly GET and POST, and allowCredentials is false; an empty list registers no CORS mapping, disabling cross-origin browser access. The default configuration is cors.allowed-origins=https://ardoco.de and the local profile additionally allows http://localhost:3000 and http://localhost:8000.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java#L23-L37",
+          "version": "repo-lines-v1:sha256:a4affb9c6dbef01f18d1a327c01596045e1864786a301a148a54f0e5ae246e0e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjZGY5NGJhZDgwZjk1ZmY2YTczYTE1N2JkNjg2NTM1NDQzYzg2ZGRkNmRhOTM4Mjc4OWQyOTNiZjM3MWFkMGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ3OGU5MzA2N2JkZDdiNmUyOGNmNjk1OGU2YWJjYmRiYmI4NTY0OTIwNWZjODg5NzAyNDA5MDY3ODhmMDlkN2YiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://src/main/resources/application-local.properties#L1-L4",
+          "version": "repo-lines-v1:sha256:b3e423ecb70c50cc7bd6922d6220e046e8c08bf1c7b9e2f1ace72560ca8aafe0:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjhmMjc1MjhjNDc1ZjE4NjNjMTkxMDBkMTQwMzM5ODdjMTIyNTJmYzE5YjQzZDFjNWExMTY5ZjZkNWRlZGU2NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWFmNzZmNDY0NjcyMjllM2QxNjY5ZDBhYzNlZGYxZThkMTI1ZGMzZmQxYWU5NzAzMzRkODgwOTMyYmJmODgxMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/main/resources/application.properties#L25-L25",
+          "version": "repo-lines-v1:sha256:68a5b25f53372b21c3cc9572f4fd776c86e1c74d5815b939fc1de65589164bf7:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjhhNWIyNWY1MzM3MmIyMWMzY2M5NTcyZjRmZDc3NmM4NmUxYzc0ZDU4MTViOTM5ZmMxZGU2NTU4OTE2NGJmNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjhhNWIyNWY1MzM3MmIyMWMzY2M5NTcyZjRmZDc3NmM4NmUxYzc0ZDU4MTViOTM5ZmMxZGU2NTU4OTE2NGJmNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjJjN2I1ODJkNTg3ZGYxZDRhMjFmMzUyZTRiOTcwYmQxNWYzMDJmMGQwNDc4NTJhYTMyZTljOGRhZDhhZDcwMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_6307fd6f605544b29674194b76dc1a7d",
+      "statement": "WebConfigCorsTest verifies the CORS behavior with MockMvc preflight requests against a dummy /api/ardocode/start controller: a preflight from an allowed origin returns 200 with Access-Control-Allow-Origin echoing the origin, Access-Control-Allow-Methods GET,POST and no Access-Control-Allow-Credentials header; a preflight from a foreign origin and one requesting the disallowed DELETE method are rejected 403; with no origins configured no Access-Control-Allow-Origin header is emitted.",
+      "evidence": [
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfigCorsTest.java#L38-L65",
+          "version": "repo-lines-v1:sha256:de8079c4325b24336b0db0dd41bd99e6f0dd49794171b3e4fb3b3e5dd95fde56:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdlNGQ3OTMwZmI5NzVhZjM0OTg5NWQwMzUzOWExYTZkYTI2YmE4NjRiYWQ3YzNlNmM2YjQwODVjZGM2YzllZGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ2ODc4NGJjMGFkYWFjNzExZjQzN2Y1MTdjYjNlNDY3OTIwNTQ2OWExNjQ3YjhlMjM0ZjJmN2MwMjE5N2IxZTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImE0MDFmYzUxM2M1YjllYjIzMGQyMzc5Mzg2NGJhYzk4NGI2OGNmNjY4NzBjNDdiMTg4MjA2ZWJlYzYxNGZhYTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI0YWY2ZmM2Yzc5ZTM3OTVlMDdhZGE0ZjQxMmYyZjQ1OTFhYmUxNTgzNWFiODBkMzI3NmM0Yzk3N2NhZWQ3NzEifQ"
+        },
+        {
+          "resource": "repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfigCorsTest.java#L68-L90",
+          "version": "repo-lines-v1:sha256:146acf51b469699b339e9097480bf814250446becb6b81e8dfbb0fe0f613db7d:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhYjJkYTMzYjM1YWI4ZTFkZDBhYjVmZDY5Y2MxYjI2MGQ4MWJkOWNkZDIxODE5Y2YxNmUxNjIxMDRlZDAxZmQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE5M2U3ZDQ2ZjBhYmRmMWVkMTE0MTUzZjhlMTYxZGNlYzdjNzg3M2FhNGRlZGUwNWQ2OTYzNGJkY2ZkMDg3OTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM3OTRkMDJhODEyMTk0NGQxNzZkMjY1ZTliYjljYzU5ZjZhYjg5MGJjYWRmOGFlZmRlYmRiYmI0ZjJlYTg0NDQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_fa98835fcaab4186bbbe66e087f56df0",
+      "statement": "CORS configuration is operationally controlled through the cors.allowed-origins property; the documented override path is the CORS_ALLOWED_ORIGINS environment variable via Spring relaxed binding (e.g. CORS_ALLOWED_ORIGINS=https://ardoco.de,https://example.org in the docker-compose environment), and the property is described as a comma-separated list restricted to GET and POST with no credentials, empty meaning CORS disabled.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L16-L20",
+          "version": "repo-lines-v1:sha256:59038c946c5970ae55fdf3e583ff3f4d83bb71bdc7907b3a1cd5288300e4266c:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTM3MzEzMmM3YTMwYTBjMGMxNzVhMmM3Mjg1ZWM5ZDQ3NmI1ZmMwYjVkYzk5ZDA2NWQ2YzhiNjU2ZjQ1ZjAwMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMTljNWY5MmUzMDlkY2Y0OWJkNjdkMDc0ZjRiZTg3MTYzY2I5Y2FiY2M2OWU1M2UwMWY2YTA5N2JiNDE3MzYxYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjg2NmNjMjA5MmRkNzA0Zjk1MDU2YTljNTgwNDA5ZGNjZTcyZWYzOGFlMWRkNDhiMGIxMDMxNzU1YWFmMWQ5MyJ9"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-16T15:01:30.713Z"
+    "at": "2026-11-23T17:33:36.087Z"
   }
 }

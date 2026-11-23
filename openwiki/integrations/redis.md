@@ -1,11 +1,11 @@
 ---
 type: Integration
 title: Redis persistence integration
-description: The persistence boundary of ArDoCo REST — the DatabaseAccessor interface, the @Primary RedisAccessor writing TTL-bound plain-string values, the Lettuce connection setup in ApplicationConfig, the docker/local Spring profile host split, the docker-compose and RedisInsight tooling, and the health/observability notes.
+description: The persistence boundary of ArDoCo REST — the DatabaseAccessor interface, the @Primary RedisAccessor writing TTL-bound plain-string values, the Lettuce connection setup in ApplicationConfig, the docker/local Spring profile split (Redis host plus the local profile's CORS origin widening), the docker-compose and RedisInsight tooling, and the health/observability notes.
 tags: [redis, persistence, database-accessor, ttl, lettuce, spring-profiles, docker-compose, redisinsight, testcontainers]
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-16T15:01:30.713Z
+    at: 2026-11-23T17:33:36.087Z
 sources:
   - id: openwiki-source-164e2da859b5277df81c7d94
     resource: repo://.github/workflows/ci.yml
@@ -35,6 +35,10 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java
   - id: openwiki-source-bf5c518e98898c34abe35f38
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ApplicationConfig.java
+  - id: openwiki-source-b2cbaede3bd44199cffd04ad
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArDoCoRestApplication.java
+  - id: openwiki-source-bd27e22b24a569b1300c8892
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java
   - id: openwiki-source-e3ffd60732c9031388dc514a
     resource: repo://src/main/resources/application-docker.properties
   - id: openwiki-source-c8948fffa3abb80f9c097fd5
@@ -49,12 +53,12 @@ sources:
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/RedisRealConnectionTest.java
   - id: openwiki-source-6a5bbd855283885f6ff02dc6
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessorTest.java
-generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-23T17:33:36.087Z" }
 ---
 
 # Redis persistence integration
 
-ArDoCo REST has no relational store. Its only persistence layer is a Redis-backed, flat key-value cache of pipeline results: each finished run stores one plain-string value (a raw JSON payload or an error message) under the content-based request ID, with a time-to-live of 24 hours. This page documents the persistence boundary (`DatabaseAccessor`), its `@Primary` Redis implementation (`RedisAccessor`), the connection setup in `ApplicationConfig`, the Spring profile split that selects the Redis host per deployment topology, and the local Docker Compose / RedisInsight tooling. How request IDs become Redis keys is covered in [Request IDs and result caching](../concepts/request-ids-and-caching.md).
+ArDoCo REST has no relational store. Its only persistence layer is a Redis-backed, flat key-value cache of pipeline results: each finished run stores one plain-string value (a raw JSON payload or an error message) under the content-based request ID, with a time-to-live of 24 hours. This page documents the persistence boundary (`DatabaseAccessor`), its `@Primary` Redis implementation (`RedisAccessor`), the connection setup in `ApplicationConfig`, the Spring profile split that selects the Redis host and the CORS origin list per deployment topology, and the local Docker Compose / RedisInsight tooling. How request IDs become Redis keys is covered in [Request IDs and result caching](../concepts/request-ids-and-caching.md).
 
 ## The persistence boundary: DatabaseAccessor
 
@@ -82,7 +86,7 @@ flowchart TD
 
 ## RedisAccessor: TTL-bound plain-string storage
 
-`RedisAccessor` (`@Primary @Repository`) injects a `RedisTemplate<String, String>` and reads its expiry from `@Value("${redis.time-to-live.hours}")` — `24` in `application.properties`. Every write goes through `template.opsForValue().set(id, jsonResult, timeToLive, TimeUnit.HOURS)`, so **every stored result has an expiry**: after 24 hours the request ID becomes stale, and a repeated request re-runs the pipeline instead of serving the cache. The read helpers are correspondingly thin: `getResult` is a plain `opsForValue().get`, `keyExistsInDatabase` is `Boolean.TRUE.equals(template.hasKey(key))` (null-safe), and `deleteResult` is `template.delete(id)`.
+`RedisAccessor` (`@Primary @Repository`) injects a `RedisTemplate<String, String>` and reads its expiry from `@Value("${redis.time-to-live.hours}")` — `24` in `application.properties`. Every write goes through `template.opsForValue().set(id, jsonResult, timeToLive, TimeUnit.HOURS)`, so **every stored result has an expiry**: after 24 hours the request ID becomes stale, and a repeated request re-runs the pipeline instead of serving the cache. The read helpers are correspondingly thin: `getResult` is a plain `opsForValue().get`, `keyExistsInDatabase` is `Boolean.TRUE.equals(template.hasKey(key))` (null-safe), and `deleteResult` is likewise the null-safe `Boolean.TRUE.equals(template.delete(id))`.
 
 Two properties of the value format matter:
 
@@ -94,6 +98,8 @@ The details of this read path and its consequences for API clients are documente
 ## @EnableRedisRepositories without Redis repositories
 
 `ApplicationConfig` carries `@EnableRedisRepositories`, but the codebase defines no Redis entities (`@RedisHash`) and no repository interfaces extending Spring Data's repository contracts. Persistence is done entirely through `RedisTemplate` string operations. The only `@Repository` beans in the app are `RedisAccessor` (the Redis-backed one) and `CurrentlyRunningRequestsRepository`, which is *not* Redis-backed at all — it is a singleton `ConcurrentHashMap` of `CompletableFuture<ArDoCoApiResult>` used to track in-flight pipeline runs. A reader should therefore not expect Spring Data Redis repository semantics (secondary indexes, expiry sets, etc.) anywhere in this application.
+
+For completeness on the relational side: although `pom.xml` declares `spring-boot-starter-data-jpa`, `ArDoCoRestApplication` excludes `DataSourceAutoConfiguration`, so the application starts without any SQL datasource and Redis remains the only durable store.
 
 ## Connection setup in ApplicationConfig
 
@@ -107,15 +113,19 @@ The template is created without any serializer configuration, so Spring Data Red
 
 ## The Spring profile split
 
-Only one property actually differs between environments — the Redis host — and it is switched via Spring profiles:
+Profile selection decides exactly two things: the Redis host and the CORS origin list.
 
-| Profile | File | `spring.data.redis.host` |
-| --- | --- | --- |
-| default | `application.properties` | `127.0.0.1` |
-| `local` | `application-local.properties` | `127.0.0.1` |
-| `docker` | `application-docker.properties` | `redis` |
+| Profile | File | `spring.data.redis.host` | `cors.allowed-origins` |
+| --- | --- | --- | --- |
+| default | `application.properties` | `127.0.0.1` | `https://ardoco.de` |
+| `local` | `application-local.properties` | `127.0.0.1` | `https://ardoco.de,http://localhost:3000,http://localhost:8000` |
+| `docker` | `application-docker.properties` | `redis` | — (inherits the base default `https://ardoco.de`) |
 
-The port (`6379`), the empty `spring.data.redis.username`/`password`, and the TTL (`redis.time-to-live.hours=24`) all live in the base `application.properties` and are not overridden by any profile. A comment in that file records the rule: "when the application runs inside docker redis.host neds to be redis".
+The port (`6379`), the empty `spring.data.redis.username`/`password`, and the TTL (`redis.time-to-live.hours=24`) all live in the base `application.properties` and are not overridden by any profile. A comment in that file records the host rule: "when the application runs inside docker redis.host neds to be redis".
+
+The `local` profile is no longer a host-only variant. Besides `spring.data.redis.host=127.0.0.1` — the same value as the default profile — it sets `cors.allowed-origins=https://ardoco.de,http://localhost:3000,http://localhost:8000` ("Allow a locally served web frontend"). It targets the dockerized-but-locally-served setup: an application served on localhost whose `/api/**` is called from a browser frontend running on `localhost:3000`/`localhost:8000`, while the Redis host itself stays `127.0.0.1`, pointing at a host-local or host-published Redis. The `docker` profile, by contrast, still overrides only the host, so its CORS list falls back to the base default.
+
+`WebConfig` is the consumer of that property: it reads `cors.allowed-origins` as a comma-separated list, trims each entry and drops empties, and — when the list is non-empty — registers a CORS mapping for `/api/**` allowing exactly those origins, only the methods `GET` and `POST`, with credentials disallowed; an empty value disables CORS entirely. Operators can override the list at runtime via the `CORS_ALLOWED_ORIGINS` environment variable, e.g. in the `environment` list of the `app` service in `docker-compose.yml` (per the README). The MVC wiring itself is detailed in [ArDoCo runner integration](ardoco-runners.md).
 
 The containerized runtime activates the docker profile itself — the `Dockerfile` sets `ENV SPRING_PROFILES_ACTIVE=docker` — so the app inside a container resolves Redis through the compose service hostname `redis` on the shared Docker network, while a host-run application uses the default or `local` profile against `127.0.0.1`. CI sets the same profile: `.github/workflows/ci.yml` runs `mvn verify` with `SPRING_PROFILES_ACTIVE=docker` next to a `redis` service container published on port 6379. In the test JVMs the actual connection is nevertheless bound by the Testcontainers host/port overrides described below, which take precedence over the profile property file.
 
@@ -151,6 +161,7 @@ For the CI setup (docker profile plus a `redis` service container) and broader t
 
 - [Request IDs and result caching](../concepts/request-ids-and-caching.md) — how request IDs become Redis keys, dedup behavior, and TTL consequences for clients.
 - [Workflow: pipeline execution](../workflows/pipeline-execution.md) — where `saveResult` and the error-string path sit in the run lifecycle.
-- [ArDoCo runner integration](ardoco-runners.md) — how the results that end up in Redis are produced.
+- [Workflow: result retrieval and waiting](../workflows/result-retrieval.md) — how stored values and error markers are read back out.
+- [ArDoCo runner integration](ardoco-runners.md) — how the results that end up in Redis are produced, plus the `WebConfig` CORS wiring in full.
 - [Operations](../operations.md) — local setup, endpoints, and infrastructure.
 - [Testing](../testing.md) — what to run after changing persistence-related code.

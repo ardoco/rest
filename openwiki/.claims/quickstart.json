@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:f1581d8d3bd4e6f6ae33e0d5aaf878a4680f8d9635b470d80e9e1b34e45e9a9b",
+  "pageVersion": "sha256:3da5e758ce4a5fc3a597d971407beb8b3924ed8dccb87f3a48fa78002368744d",
   "claims": [
     {
       "id": "claim_7e93b455b92a42f9be6230fa99851960",
@@ -38,7 +38,7 @@
     },
     {
       "id": "claim_95d778176be54a56854ba6dfecb595b2",
-      "statement": "The TraceLinkType enum assigns each runner family a Redis key prefix and endpoint name (SAD_CODE=ardocodeResult, SAM_CODE=arcotlResult, SAD_SAM=swattrResult, SAD_SAM_CODE=transarcResult, plus OTHER), and request IDs are built as traceLinkType.getKeyPrefix() + ':' + projectName + hash, so the prefix doubles as the Redis key namespace.",
+      "statement": "Request IDs are built as traceLinkType.getKeyPrefix() + ':' + projectName + hash, and because results are stored in Redis under the request ID, the TraceLinkType key prefix embedded in each ID doubles as the per-family Redis key namespace.",
       "evidence": [
         {
           "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java#L9-L41",
@@ -47,6 +47,10 @@
         {
           "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java#L133-L137",
           "version": "repo-lines-v1:sha256:78d9b6a73f688485eab23b162556e28436c234b264e7f4ee0808bc3f74dd5f80:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZGU5OGI5YzU4MGEzMDBkMmZlMjc1ZTJlN2E5MjA2YzliYjYxNzM5MTFiMDFjMGJiN2YyOWVhMzZiYTBiZGJiNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODEyMjYxYzk0MmU2NTJjNTdiODg5Y2MwNGU4NTBmODMyY2UyOGY2OGE5MjJjY2VjOWFkZGM2ZDE1OGJhYTg2MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDBmZWQ2YmU2NTk5YTg0Mjc4YzJiNjUzMjgwZWQ1OTJkNGI4YjU3ZmZjN2UxOTBhYTAyZDY3MzhiZGIxMjc3MyJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessor.java#L21-L24",
+          "version": "repo-lines-v1:sha256:5ae810c4eab08421480f8e77a9290eb6ae0cf4e7c70bfb613727426db52d7962:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDA0ZTc4ODE2OTRkY2E2NTg1OWYzNTEzNDNlODNhNGM1MDBiMWE1ZjdmNjlmNDE2ZTQ0OGYwZWFkZTE3YTMyNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmM2YzFkM2EzZjVmZDI1ZTkxOTFlNDk2YTk4YzJiYWIzOWFjMDI5YjRjOTU1ZTBiMzg0NzMwMDVmYTEwM2YwMyJ9"
         }
       ]
     },
@@ -153,28 +157,6 @@
       ]
     },
     {
-      "id": "claim_a7fd5e2e81144974a5301637ee3e3526",
-      "statement": "Auxiliary HTTP surface: HomeController redirects / to /swagger-ui/index.html, HealthController serves GET /api/health returning 'OK', and GET /api/configuration returns the default ArDoCo configuration discovered reflectively via ConfigurationProviderService scanning AbstractConfigurable subclasses in the edu.kit.kastel.mcse.ardoco package for @Configurable fields.",
-      "evidence": [
-        {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ConfigurationProviderController.java#L43-L48",
-          "version": "repo-lines-v1:sha256:78ab0184ee8328ba78b576bbee712b5ff384061d1ee58eb1a2477c61db0910c2:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWRhMDFmYjI2NzZkYzRlNjZmODk1OWY5N2YyOTQ3YmVkNDgzMDBhYzRkNGVhODNhNDI2NmM2N2FhMzYyNTYxNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmE2OTU4OGY0YzA5ZTM1YzI4NGM3NmIwZjgwNDFhZmRmMWRmM2U4YjBmZDA0YjJkNWZjZGEyNTRmMmI3OGNhOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODA0Zjg5ZmMwZWM5OGM5ODI0MTgzZTc5NWQzZWRkMTllOTMwZjdiYzQ3MWY5MDEyYWEzZDUwM2JlMmY4OTc0YiJ9"
-        },
-        {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/HealthController.java#L31-L34",
-          "version": "repo-lines-v1:sha256:cfc244d535c6be53c50a1014043d7aded062c46188e30c9162dd8946613de7e1:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDEwYmM3YjI0YTQzMDc0MDdmNTM3YzcxMjU1MTIwYzZkYjZlZDc3Y2IwOGNjOTVhYTQ1M2Q3YmNmN2FmZTM0MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzVjODRiMTQwYmEyZmY5MWIyNTk0N2U2NWIyOGJlZDlkMzAzOTQyNjYwNjVkNjQ5MzJjZWVhNjQ5ZWM3MDI2NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
-        },
-        {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/HomeController.java#L25-L28",
-          "version": "repo-lines-v1:sha256:4fd957f7c1b13bedbcc05998ee89fdfff11f1e661f8d855984a02c1b33ffbf47:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzQzZTMzYzNiMzI2MzMyNmMyZTA4MDI0NTY2MDY2MmVjNTYxMWIyY2EzODg2ZTljYzZiMjY1NjYwN2ZhYjgzYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjA4MDcxYjQ0OTk3YzI0ZDZlNThlNmRiNzFiMTM2YjZhMTBjODU2YWQzZWY0YWNlYTcyZmQ5ZGUxNTIyMmMxZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
-        },
-        {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ConfigurationProviderService.java#L48-L61",
-          "version": "repo-lines-v1:sha256:2a941f270c016283d690d6e34b654fe352e92786fadecf3dfce6b5be66fdc0b0:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1Y2RkOWJjZmM5ZDQ3ZDY2ZjUzMDhhMTJhODQ0MzYxODBjOGIzOGJmZTU0ZjQzOThiZThhY2ExNGE3ZGQ3ZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRlNDgzZTcyZGNkOTc1MGFkMDg3ZDliYWE4YmI4M2UxYjE5MTAzY2U5MTZlMmE3OTkwMzVlMzEwNmJiNGU2MDMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUxMDEyNmQwMmMyN2RjOGUyYzBmYmYyYTgzMmRhMTJkNDdkYmM2MmIxZTg0OTlhMDZjZGZkMmU5ZDcwMzdmZTcifQ"
-        }
-      ]
-    },
-    {
       "id": "claim_57022f7284d344d09b708feee36fb51e",
       "statement": "The centralized GlobalExceptionHandler (@ControllerAdvice) maps exceptions to HTTP statuses and ErrorResponse bodies: FileNotFoundException and FileConversionException to 422 Unprocessable Content, ArdocoException to 500 Internal Server Error, IllegalArgumentException to 422, the custom TimeoutException to 408 Request Timeout, and any other Exception to a generic 500 handler.",
       "evidence": [
@@ -199,20 +181,6 @@
       ]
     },
     {
-      "id": "claim_e3aeeae5740d4bc6907fab46c720176e",
-      "statement": "The inconsistency workflow keeps its results keyed separately from plain SWATTR results by overriding generateRequestId: InconsistencyController builds IDs as TraceLinkType.SAD_SAM.getKeyPrefix() + 'Inconsistency:' + projectName + hash (i.e. swattrResultInconsistency:...) despite sharing the SAD_SAM trace-link type and endpoint binding with SwattrController.",
-      "evidence": [
-        {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/TraceLinkType.java#L9-L20",
-          "version": "repo-lines-v1:sha256:e2db74fd9edfeac09806fa39db4afba6d6cc20612f73c273562d341be9b12d0f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhMzM4ZGE4MDhjNjNkODQ2ZDNmMDc4N2JhZDQwNTExYmVkM2NhMzlhOTc1YjE2ZjA3MTFkNmU3ZDA0MmQ5NjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhZjBhNjZmZTVkNTU0NDgwNDRjNTI4ZGMxMWQ2ZTUzMDFmYjdlYjdhYzMyODVmZTY3ZjEwYTc0M2Q2ZTJlMjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU4ZjY3MzFhZjA2MjFjMjM3OTg2ZDFlYjIwYjFkNTQ1MDdlZWFlYmQ2NTdiOGY4YzVmNGY4MjY5NGI0YTFiZTYifQ"
-        },
-        {
-          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/InconsistencyController.java#L143-L148",
-          "version": "repo-lines-v1:sha256:a13e6f0eeeeb06c99560ba3e6bb5c1c50be916604eea7b5f9c6bd33b63d31a29:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWRjMmIzMTFhYmU4NzU3MmU4YTdjYzBkOTk2YTY1ODQ0MDc2ZTUyMzJkMjFiN2E4NTQ3NWY5YjQwNTViNzQ5MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDg5M2Y0MGUzNzgxZWI4OTZjODJkMDQ2YTA4MDY3YTExZTM1Y2RmMmYxZGZhZjI2ZmVhOTBiOGRiNjY3NjQxMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTE3NjE1YzlkNmQyNmQ4ZTYzZmU5NWNjYTdlNmUwYTg5ZGYxZmFiZGE1MTZiNjg0NDFlZTFkNzI3ZjEyM2I0NCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
-        }
-      ]
-    },
-    {
       "id": "claim_f1c19aa5b1a64a6ba80a18923e099f2d",
       "statement": "The openwiki/ directory is generated documentation maintained through the repository's documented maintenance process and a scheduled GitHub Actions workflow (.github/workflows/openwiki.yml, weekly cron Monday 06:00 UTC calling the ardoco/actions openwiki workflow); AGENTS.md instructs contributors to refresh generated pages after source changes rather than hand-edit them, and to treat source code and tests as authoritative.",
       "evidence": [
@@ -223,16 +191,6 @@
         {
           "resource": "repo://AGENTS.md#L4-L16",
           "version": "repo-lines-v1:sha256:0e1c55cac9923f82ef9c68870c10786d6ab29626c07049ad83c7b1b7769928bb:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA5Zjc4NzE0ODkzYWE3Nzk0MmNlYTFjNGEyZTAyMzFkYmI3ZmEyYTQxYTcwYzgxNDYwYTNjNjc1NjJkYTNhYWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU5YjQ4YzFjOTNhZjYzMmQwZDU0ZjM3NWYzNGJlNjNiZmUwODRkYTIxZGJmOThkODlmMmM1MTc0ZjRmNTY2ZWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
-        }
-      ]
-    },
-    {
-      "id": "claim_1a410d16eadd4aa1b205176aeb2c08d5",
-      "statement": "application.properties fixes the operational request envelope: multipart uploads are enabled and capped at 200MB via spring.servlet.multipart.max-file-size, and Spring Boot actuator exposes only the health endpoint (management.endpoints.web.exposure.include=health, with management.endpoint.health.show-details=always).",
-      "evidence": [
-        {
-          "resource": "repo://src/main/resources/application.properties#L14-L18",
-          "version": "repo-lines-v1:sha256:bf69743d054f0599fe174dbeb7345f05fb19147ac649ca7eff5a90105facbd86:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDVkZTU0NTM5ZDhjYmU3N2ZjMGVjYjY4M2IwMjk0M2E0NDY4YTUyZDNlNmYwMWM2OWY1YjFlYmNiODI2Y2Q1MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGVjZTg2OTk0MzY5NjFjNGFhMWM4YjIyYjYyMmE3ZjcxNzNiMTE1MTY0YWFlMGRkMDdkODM5NDYyNThhNDUwOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTg0ZWMzNmY2YmE4NjUwYmVkNjk2YWFmNjAxMzljMjNkNmMzMmQ3YjRjY2YxNzRlZGViNTU5OWNkY2YzOTVhYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNmU4ZWRmNzgwZjk2NTg5YzExODljZDdjYjZjY2UyYmVmZGY4MmUyYTdkNDM2NjQyZGE2N2MzMDE1ZTQ0ZDIzNiJ9"
         }
       ]
     },
@@ -257,10 +215,32 @@
           "version": "repo-lines-v1:sha256:05882ef112e89d10784aa63fac011f0ab53bcf7de1e74252cbeceba6f0eaf86d:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2QxZTFlMjYwYmRhNzcyZmFhOTgxNTVkMzgwOGYwOTVjOGJkMmE3ZTlhNTM2Y2I3N2I5YTQ3YzcxNDQ2MTY3OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZjkwYjhkODkxNDEwMTNiOGZlNTM2YzQ3YWNjNjgxOGM0ZmRiZTQ1NjVlOTIxZjZjZjk0ZTE1MWZjYzhjYmJhZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDUzMmMxNWEyMWI0MGVjZTk2N2YyNzdmYmEzNzYxMzQ5MjkxNDJhYWQ0MjE1ZWY0N2YyZjFlMThjNWUxYWI2MiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjMxN2NlNzk0MDNjNjNkZWIxMzU4MWFlMzQxNGIzZWNkMGYxZTM3NDRmYjU4NzE1MWM0NDJlYjBkMzEyNGZlMSJ9"
         }
       ]
+    },
+    {
+      "id": "claim_761443708ebe41909cd7de3c4dc7ba32",
+      "statement": "Browser CORS access is gated by WebConfig: it reads cors.allowed-origins as a comma-separated list (entries trimmed, empties dropped; default https://ardoco.de in application.properties, overridable via the CORS_ALLOWED_ORIGINS environment variable) and, when at least one origin remains, registers a single CORS mapping for /api/** allowing only GET and POST with credentials disabled; an empty value disables CORS entirely, and the local Spring profile additionally allows the localhost origins http://localhost:3000 and http://localhost:8000.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L10-L16",
+          "version": "repo-lines-v1:sha256:bddf386517e4a547303f97d4c8cf153f09daf02f70b1cecec304786c01d6f909:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2QxMDZkMTc1ODlmMzg1YjhmOTQ5YTNkMDk0Yjc1MWRiNTM4MDExNTNjOGExOGQ0NDgyNDEyODIxMjU3MWFjYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTI3YzYyNmRjNDZhNzZkZDNjNTJmZjM1Y2FhM2I1ZmI5YTY0ZjE3YTg4OGE0OTJiMDI3NTY5ZTllNGZlM2Q4NCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjNiMDUxN2FhN2EwZDFmNDlhNDQ1MGZmOTcyMDI3ZWYxNjJkZDVlMjU0YjI3ZDQ0YTVjYjllZWZlMDE1YzcwMiJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java#L14-L30",
+          "version": "repo-lines-v1:sha256:7673018e1accccae964fe3bbd14b330c15b1c13674ee8d23172411bab359487d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRiMTQ3NjJhYWFkNThkMTM4NDRjZjJlYzU0NzQwYTRkOTdmNWUwN2VlNTE2ZDMyMGQ2MDM2YzFjN2NlNDJkZmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFjMzkzNjRmMmVlMmNhZjcxNzQwZjFmNTQzZjk5OThkMTAyMzhlYjExZmZlZmZmNTAyZTkyMjE1ZmYyM2NjOTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA1Nzc3MDgyOTI2NmQwNzQwY2Q2NmZlMTA5YjE0OTRjODMxMmQ4MTM4OWNhYTc2ZjIwZTZhYjVhNTcyZjE5OTYifQ"
+        },
+        {
+          "resource": "repo://src/main/resources/application-local.properties#L1-L4",
+          "version": "repo-lines-v1:sha256:b3e423ecb70c50cc7bd6922d6220e046e8c08bf1c7b9e2f1ace72560ca8aafe0:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjhmMjc1MjhjNDc1ZjE4NjNjMTkxMDBkMTQwMzM5ODdjMTIyNTJmYzE5YjQzZDFjNWExMTY5ZjZkNWRlZGU2NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWFmNzZmNDY0NjcyMjllM2QxNjY5ZDBhYzNlZGYxZThkMTI1ZGMzZmQxYWU5NzAzMzRkODgwOTMyYmJmODgxMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/main/resources/application.properties#L23-L25",
+          "version": "repo-lines-v1:sha256:95db3c81d1f2f3ccd0cc0e6daa17543e4d9beea35a36a97d8b815b81130165d3:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2EzY2U3NjUzYjBhYjRjMjM5NTUzYTY3YmFjMzNhODViZmYwNWJhMDhhYzAxNmQ4YzFmMWFhOTM3ODU4ZjY2MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNjhhNWIyNWY1MzM3MmIyMWMzY2M5NTcyZjRmZDc3NmM4NmUxYzc0ZDU4MTViOTM5ZmMxZGU2NTU4OTE2NGJmNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzU1ODE0NDY3ZjE1MTVhMjdjZDAxZWRkYmI2ZTVhZjYyNjgxMzE5YWRlZDI5ZWNjODYyYzQxMjEyZGNkMWMwZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-16T15:01:30.713Z"
+    "at": "2026-11-23T17:33:36.087Z"
   }
 }

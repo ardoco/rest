@@ -1,15 +1,17 @@
 ---
 type: Reference
 title: Architecture
-description: Layered controller, service, and repository design of the ArDoCo REST API, covering the AbstractController, AbstractService, and AbstractRunnerTLRService hierarchies, runner setup in controllers, and the split between in-flight tracking and durable Redis storage.
-tags: [architecture, layering, controller-service-repository, async-execution, redis, request-lifecycle]
+description: Layered controller, service, and repository design of the ArDoCo REST API, covering the AbstractController, AbstractService, and AbstractRunnerTLRService hierarchies, runner setup in controllers, application bootstrap with ApplicationConfig and WebConfig (model-format converter plus CORS for /api/**), and the split between in-flight tracking and durable Redis storage.
+tags: [architecture, layering, controller-service-repository, async-execution, redis, cors, request-lifecycle]
 openwiki_generated: true
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-16T15:01:30.713Z
+    at: 2026-11-23T17:33:36.087Z
 sources:
   - id: openwiki-source-aed92bcc8ea721affa9f52be
     resource: repo://architecture_decisions.md
+  - id: openwiki-source-23775c3de52f3ab95a13cb8b
+    resource: repo://README.md
   - id: openwiki-source-176362edb7d4360cef66ced2
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/api_response/ArDoCoApiResult.java
   - id: openwiki-source-db53f3b7825ef9712a7964e1
@@ -68,9 +70,13 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArDoCoRestApplication.java
   - id: openwiki-source-bd27e22b24a569b1300c8892
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java
+  - id: openwiki-source-c8948fffa3abb80f9c097fd5
+    resource: repo://src/main/resources/application-local.properties
   - id: openwiki-source-ece093ad10b91f3da0b7e34f
     resource: repo://src/main/resources/application.properties
-generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
+  - id: openwiki-source-38d559d093403a874d5a302e
+    resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfigCorsTest.java
+generated: { by: "openwiki/0.9.0", at: "2026-11-23T17:33:36.087Z" }
 ---
 
 # Architecture
@@ -81,7 +87,13 @@ ArDoCo REST is a layered Spring Boot application built around a consistent contr
 
 `ArDoCoRestApplication` is annotated with `@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })`, `@EnableAsync`, and `@OpenAPIDefinition` metadata ("ARDoCo: Trace Link Recovery"). Excluding `DataSourceAutoConfiguration` means the application starts without any SQL datasource — all durable state lives in Redis (see [Redis persistence integration](integrations/redis.md)). `@EnableAsync` turns on Spring's async infrastructure at the application level, although the pipelines themselves are dispatched with `CompletableFuture.supplyAsync` inside `AbstractRunnerTLRService`, not through `@Async` handler methods.
 
-`ApplicationConfig` declares `@EnableRedisRepositories` and defines the `LettuceConnectionFactory` and `RedisTemplate` beans from the `spring.data.redis.host` and `spring.data.redis.port` properties. `WebConfig` registers `ModelFormatTypeConverter` as a Spring converter so the required `inputArchitectureModelFormat` request parameter binds directly to the `ModelFormat` enum; an unknown format name surfaces as an `IllegalArgumentException` ("Invalid architecture model type: …") that `GlobalExceptionHandler` maps to 422. Default timings live in `application.properties`: `redis.time-to-live.hours=24` for stored results and `tlr.timeout.seconds=60` for bounded waits.
+`ApplicationConfig` declares `@EnableRedisRepositories` and defines the `LettuceConnectionFactory` and `RedisTemplate` beans from the `spring.data.redis.host` and `spring.data.redis.port` properties. `WebConfig` does two things: it registers `ModelFormatTypeConverter` as a Spring converter so the required `inputArchitectureModelFormat` request parameter binds directly to the `ModelFormat` enum — an unknown format name surfaces as an `IllegalArgumentException` ("Invalid architecture model type: …") that `GlobalExceptionHandler` maps to 422 — and it configures CORS for `/api/**` as described below. Default timings live in `application.properties`: `redis.time-to-live.hours=24` for stored results and `tlr.timeout.seconds=60` for bounded waits.
+
+### CORS for /api/** browser clients
+
+`WebConfig` reads the `cors.allowed-origins` property as a comma-separated list of origins, trimming each entry and filtering out empty ones. When at least one origin remains, it registers a CORS mapping for `/api/**` that allows exactly those origins, only the methods `GET` and `POST`, and sets `allowCredentials(false)`; when the list is empty, no CORS mapping is registered at all, so cross-origin browser calls are simply not answered with CORS headers. The default in `application.properties` is `https://ardoco.de`, and the `local` profile adds localhost origins for a locally served web frontend; operators can override the property through the `CORS_ALLOWED_ORIGINS` environment variable (Spring relaxed binding).
+
+`WebConfigCorsTest` pins this behavior down with MockMvc preflight (`OPTIONS` + `Origin` + `Access-Control-Request-Method`) requests against a dummy `/api/ardocode/start` controller: a preflight from an allowed origin is answered `200 OK` with `Access-Control-Allow-Origin` echoing the origin, `Access-Control-Allow-Methods: GET,POST`, and no `Access-Control-Allow-Credentials` header; a preflight from a foreign origin is rejected with `403 Forbidden` and no allow-origin header; a preflight requesting the disallowed method `DELETE` is likewise rejected; and with no origins configured, no `Access-Control-Allow-Origin` header is emitted at all. The suite details live in [Testing](testing.md).
 
 ## Layering overview
 
@@ -95,7 +107,7 @@ ArDoCo REST is a layered Spring Boot application built around a consistent contr
 
 ### AbstractController
 
-`AbstractController` holds the constants for the shared multipart parameters (`projectName`, `inputText`, `inputArchitectureModel`, `inputArchitectureModelFormat`, `inputCode`, `additionalConfigs`), the `TraceLinkType` and the `AbstractRunnerTLRService` for its family, and an autowired `ResultService`. It provides the shared behavior all family controllers reuse:
+`AbstractController` holds the constants for the shared multipart parameters (`projectName`, `inputText`, `inputArchitectureModel`, `inputArchitectureModelFormat`, `inputCode`, `additionalConfigs`), the `TraceLinkType` and the `AbstractRunnerTLRService` for its family, and autowired `ResultService` and Jackson `JsonMapper` beans. It provides the shared behavior all family controllers reuse:
 
 - `handleRunPipeLineResult(runner, requestId, inputFiles)` calls `service.runPipeline(...)`. If no result came back it answers `200 OK` with the message "The result is being processed and can be queried using the id."; if a cached result was returned it answers `200 OK` with the payload and "The result is ready." Both outcomes are HTTP 200 — the ID is the contract for later polling.
 - `handleRunPipelineAndWaitForResult(runner, requestId, inputFiles)` performs the same service call, then (when empty) blocks in `ResultService.waitForResult(requestId)`. It answers `200 OK` with the result when one arrives in time, otherwise `202 Accepted` with "The request timed out before the traceLinks could be retrieved. Please try querying only the result using the projectId."
@@ -234,12 +246,14 @@ See [Workflow: result retrieval and waiting](workflows/result-retrieval.md) for 
 - Async execution is enabled at the application level; pipeline dispatch uses `CompletableFuture.supplyAsync`.
 - DataSource auto-configuration is excluded, matching the Redis-backed architecture.
 - Stored results have a 24-hour TTL (`redis.time-to-live.hours`), and result waits time out after `tlr.timeout.seconds` (60 s).
+- CORS for `/api/**` is opt-in through `cors.allowed-origins` (default `https://ardoco.de`; GET and POST only, no credentials); an empty list disables CORS entirely.
 - `/api/health` and `/actuator/health` serve as health checks.
 
 ## Key source files
 
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArDoCoRestApplication.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ApplicationConfig.java`
+- `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ResultController.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractService.java`
@@ -249,4 +263,5 @@ See [Workflow: result retrieval and waiting](workflows/result-retrieval.md) for 
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/DatabaseAccessor.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessor.java`
 - `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/exception/GlobalExceptionHandler.java`
+- `src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfigCorsTest.java`
 - `architecture_decisions.md`

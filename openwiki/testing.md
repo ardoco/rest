@@ -1,8 +1,8 @@
 ---
 type: "Reference"
 title: "Testing"
-description: "What the ArDoCo REST test suites cover and what to run after a change: the Testcontainers-based controller integration tests per runner family (AbstractTLRControllerTest plus subclasses), the RedisAccessor container tests and the Testcontainers Redis pattern, the utility unit tests (FileConverter, HashGenerator, TraceLinkConverter), the ArchUnit ArchitectureTest rule, and the change-sensitive areas."
-tags: [testing, testcontainers, controller-integration-tests, redis, archunit, junit, ci, mvn-verify]
+description: "What the ArDoCo REST test suites cover and what to run after a change: the Testcontainers-based controller integration tests per runner family (AbstractTLRControllerTest plus subclasses), the lightweight WebConfigCorsTest MockMvc CORS suite, the RedisAccessor container tests and the Testcontainers Redis pattern, the utility unit tests (FileConverter, HashGenerator, TraceLinkConverter), the ArchUnit ArchitectureTest rule, and the change-sensitive areas."
+tags: [testing, testcontainers, controller-integration-tests, redis, cors, mockmvc, archunit, junit, ci, mvn-verify]
 openwiki_generated: true
 sources:
   - id: openwiki-source-164e2da859b5277df81c7d94
@@ -17,6 +17,10 @@ sources:
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/AbstractRunnerTLRService.java
   - id: openwiki-source-dcb821af11b2c9f3ac31b92e
     resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/service/ResultService.java
+  - id: openwiki-source-bd27e22b24a569b1300c8892
+    resource: repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java
+  - id: openwiki-source-ece093ad10b91f3da0b7e34f
+    resource: repo://src/main/resources/application.properties
   - id: openwiki-source-0ead47b845f38f77026ad2b9
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/AbstractTLRControllerTest.java
   - id: openwiki-source-c71470a540c52c842bbad746
@@ -41,30 +45,32 @@ sources:
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/util/TraceLinkConverterTest.java
   - id: openwiki-source-aabf02743c3fb4aa40b7703f
     resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArchitectureTest.java
+  - id: openwiki-source-38d559d093403a874d5a302e
+    resource: repo://src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfigCorsTest.java
   - id: openwiki-source-6fc097e625e36feff88bdf6a
     resource: repo://src/test/java/testUtil/TestUtils.java
   - id: openwiki-source-1805edcac6becffbe1030f2a
     resource: repo://src/test/resources/bigBlueButton/bbb.repository
   - id: openwiki-source-fe6ea4bbcfa4165dae50b647
     resource: repo://src/test/resources/bigBlueButton/bigbluebutton.txt
-generated: { by: "openwiki/0.9.0", at: "2026-11-16T15:01:30.713Z" }
+generated: { by: "openwiki/0.9.0", at: "2026-11-23T17:33:36.087Z" }
 verified:
   - by: openwiki/0.9.0
-    at: 2026-11-16T15:01:30.713Z
+    at: 2026-11-23T17:33:36.087Z
 ---
 
 # Testing
 
-The test tree of ArDoCo REST is small but deliberate: it combines full-stack controller integration tests against a real Redis container, a repository test for the Redis accessor, focused unit tests for the conversion utilities, and one ArchUnit rule that constrains the logging setup. Because the application's behavior is mostly request shaping, runner setup, asynchronous execution, Redis persistence, and response status selection, the tests are integration-heavy rather than mock-heavy — the controller tests run the actual ArDoCo runners against real project artifacts.
+The test tree of ArDoCo REST is small but deliberate: it combines full-stack controller integration tests against a real Redis container, a repository test for the Redis accessor, a lightweight MockMvc suite for the CORS configuration, focused unit tests for the conversion utilities, and one ArchUnit rule that constrains the logging setup. Because the application's behavior is mostly request shaping, runner setup, asynchronous execution, Redis persistence, and response status selection, the tests are integration-heavy rather than mock-heavy — the controller tests run the actual ArDoCo runners against real project artifacts.
 
 ## Test organization
 
 All tests live under `src/test/java` in two roots:
 
-- `edu.kit.kastel.mcse.ardoco.tlr.rest` — the controller tests (`AbstractTLRControllerTest` plus four subclasses), the Redis tests (`RedisAccessorTest`, `RedisConnectionTest`, `RedisRealConnectionTest`), the utility tests (`FileConverterTest`, `HashGeneratorTest`, `TraceLinkConverterTest`), and `ArchitectureTest`.
+- `edu.kit.kastel.mcse.ardoco.tlr.rest` — the controller tests (`AbstractTLRControllerTest` plus four subclasses), the Redis tests (`RedisAccessorTest`, `RedisConnectionTest`, `RedisRealConnectionTest`), the utility tests (`FileConverterTest`, `HashGeneratorTest`, `TraceLinkConverterTest`), the CORS suite `WebConfigCorsTest`, and `ArchitectureTest`.
 - `testUtil` — `TestUtils`, a shared helper class for the controller tests.
 
-This matches the current tree: `ArchitectureTest` sits directly in `.../tlr/rest`, the controller tests in `.../rest/api/controller`, `RedisAccessorTest` in `.../rest/api/repository`, `RedisConnectionTest`/`RedisRealConnectionTest` in `.../rest/api`, and the three utility tests in `.../rest/api/util`.
+This matches the current tree: `ArchitectureTest` and `WebConfigCorsTest` sit directly in `.../tlr/rest`, the controller tests in `.../rest/api/controller`, `RedisAccessorTest` in `.../rest/api/repository`, `RedisConnectionTest`/`RedisRealConnectionTest` in `.../rest/api`, and the three utility tests in `.../rest/api/util`.
 
 ```mermaid
 flowchart TD
@@ -155,6 +161,21 @@ Each subclass then supplies its own empty-file fixture: the sad-code test emptie
 
 Because every pairing is asserted explicitly, changing a message constant, a status pairing, or the `traceLinkType` derivation breaks the build — the response model is pinned by these tests. Two helpers in `TestUtils` are currently dead code: `testStartPipeline_new` and the parameterless `setUpRequestParamToStartPipelineBBB()` are defined but never called by any test. The response model itself is documented in [Response and error model](concepts/response-and-error-model.md).
 
+## CORS tests
+
+### WebConfigCorsTest
+
+`WebConfigCorsTest` (in `.../tlr/rest`, next to `ArchitectureTest`) pins the CORS configuration of [WebConfig](architecture.md) without a Spring Boot server, a Redis, or Testcontainers. It builds an `AnnotationConfigWebApplicationContext` with `@EnableWebMvc`, applies the `cors.allowed-origins` property through `TestPropertyValues`, and registers three beans: the production `WebConfig`, the `ModelFormatTypeConverter`, and a private `DummyController` mapped at `/api/ardocode/start` with a single `POST` handler. `MockMvcBuilders.webAppContextSetup` then drives raw `MockMvc` requests against that minimal context — including the `OPTIONS` preflight requests a browser would send.
+
+Four tests pin the CORS contract of the `/api/**` mapping:
+
+- `preflightFromAllowedOriginIsAccepted` — an `OPTIONS` preflight with `Access-Control-Request-Method: POST` from the configured origin `https://ardoco.de` returns **200** with `Access-Control-Allow-Origin` echoing the origin, `Access-Control-Allow-Methods: GET,POST`, and **no** `Access-Control-Allow-Credentials` header.
+- `preflightFromForeignOriginIsRejected` — a preflight from a foreign origin (`https://evil.example`) returns **403 Forbidden** with no `Access-Control-Allow-Origin` header.
+- `preflightWithDisallowedMethodIsRejected` — a preflight requesting **DELETE** from an allowed origin is rejected with **403** (only `GET` and `POST` are registered in `WebConfig`).
+- `noOriginsConfiguredDisablesCors` — with `cors.allowed-origins` set to the empty string, `WebConfig` registers no CORS mapping at all, so even a preflight from an allowed origin is answered without any `Access-Control-Allow-Origin` header.
+
+Because it never boots `ArDoCoRestApplication` and never starts a container, the suite runs in the same `mvn verify` lifecycle **without Docker**, and it is the fastest guard for changes to `WebConfig`'s `addCorsMappings`/`addFormatters` wiring. The operational side of the CORS property (defaults, profile overrides, `CORS_ALLOWED_ORIGINS`) is documented in [Operations](operations.md).
+
 ## Redis tests
 
 `RedisAccessorTest` (`@SpringBootTest`) verifies the accessor semantics against the real Redis container:
@@ -212,18 +233,20 @@ The Failsafe plugin binding (integration-test + verify) and the Spring Boot repa
 When changing controllers, services, result handling, or repositories, prioritize the affected classes plus the shared tests they rely on:
 
 - the relevant controller test subclass (`ArCoTLControllerTest`, `ArDoCoForSadCodeControllerTest`, `ArDoCoForSadSamTLRControllerTest`, or `ArDoCoForSadSamCodeControllerTest`) — or all of them, since `AbstractTLRControllerTest` changes affect every family;
+- `WebConfigCorsTest` when touching `WebConfig` (CORS mapping or converter registration), `ModelFormatTypeConverter`, or the `cors.allowed-origins` property — it needs no Docker and runs in seconds;
 - `RedisAccessorTest` when touching `RedisAccessor`, `DatabaseAccessor`, or the Redis configuration;
 - `HashGeneratorTest` and `FileConverterTest` when touching request-ID generation or file conversion;
 - `TraceLinkConverterTest` when touching the converter output shapes;
 - `ArchitectureTest` when touching imports or the logging setup.
 
-For broader changes, run the full Maven verification lifecycle: `mvn verify`, the same command CI uses. The integration tests require a Docker daemon (or a remote Testcontainers host) and each controller test spins up its own Redis container, so full-suite runs are relatively slow — the per-class timeouts are in the 3–6 minute range.
+For broader changes, run the full Maven verification lifecycle: `mvn verify`, the same command CI uses. The integration tests require a Docker daemon (or a remote Testcontainers host) and each controller test spins up its own Redis container, so full-suite runs are relatively slow — the per-class timeouts are in the 3–6 minute range. Only `WebConfigCorsTest` and the pure unit tests are independent of Docker.
 
 ## Change-sensitive areas
 
 | Area | Risk | Guarded by |
 | --- | --- | --- |
 | Request-ID generation | Any change to the hash or the ID format affects caching and result reuse; the controller tests assert the dedup behavior (cached start returns the ready result). | `HashGeneratorTest`, `FileConverterTest`, `AbstractTLRControllerTest` (cached-start assertions) |
+| CORS policy for `/api/**` | Loosening or tightening the origin list, the method set, or the credentials flag changes the browser-facing contract; an empty `cors.allowed-origins` silently disables CORS. | `WebConfigCorsTest` |
 | Temporary-file cleanup | `AbstractRunnerTLRService.runPipelineAsync` deletes all input files in a `finally` block; a failure there can leak files or break async cleanup. No test directly asserts the deletion, but the controller integration tests exercise the real pipeline path that creates and consumes the temp files, and `FileConverterTest` pins the conversion that creates them. | `FileConverterTest`, controller integration tests (indirectly) |
 | Redis serialization | `RedisAccessor` stores plain strings; the read path (`AbstractService.getResultFromDatabase`) re-parses the stored `traceLinks`/`inconsistencies` shape. A mismatch changes how results are retrieved later. | `RedisAccessorTest`, `TraceLinkConverterTest`, controller integration tests (database-state assertions at each stage) |
 | Response status selection | Start, wait, and timeout behavior is part of the public API contract; the status/message pairings are asserted exactly. | `testUtil.TestUtils`, `AbstractTLRControllerTest` (`testRetrievingResultForInvalidId`, `testHandleEmptyFile`, `test_runPipelineAndWaitForResult_helper`) |
@@ -235,6 +258,8 @@ For broader changes, run the full Maven verification lifecycle: `mvn verify`, th
 - `src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadCodeControllerTest.java`
 - `src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamCodeControllerTest.java`
 - `src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/controller/ArDoCoForSadSamTLRControllerTest.java`
+- `src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfigCorsTest.java`
+- `src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java`
 - `src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/RedisConnectionTest.java`
 - `src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/RedisRealConnectionTest.java`
 - `src/test/java/edu/kit/kastel/mcse/ardoco/tlr/rest/api/repository/RedisAccessorTest.java`
@@ -253,5 +278,6 @@ For broader changes, run the full Maven verification lifecycle: `mvn verify`, th
 - [Response and error model](concepts/response-and-error-model.md) — the status/message pairings pinned by `TestUtils`.
 - [Redis persistence integration](integrations/redis.md) — the persistence layer behind `RedisAccessorTest` and the controller tests.
 - [ArDoCo runner integration](integrations/ardoco-runners.md) — why the controller tests double as the ArDoCo compatibility check.
+- [Operations](operations.md) — the runtime configuration (`cors.allowed-origins`, Redis, Docker) the test suites depend on.
 - [Workflow: pipeline execution](workflows/pipeline-execution.md) — the lifecycle the tests drive.
 - [Workflow: result retrieval](workflows/result-retrieval.md) — the client-side retrieval experience the retrieval tests pin.

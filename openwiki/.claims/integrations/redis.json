@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "pageVersion": "sha256:5364079066bcae6cb27e118137026358caa55926682f2cd019f6a806f0f9131e",
+  "pageVersion": "sha256:8720df94a0a5d613aae14ec5560048a359cd470f7cd47cb1dc2e8ca8c00e38c6",
   "claims": [
     {
       "id": "claim_1ed10eaff46746bf8afbbd06507e9d42",
@@ -86,7 +86,7 @@
     },
     {
       "id": "claim_b935047e6277488fb69c7e38de536e52",
-      "statement": "Only the Redis host differs per deployment topology and is switched by Spring profile: application-docker.properties sets spring.data.redis.host=redis (the compose service hostname, matching the Dockerfile's ENV SPRING_PROFILES_ACTIVE=docker for container networking), while the default profile and application-local.properties both use 127.0.0.1; port 6379, empty username/password, and redis.time-to-live.hours=24 live only in the base application.properties and are not overridden by any profile.",
+      "statement": "The Redis host is switched by Spring profile: application-docker.properties sets spring.data.redis.host=redis (the compose service hostname, matching the Dockerfile's ENV SPRING_PROFILES_ACTIVE=docker for container networking), while the default profile and application-local.properties both use 127.0.0.1; port 6379, empty username/password, and redis.time-to-live.hours=24 live only in the base application.properties and are not overridden by any profile. The Redis host is no longer the only profile-varying setting: the local profile additionally sets cors.allowed-origins.",
       "evidence": [
         {
           "resource": "repo://Dockerfile#L12-L12",
@@ -97,8 +97,8 @@
           "version": "repo-lines-v1:sha256:a6d8c5c75ab9f62eb5a8a1ff4c5ce6d439f6480628a2b40745400db082c5b85b:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjIxNDk2OGI2ZjhkNWIzMjdhZWEyOWFmYTE3ZjA5N2IzN2M2MzA4MDQ0MjNjZDlmNDM5NWQyNDIzZTk1ZjdkNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTExYmU4NzMxODNmN2U1ZjE5NWZhYWEwNDVjMzFmYTI5MGU2ZjBhZTg4NWExYWEzYmExOGUzOTg3NWY3NmI0NSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
         },
         {
-          "resource": "repo://src/main/resources/application-local.properties#L1-L2",
-          "version": "repo-lines-v1:sha256:8cc13dcff343b5014d3e0848e67a6d2e8d7d6a381cb237315973ad40b0aeda09:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjhmMjc1MjhjNDc1ZjE4NjNjMTkxMDBkMTQwMzM5ODdjMTIyNTJmYzE5YjQzZDFjNWExMTY5ZjZkNWRlZGU2NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZGVmOGNkZjI0YzlkMTI3ZjM2OTJjMTY5NjM2OTk1ZDM5MmExZjczM2I3Zjc2OGNkNzllN2Q5MTFiYTQ2OGIyNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+          "resource": "repo://src/main/resources/application-local.properties#L1-L4",
+          "version": "repo-lines-v1:sha256:b3e423ecb70c50cc7bd6922d6220e046e8c08bf1c7b9e2f1ace72560ca8aafe0:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjhmMjc1MjhjNDc1ZjE4NjNjMTkxMDBkMTQwMzM5ODdjMTIyNTJmYzE5YjQzZDFjNWExMTY5ZjZkNWRlZGU2NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWFmNzZmNDY0NjcyMjllM2QxNjY5ZDBhYzNlZGYxZThkMTI1ZGMzZmQxYWU5NzAzMzRkODgwOTMyYmJmODgxMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
         },
         {
           "resource": "repo://src/main/resources/application.properties#L6-L10",
@@ -267,10 +267,42 @@
           "version": "repo-lines-v1:sha256:c4e63c6ea4581ee7075c3d2e32d274082e04d4054c6149792c0094fa1965ab56:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDhjZGU2ODdhYmJmMDU3ZDRiN2Q3NzcwMjg0N2ExNmUyZDBjZDM1NmNhMjkxNjM2MDJkMjc4YzkyYjRiN2Y0OSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmM5ZTQ1MDcyNGZmOTk4MzE0YTEyYzQ5Mjc4MzY5ZmQ1MjQ3YzUyMTlmNDA0NWJjNWQxYmQ5ZWZlNDcxMjRiMCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjUwZDljZTI4MzQ0MDIzYzIwYzFkZDFiMjA4OTljZWJjZDFmNDM1YWUyM2NhYTdkMmU1M2MyZGQ0MTUzNmVlMSJ9"
         }
       ]
+    },
+    {
+      "id": "claim_a84f90a28b8f4995b5f44f3af8159c04",
+      "statement": "The local Spring profile widens CORS for the dockerized-but-locally-served setup: application-local.properties sets cors.allowed-origins to https://ardoco.de,http://localhost:3000,http://localhost:8000 (\"Allow a locally served web frontend\") alongside spring.data.redis.host=127.0.0.1, while the docker profile overrides only the Redis host and inherits the base default cors.allowed-origins=https://ardoco.de; WebConfig consumes the property — trimming entries, dropping empties, registering a GET/POST-only, no-credentials CORS mapping for /api/** when the list is non-empty and no CORS mapping at all when it is empty — and operators can override the list via the CORS_ALLOWED_ORIGINS environment variable.",
+      "evidence": [
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/WebConfig.java#L23-L35",
+          "version": "repo-lines-v1:sha256:81f1915253606e218cddaf1b085db89d0004011d6f654af47c644b92fc6a3a26:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjZGY5NGJhZDgwZjk1ZmY2YTczYTE1N2JkNjg2NTM1NDQzYzg2ZGRkNmRhOTM4Mjc4OWQyOTNiZjM3MWFkMGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc2MTM4OWE3YmY1YjMyMzE2NmJiNWYyOTdhMmZkNDYxOTBiNGU4YmEwY2IwNDMzYzJjMDg1ZTNiZDM1ODJmZTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ3OGU5MzA2N2JkZDdiNmUyOGNmNjk1OGU2YWJjYmRiYmI4NTY0OTIwNWZjODg5NzAyNDA5MDY3ODhmMDlkN2YiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ5YTAwY2JkNTBhMjJlYTgwYzBlNTQxZDE2ZDJkZjMzYmJkMzllY2Y1OTgxOGEyMjA0ZWQxNTZkNzg3YTI1ODcifQ"
+        },
+        {
+          "resource": "repo://src/main/resources/application-local.properties#L1-L4",
+          "version": "repo-lines-v1:sha256:b3e423ecb70c50cc7bd6922d6220e046e8c08bf1c7b9e2f1ace72560ca8aafe0:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjhmMjc1MjhjNDc1ZjE4NjNjMTkxMDBkMTQwMzM5ODdjMTIyNTJmYzE5YjQzZDFjNWExMTY5ZjZkNWRlZGU2NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWFmNzZmNDY0NjcyMjllM2QxNjY5ZDBhYzNlZGYxZThkMTI1ZGMzZmQxYWU5NzAzMzRkODgwOTMyYmJmODgxMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/main/resources/application.properties#L20-L23",
+          "version": "repo-lines-v1:sha256:76e7194016c677e8dcbaafde28d5db92cca59bd084a1793404122e8a4ede0253:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmIxNzg2M2NiNzNiODY4YTVmODdiODcwOWM3MTYwODBmYzcwNTk5NDQ2NGFhMDlkMGEyZjk1MmQ2NzQxNDUxMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2EzY2U3NjUzYjBhYjRjMjM5NTUzYTY3YmFjMzNhODViZmYwNWJhMDhhYzAxNmQ4YzFmMWFhOTM3ODU4ZjY2MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTI2NmQzODNkMGYyNmExMzg4MDMwODBjY2JkMzc5YWNlMGU0ZmRkNTY5N2Q0YjAxYzE0MmRlZTg0OTkwMGU0NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjIsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMmQ2ZjIxNjA5YmU1OTZjYTYzOTAxMDExNzFiMDA4MjkxYTE3MmEwMTM1NTc5NTUzNTg5ZTRmYWFkOTQwOGFjOCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_3afbab57f36e4385876cb5a3cc911f0f",
+      "statement": "Although pom.xml declares spring-boot-starter-data-jpa, ArDoCoRestApplication excludes DataSourceAutoConfiguration, so the application starts without any SQL datasource and Redis remains the only durable persistence layer.",
+      "evidence": [
+        {
+          "resource": "repo://pom.xml#L101-L104",
+          "version": "repo-lines-v1:sha256:1bc88098360647915c8f9a528104d0507348b87b3c940ac3d43cd24b9345a11a:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjY2NGMwZmMxYWRlYzMzMWI1MTJhMzlmZDI4NjI5OWUzNDgyNzZkZDBhY2UyOTA1ZWYwODQyM2YwNGIyNWU2MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzlmNzI2YzgzNGNjMTQ4YzZiMzdjYmQzY2UyOTc2NDQyMDFmMTAzYzZjYzMzNjljODIwNjY3ZDFkMzlhYzk5MyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDFkODI2ZGU2N2QxYmNjNTZiMWU5MTUzOGQ4MDNiODUxZWNlYmFiMzI2NTBjZWE1MTkyYTM4ZmZhNzJkYTZhNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjA1ZTQ5Y2VmNDIxMGZkMDFmMDAxNmNjMTVkMDg4YTc3Y2FlNTViOTk4YWIyNTVhOTA3OTg5NTdlZGU0ZDYzYSJ9"
+        },
+        {
+          "resource": "repo://src/main/java/edu/kit/kastel/mcse/ardoco/tlr/rest/ArDoCoRestApplication.java#L17-L19",
+          "version": "repo-lines-v1:sha256:de62f88ddd68bfbb6018acc0dd3b5196da4c4a9adc9fdd569d6c0fac0a977311:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNmY5MTA2NTc0MTQxNDliMmIyNzc2YTE1MDAxNzRlOWM2ZDhiMzUyODRlMDQyN2NmZDIzNGViYTEzNGI2ZDM2MCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjI5MjYxYzUxMmFhMzExMDIyM2I3ZTNmODliZWMyZjA4MzFiYjJlYmUxNjhiM2EyNzk1ODAwMWQ0NTdmNDlkZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMmYwYWNjZTk0ZWE2ODg1MzMyZGRhOWQyZDQyMDdlOWNkN2IyM2RmNjRkNzgwMWNjNDRkNTI3YzM3YmI1OGQ1ZCJ9"
+        }
+      ]
     }
   ],
   "verification": {
     "by": "openwiki/0.9.0",
-    "at": "2026-11-16T15:01:30.713Z"
+    "at": "2026-11-23T17:33:36.087Z"
   }
 }
