@@ -2,6 +2,7 @@
 package edu.kit.kastel.mcse.ardoco.tlr.rest;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,6 +31,8 @@ class WebConfigCorsTest {
 
     private static final String ALLOWED_ORIGIN = "https://ardoco.de";
     private static final String FOREIGN_ORIGIN = "https://evil.example";
+    private static final String SUBDOMAIN_PATTERN = "https://*.ardoco.de";
+    private static final String SUBDOMAIN_ORIGIN = "https://tv.ardoco.de";
     private static final String ENDPOINT = "/api/ardocode/start";
 
     @Test
@@ -46,6 +49,24 @@ class WebConfigCorsTest {
     void preflightFromForeignOriginIsRejected() throws Exception {
         MockMvc mockMvc = createMockMvc(ALLOWED_ORIGIN);
         mockMvc.perform(preflight(FOREIGN_ORIGIN)).andExpect(status().isForbidden()).andExpect(header().doesNotExist(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN));
+    }
+
+    @Test
+    void requestFromSubdomainMatchingPatternIsAccepted() throws Exception {
+        MockMvc mockMvc = createMockMvc(ALLOWED_ORIGIN + "," + SUBDOMAIN_PATTERN);
+        mockMvc.perform(preflight(SUBDOMAIN_ORIGIN))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, SUBDOMAIN_ORIGIN));
+        mockMvc.perform(post(ENDPOINT).header(HttpHeaders.ORIGIN, SUBDOMAIN_ORIGIN))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, SUBDOMAIN_ORIGIN));
+    }
+
+    @Test
+    void lookalikeOfSubdomainPatternIsRejected() throws Exception {
+        MockMvc mockMvc = createMockMvc(ALLOWED_ORIGIN + "," + SUBDOMAIN_PATTERN);
+        mockMvc.perform(preflight("https://ardoco.de.evil.example")).andExpect(status().isForbidden());
+        mockMvc.perform(preflight("https://evilardoco.de")).andExpect(status().isForbidden());
     }
 
     @Test
