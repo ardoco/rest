@@ -28,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
         if (allowedOrigins.isEmpty()) {
             return;
         }
-        registry.addMapping("/api/**").allowedOrigins(allowedOrigins.toArray(String[]::new)).allowedMethods("GET", "POST").allowCredentials(false);
+        registry.addMapping("/api/**").allowedOriginPatterns(allowedOrigins.toArray(String[]::new)).allowedMethods("GET", "POST").allowCredentials(false);
     }
 
     @Override
