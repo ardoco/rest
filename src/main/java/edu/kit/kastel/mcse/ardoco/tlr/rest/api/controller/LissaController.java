@@ -72,9 +72,9 @@ public class LissaController {
 
             @Parameter(description = "The artifact type of the target files", required = true) @RequestParam(TARGET_ARTIFACT_TYPE_PARAMETER) ArtifactType targetArtifactType,
 
-            @Parameter(description = "JSON string containing additional LiSSA configuration. If not provided, the default is used.", required = false) @RequestParam(name = ADDITIONAL_CONFIGURATION_PARAMETER, required = false) String additionalConfigsJson,
+            @Parameter(description = "JSON string containing additional LiSSA configuration. If not provided, the default is used.", required = false, schema = @Schema(type = "object")) @RequestPart(name = ADDITIONAL_CONFIGURATION_PARAMETER, required = false) String additionalConfigsJson,
 
-            @Parameter(description = ".env-format string with the caller's own API keys (e.g. OPENAI_API_KEY=sk-...).", required = false) @RequestParam(name = API_KEYS_PARAMETER, required = false) String apiKeys) {
+            @Parameter(description = "JSON object with the caller's own API keys, mapping environment variable names to values (e.g. {\"OPENAI_API_KEY\": \"sk-...\"}).", required = false, schema = @Schema(type = "object")) @RequestPart(name = API_KEYS_PARAMETER, required = false) String apiKeys) {
         logger.info("Received request to start LiSSA processing pipeline for project: {}", projectName);
 
         List<File> sourceFiles = convertToFiles(inputSourceArtifacts);
@@ -102,9 +102,9 @@ public class LissaController {
 
             @Parameter(description = "The artifact type of the target files", required = true) @RequestParam(TARGET_ARTIFACT_TYPE_PARAMETER) ArtifactType targetArtifactType,
 
-            @Parameter(description = "JSON string containing additional LiSSA configuration. If not provided, the default is used.", required = false) @RequestParam(name = ADDITIONAL_CONFIGURATION_PARAMETER, required = false) String additionalConfigsJson,
+            @Parameter(description = "JSON string containing additional LiSSA configuration. If not provided, the default is used.", required = false, schema = @Schema(type = "object")) @RequestPart(name = ADDITIONAL_CONFIGURATION_PARAMETER, required = false) String additionalConfigsJson,
 
-            @Parameter(description = ".env-format string with the caller's own API keys (e.g. OPENAI_API_KEY=sk-...).", required = false) @RequestParam(name = API_KEYS_PARAMETER, required = false) String apiKeys) {
+            @Parameter(description = "JSON object with the caller's own API keys, mapping environment variable names to values (e.g. {\"OPENAI_API_KEY\": \"sk-...\"}).", required = false, schema = @Schema(type = "object")) @RequestPart(name = API_KEYS_PARAMETER, required = false) String apiKeys) {
         List<File> sourceFiles = convertToFiles(inputSourceArtifacts);
         List<File> targetFiles = convertToFiles(inputTargetArtifacts);
         List<File> inputFiles = new ArrayList<>(sourceFiles);

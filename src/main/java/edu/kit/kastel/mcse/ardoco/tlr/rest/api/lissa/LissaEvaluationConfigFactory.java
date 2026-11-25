@@ -52,8 +52,7 @@ public class LissaEvaluationConfigFactory {
         ModuleConfiguration targetProvider = new ModuleConfiguration("text", new HashMap<>(Map.of("path", targetDir.toString(), "artifact_type", targetType
                 .name())));
 
-        GoldStandardConfiguration goldStandard = new GoldStandardConfiguration(
-                "src/main/java/edu/kit/kastel/mcse" + "/ardoco/tlr/rest/api/lissa/emptyFile" + ".csv", false, false);
+        GoldStandardConfiguration goldStandard = new GoldStandardConfiguration(createEmptyGoldStandard(workingDir).toString(), false, false);
 
         EvaluationConfiguration config = buildDefaults();
 
@@ -96,6 +95,9 @@ public class LissaEvaluationConfigFactory {
 
         EvaluationConfiguration additionalConfig;
         try {
+            if (mapper.readTree(additionalConfigJson).isEmpty()) {
+                return base;
+            }
             additionalConfig = mapper.readValue(additionalConfigJson, EvaluationConfiguration.class);
         } catch (JsonProcessingException e) {
             logger.warn("Failed to parse additional LiSSA configuration JSON; using defaults. Error: {}", e.getMessage());
@@ -129,6 +131,16 @@ public class LissaEvaluationConfigFactory {
             return targetDir;
         } catch (IOException e) {
             throw new ArdocoException("Failed to prepare LiSSA input directory " + targetDir + ": " + e.getMessage(), e);
+        }
+    }
+
+    private Path createEmptyGoldStandard(Path workingDir) {
+        Path goldStandard = workingDir.resolve("gold-standard.csv");
+        try {
+            Files.deleteIfExists(goldStandard);
+            return Files.createFile(goldStandard);
+        } catch (IOException e) {
+            throw new ArdocoException("Failed to create empty LiSSA gold standard file " + goldStandard + ": " + e.getMessage(), e);
         }
     }
 }

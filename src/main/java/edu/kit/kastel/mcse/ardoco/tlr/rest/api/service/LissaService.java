@@ -5,7 +5,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.kit.kastel.mcse.ardoco.llm.util.EnvironmentProvider;
@@ -57,11 +58,12 @@ public class LissaService extends AbstractService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public Optional<ArDoCoApiResult> runPipeline(List<File> sourceFiles, ArtifactType sourceType, List<File> targetFiles, ArtifactType targetType, String id,
-            @Nullable String additionalConfigsJson, @Nullable String apiKeysEnv) {
+            @Nullable String additionalConfigsJson, @Nullable String apiKeysJson) {
+        EnvironmentProvider environment = parseEnvironment(apiKeysJson);
         if (!resultIsInDatabase(id) && !resultIsOnItsWay(id)) {
             logger.info("Start new TLR of type {} for {}", TraceLinkType.LISSA, id);
             CompletableFuture<ArDoCoApiResult> future = CompletableFuture.supplyAsync(() -> runPipelineAsync(sourceFiles, sourceType, targetFiles, targetType,
-                    id, additionalConfigsJson, apiKeysEnv));
+                    id, additionalConfigsJson, environment));
             currentlyRunningRequestsRepository.addRequest(id, future);
         } else if (resultIsInDatabase(id)) {
             return Optional.of(getResultFromDatabase(id));
@@ -70,7 +72,7 @@ public class LissaService extends AbstractService {
     }
 
     private ArDoCoApiResult runPipelineAsync(List<File> sourceFiles, ArtifactType sourceType, List<File> targetFiles, ArtifactType targetType, String id,
-            @Nullable String additionalConfigsJson, String apiKeysEnv) {
+            @Nullable String additionalConfigsJson, EnvironmentProvider environment) {
         ArDoCoApiResult traceLinkJson;
         Path workingDir = null;
         try {
@@ -78,7 +80,6 @@ public class LissaService extends AbstractService {
             EvaluationConfiguration config = configFactory.build(sourceFiles, sourceType, targetFiles, targetType, workingDir, additionalConfigsJson);
             logger.info("Using the following config: {}", config);
 
-            EnvironmentProvider environment = parseEnvironment(apiKeysEnv);
             //TODO Remove log
             logger.info("Using the following env: {}", environment);
             logger.info(environment.getenv("CACHE_HIERARCHY"));
@@ -118,42 +119,23 @@ public class LissaService extends AbstractService {
     }
 
     /**
-     * Pases a string containing environment variable definitions in the format "KEY=VALUE" (one per line) and returns a map of key-value pairs.
+     * Parses a JSON object mapping environment variable names to string values, e.g. {@code {"OPENAI_API_KEY": "sk-..."}}.
      *
-     * @param input The input string containing environment variable definitions.
+     * @param input The JSON object, or null/blank for no variables.
      * @return A map environment of the key-value pairs.
+     * @throws IllegalArgumentException if the input is not a JSON object with string values.
      */
-    private static EnvironmentProvider parseEnvironment(String input) {
-        Map<String, String> values = new HashMap<>();
-        for (String line : input.split("\\R")) {
-            parseEnvLine(line).ifPresent(entry -> values.put(entry.getKey(), entry.getValue()));
+    private EnvironmentProvider parseEnvironment(@Nullable String input) {
+        if (input == null || input.isBlank()) {
+            return new MapEnvironment(Map.of());
         }
-
-        return new MapEnvironment(values);
-    }
-
-    /**
-     * Parses a single line of environment variable definition in the format "KEY=VALUE".
-     *
-     * @param line The line to parse.
-     * @return An optional containing the key-value pair if the line is valid, or an empty optional if the line is invalid or a comment.
-     */
-    private static Optional<Map.Entry<String, String>> parseEnvLine(String line) {
-        line = line.trim();
-
-        if (line.isEmpty() || line.startsWith("#")) {
-            return Optional.empty();
+        try {
+            Map<String, String> values = mapper.readValue(input, new TypeReference<Map<String, String>>() {
+            });
+            return new MapEnvironment(values == null ? Map.of() : values);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("apiKeys must be a JSON object mapping variable names to string values, e.g. {\"OPENAI_API_KEY\": \"sk-...\"}",
+                    e);
         }
-
-        String[] keyValue = line.split("=", 2);
-
-        if (keyValue.length != 2) {
-            return Optional.empty();
-        }
-
-        String key = keyValue[0].trim();
-        String value = keyValue[1].trim();
-
-        return Optional.of(Map.entry(key, value));
     }
 }
