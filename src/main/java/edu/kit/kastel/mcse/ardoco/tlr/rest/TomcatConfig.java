@@ -1,4 +1,4 @@
-/* Licensed under MIT 2025. */
+/* Licensed under MIT 2025-2026. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest;
 
 import org.apache.catalina.connector.Connector;
@@ -21,13 +21,11 @@ public class TomcatConfig {
      * @return a web server customizer
      */
     @Bean
-    public WebServerFactoryCustomizer<ConfigurableTomcatWebServerFactory> tomcatCustomizer(
-            @Value("${server.tomcat.max-locale-count:100}") int maxLocaleCount) {
+    public WebServerFactoryCustomizer<ConfigurableTomcatWebServerFactory> tomcatCustomizer(@Value("${server.tomcat.max-locale-count:100}") int maxLocaleCount) {
         if (maxLocaleCount < 1) {
             throw new IllegalArgumentException("server.tomcat.max-locale-count must be greater than zero");
         }
 
-        return factory -> factory.addConnectorCustomizers((Connector connector) ->
-                connector.setMaxLocaleCount(maxLocaleCount));
+        return factory -> factory.addConnectorCustomizers((Connector connector) -> connector.setMaxLocaleCount(maxLocaleCount));
     }
 }
