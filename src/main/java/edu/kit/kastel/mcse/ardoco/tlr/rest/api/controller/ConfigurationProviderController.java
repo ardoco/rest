@@ -1,7 +1,6 @@
-/* Licensed under MIT 2025. */
+/* Licensed under MIT 2025-2026. */
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +35,10 @@ public class ConfigurationProviderController {
      * Retrieves the default configuration.
      *
      * @return a ResponseEntity containing the default configuration as a Map
-     * @throws InvocationTargetException if an exception occurs during method invocation
-     * @throws InstantiationException    if an error occurs while instantiating a class
-     * @throws IllegalAccessException    if access to a class or its constructor is denied
      */
     @Operation(summary = "Get Default Configuration", description = "Retrieves the default configuration of ardoco.")
     @GetMapping("/configuration")
-    public ResponseEntity<Map<String, String>> getConfiguration() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public ResponseEntity<Map<String, String>> getConfiguration() {
         Map<String, String> config = configurationProviderService.getDefaultConfiguration();
         return ResponseEntity.ok(config);
     }
