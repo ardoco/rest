@@ -2,6 +2,9 @@
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,7 @@ import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArDoCoApiResult;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.ArdocoResultResponse;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.api_response.TraceLinkType;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.converter.FileConverter;
+import edu.kit.kastel.mcse.ardoco.tlr.rest.api.exception.FileConversionException;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.messages.ResultMessages;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.LissaService;
 import edu.kit.kastel.mcse.ardoco.tlr.rest.api.service.ResultService;
@@ -77,14 +81,10 @@ public class LissaController {
             @Parameter(description = "JSON object with the caller's own API keys, mapping environment variable names to values (e.g. {\"OPENAI_API_KEY\": \"sk-...\"}).", required = false, schema = @Schema(type = "object")) @RequestPart(name = API_KEYS_PARAMETER, required = false) String apiKeys) {
         logger.info("Received request to start LiSSA processing pipeline for project: {}", projectName);
 
-        List<File> sourceFiles = convertToFiles(inputSourceArtifacts);
-        List<File> targetFiles = convertToFiles(inputTargetArtifacts);
-        List<File> inputFiles = new ArrayList<>(sourceFiles);
-        inputFiles.addAll(targetFiles);
-
-        String id = generateRequestId(inputFiles, projectName, additionalConfigsJson);
-        Optional<ArDoCoApiResult> result = service.runPipeline(sourceFiles, sourceArtifactType, targetFiles, targetArtifactType, id, additionalConfigsJson,
-                apiKeys);
+        PipelineStart start = startPipeline(projectName, inputSourceArtifacts, sourceArtifactType, inputTargetArtifacts, targetArtifactType,
+                additionalConfigsJson, apiKeys);
+        String id = start.id();
+        Optional<ArDoCoApiResult> result = start.result();
 
         return buildResponse(id, result, ResultMessages.RESULT_IS_BEING_PROCESSED, HttpStatus.OK);
     }
@@ -105,14 +105,10 @@ public class LissaController {
             @Parameter(description = "JSON string containing additional LiSSA configuration. If not provided, the default is used.", required = false, schema = @Schema(type = "object")) @RequestPart(name = ADDITIONAL_CONFIGURATION_PARAMETER, required = false) String additionalConfigsJson,
 
             @Parameter(description = "JSON object with the caller's own API keys, mapping environment variable names to values (e.g. {\"OPENAI_API_KEY\": \"sk-...\"}).", required = false, schema = @Schema(type = "object")) @RequestPart(name = API_KEYS_PARAMETER, required = false) String apiKeys) {
-        List<File> sourceFiles = convertToFiles(inputSourceArtifacts);
-        List<File> targetFiles = convertToFiles(inputTargetArtifacts);
-        List<File> inputFiles = new ArrayList<>(sourceFiles);
-        inputFiles.addAll(targetFiles);
-
-        String id = generateRequestId(inputFiles, projectName, additionalConfigsJson);
-        Optional<ArDoCoApiResult> result = service.runPipeline(sourceFiles, sourceArtifactType, targetFiles, targetArtifactType, id, additionalConfigsJson,
-                apiKeys);
+        PipelineStart start = startPipeline(projectName, inputSourceArtifacts, sourceArtifactType, inputTargetArtifacts, targetArtifactType,
+                additionalConfigsJson, apiKeys);
+        String id = start.id();
+        Optional<ArDoCoApiResult> result = start.result();
 
         if (result.isEmpty()) {
             result = resultService.waitForResult(id);
@@ -130,7 +126,41 @@ public class LissaController {
         return new ResponseEntity<>(response, response.getStatus());
     }
 
-    private List<File> convertToFiles(MultipartFile[] multipartFiles) {
+    private record PipelineStart(String id, Optional<ArDoCoApiResult> result) {
+    }
+
+    /**
+     * Stores the uploads in a fresh directory owned by this request (so concurrent requests with equally named files
+     * cannot interfere) and hands it to the service, which deletes it once it is no longer needed.
+     */
+    private PipelineStart startPipeline(String projectName, MultipartFile[] inputSourceArtifacts, ArtifactType sourceArtifactType,
+            MultipartFile[] inputTargetArtifacts, ArtifactType targetArtifactType, @Nullable String additionalConfigsJson, @Nullable String apiKeys) {
+        Path uploadDir;
+        try {
+            uploadDir = Files.createTempDirectory("lissa-upload-");
+        } catch (IOException e) {
+            throw new FileConversionException("Failed to create upload directory: " + e.getMessage(), e);
+        }
+
+        List<File> sourceFiles;
+        List<File> targetFiles;
+        try {
+            sourceFiles = convertToFiles(inputSourceArtifacts, uploadDir.resolve("source"));
+            targetFiles = convertToFiles(inputTargetArtifacts, uploadDir.resolve("target"));
+        } catch (RuntimeException e) {
+            LissaService.deleteQuietly(uploadDir);
+            throw e;
+        }
+        List<File> inputFiles = new ArrayList<>(sourceFiles);
+        inputFiles.addAll(targetFiles);
+
+        String id = generateRequestId(inputFiles, projectName, additionalConfigsJson);
+        Optional<ArDoCoApiResult> result = service.runPipeline(sourceFiles, sourceArtifactType, targetFiles, targetArtifactType, uploadDir, id,
+                additionalConfigsJson, apiKeys);
+        return new PipelineStart(id, result);
+    }
+
+    private List<File> convertToFiles(MultipartFile[] multipartFiles, Path directory) {
         logger.debug("Converting {} multipart files to files...", multipartFiles.length);
         List<File> files = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {

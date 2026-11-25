@@ -2,6 +2,7 @@
 package edu.kit.kastel.mcse.ardoco.tlr.rest.api.service;
 
 import java.io.File;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
@@ -42,9 +43,10 @@ public class LissaService extends AbstractService {
     private static final Logger logger = LoggerFactory.getLogger(LissaService.class);
     private static final String ERROR_PREFIX = "Error: ";
 
-    // Serializes all LiSSA evaluation runs process-wide, since LiSSA's Environment/CacheManager
-    // are static singletons, not request-scoped.
+    // Serializes all LiSSA evaluation runs process-wide, since LiSSA's CacheManager is a static
+    // singleton pointed at each run's own cache dir, and result files go to the shared working dir.
     private static final ReentrantLock EXECUTION_LOCK = new ReentrantLock();
+    private static final String LISSA_OUTPUT_GLOB = "{results,traceLinks}-in_memory_configuration.json_*.{md,csv}";
 
     @Autowired
     private CurrentlyRunningRequestsRepository currentlyRunningRequestsRepository;
@@ -57,22 +59,36 @@ public class LissaService extends AbstractService {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public Optional<ArDoCoApiResult> runPipeline(List<File> sourceFiles, ArtifactType sourceType, List<File> targetFiles, ArtifactType targetType, String id,
-            @Nullable String additionalConfigsJson, @Nullable String apiKeysJson) {
-        EnvironmentProvider environment = parseEnvironment(apiKeysJson);
-        if (!resultIsInDatabase(id) && !resultIsOnItsWay(id)) {
-            logger.info("Start new TLR of type {} for {}", TraceLinkType.LISSA, id);
-            CompletableFuture<ArDoCoApiResult> future = CompletableFuture.supplyAsync(() -> runPipelineAsync(sourceFiles, sourceType, targetFiles, targetType,
-                    id, additionalConfigsJson, environment));
-            currentlyRunningRequestsRepository.addRequest(id, future);
-        } else if (resultIsInDatabase(id)) {
-            return Optional.of(getResultFromDatabase(id));
+    /**
+     * Starts a LiSSA run unless its result is already known or being computed.
+     *
+     * @param uploadDir directory containing the uploaded source and target files. This service takes ownership and
+     *                  deletes it once it is no longer needed, whether or not a run is started.
+     */
+    public Optional<ArDoCoApiResult> runPipeline(List<File> sourceFiles, ArtifactType sourceType, List<File> targetFiles, ArtifactType targetType,
+            Path uploadDir, String id, @Nullable String additionalConfigsJson, @Nullable String apiKeysJson) {
+        boolean started = false;
+        try {
+            EnvironmentProvider environment = parseEnvironment(apiKeysJson);
+            if (!resultIsInDatabase(id) && !resultIsOnItsWay(id)) {
+                logger.info("Start new TLR of type {} for {}", TraceLinkType.LISSA, id);
+                CompletableFuture<ArDoCoApiResult> future = CompletableFuture.supplyAsync(() -> runPipelineAsync(sourceFiles, sourceType, targetFiles,
+                        targetType, uploadDir, id, additionalConfigsJson, environment));
+                started = true;
+                currentlyRunningRequestsRepository.addRequest(id, future);
+            } else if (resultIsInDatabase(id)) {
+                return Optional.of(getResultFromDatabase(id));
+            }
+            return Optional.empty();
+        } finally {
+            if (!started) {
+                deleteQuietly(uploadDir);
+            }
         }
-        return Optional.empty();
     }
 
-    private ArDoCoApiResult runPipelineAsync(List<File> sourceFiles, ArtifactType sourceType, List<File> targetFiles, ArtifactType targetType, String id,
-            @Nullable String additionalConfigsJson, EnvironmentProvider environment) {
+    private ArDoCoApiResult runPipelineAsync(List<File> sourceFiles, ArtifactType sourceType, List<File> targetFiles, ArtifactType targetType, Path uploadDir,
+            String id, @Nullable String additionalConfigsJson, EnvironmentProvider environment) {
         ArDoCoApiResult traceLinkJson;
         Path workingDir = null;
         try {
@@ -85,8 +101,14 @@ public class LissaService extends AbstractService {
             logger.info(environment.getenv("CACHE_HIERARCHY"));
 
             Set<TraceLink> traceLinks;
-            logger.info("Running LiSSA evaluation in-process...");
-            traceLinks = new Evaluation(config, environment).run();
+            EXECUTION_LOCK.lock();
+            try {
+                logger.info("Running LiSSA evaluation in-process...");
+                traceLinks = new Evaluation(config, environment).run();
+            } finally {
+                deleteLissaOutputFiles();
+                EXECUTION_LOCK.unlock();
+            }
             logger.info("LiSSA evaluation results: {}", traceLinks);
             List<LissaTraceLink> mapped = traceLinks.stream().map(tl -> new LissaTraceLink(tl.sourceId(), tl.targetId())).toList();
             traceLinkJson = new ArDoCoApiResult(mapper.writeValueAsString(mapped));
@@ -99,22 +121,36 @@ public class LissaService extends AbstractService {
             throw new ArdocoException(message, e);
         } finally {
             currentlyRunningRequestsRepository.removeRequest(id);
-            for (File file : sourceFiles)
-                file.delete();
-            for (File file : targetFiles)
-                file.delete();
+            deleteQuietly(uploadDir);
             deleteQuietly(workingDir);
         }
         return traceLinkJson;
     }
 
-    private void deleteQuietly(Path dir) {
+    /**
+     * LiSSA always writes its statistics report and a trace link CSV into the current working directory. We only need
+     * the returned trace links, so remove those files. Must be called while holding {@link #EXECUTION_LOCK}.
+     */
+    private void deleteLissaOutputFiles() {
+        try (DirectoryStream<Path> files = Files.newDirectoryStream(Path.of("").toAbsolutePath(), LISSA_OUTPUT_GLOB)) {
+            for (Path file : files) {
+                Files.deleteIfExists(file);
+            }
+        } catch (Exception e) {
+            logger.warn("Failed to clean up LiSSA output files: {}", e.getMessage());
+        }
+    }
+
+    /**
+     * Recursively deletes the given directory, logging instead of throwing on failure.
+     */
+    public static void deleteQuietly(@Nullable Path dir) {
         if (dir == null)
             return;
         try (var walk = Files.walk(dir)) {
             walk.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
         } catch (Exception e) {
-            logger.warn("Failed to clean up LiSSA working directory {}: {}", dir, e.getMessage());
+            logger.warn("Failed to clean up LiSSA directory {}: {}", dir, e.getMessage());
         }
     }
 
