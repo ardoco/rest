@@ -15,7 +15,7 @@ from starting the pipeline. The branch also contains a ``.md`` file explaining t
 ## CORS configuration
 
 Browser clients (e.g. the TraceViz web demo) may only call ``/api/**`` from origins listed in the property ``cors.allowed-origins``
-(comma-separated, only ``GET`` and ``POST``, no credentials). The default is ``https://ardoco.de``; an empty value disables CORS.
+(comma-separated origin patterns such as ``https://*.ardoco.de``, only ``GET`` and ``POST``, no credentials). The default is ``https://ardoco.de,https://*.ardoco.de``; an empty value disables CORS.
 Override it via the environment variable ``CORS_ALLOWED_ORIGINS`` (Spring relaxed binding), e.g. ``CORS_ALLOWED_ORIGINS=https://ardoco.de,https://example.org``
 in the ``environment`` list of the ``app`` service in ``docker-compose.yaml``.
 
